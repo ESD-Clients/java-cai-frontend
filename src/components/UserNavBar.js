@@ -1,0 +1,212 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Helper, ModuleController } from "../controllers/_Controllers";
+import { clearModal, showConfirmationBox } from "../modals/Modal";
+
+export default function UserNavbar({ user }) {
+
+    const navigate = useNavigate();
+
+    const [loaded, setLoaded] = useState(false);
+    const [modules, setModules] = useState([]);
+
+    useEffect(() => {
+        async function fetchData () {
+            let modules = await ModuleController.getActiveList();
+            setModules(modules);
+        }
+
+        if(!loaded) fetchData();
+    }, [loaded])
+
+    function logout() {
+
+        showConfirmationBox({
+            title: "Confirmation",
+            message: "Are you sure you want to logout?",
+            onYes: () => {
+                clearModal();
+                Helper.logout();
+                navigate("/");
+            }
+        })
+    }
+
+    return (
+        <>
+            <div className="w-screen flex flex-row justify-center ">
+                <div className="lg:w-[80vw] w-full lg:mt-4 m-0">
+                    <div className="navbar bg-base-100">
+                        <div className="navbar-start">
+                            <div className="dropdown">
+                                <label tabIndex="0" className="btn btn-ghost lg:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+                                    </svg>
+                                </label>
+                                <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 backdrop-blur-sm rounded-box w-52">
+                                    <li><a>Dashboard</a></li>
+                                    <li><a>Playground</a></li>
+                                    <li tabIndex="0">
+                                        <a>
+                                            Modules
+                                            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+                                            </svg>
+                                        </a>
+                                        <ul className="p-2 bg-base-200 z-50">
+                                            <div>
+                                                {
+                                                    modules.length > 0 ? (
+                                                        modules.map((item, i) => {
+                                                            if(item.remarks === "approved") {
+                                                                if(item.number <= user.current_module) {
+                                                                    return (
+                                                                        <li key={i.toString()}>
+                                                                            <a 
+                                                                                href={"/student/module?" + item.number}
+                                                                            >
+                                                                                Module {item.number}
+                                                                            </a>
+                                                                        </li>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return (
+                                                                        <li className="disabled" key={i.toString()}>
+                                                                            <a>Module {item.number}
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                                                                    <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
+                                                                                </svg>
+                                                                            </a>
+                                                                        </li>
+                                                                    )
+                                                                }
+                                                            }
+                                                        })
+                                                    ) : (
+                                                        <li>No Module Available</li>
+                                                    )
+                                                }
+                                            </div>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="normal-case btn btn-ghost text-xl font-bold">
+                                caiJAVA
+                            </div>
+                            <div className="hidden lg:block">
+                                <ul className="menu menu-horizontal p-0">
+                                    <li><Link to="/student/dashboard">Dashboard</Link></li>
+                                    <li><Link to="/student/playground">Playground</Link></li>
+                                    <li tabIndex="0">
+                                        <a>
+                                            Modules
+                                            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+                                            </svg>
+                                        </a>
+                                        <ul className="p-2 bg-base-200 z-50">
+                                            <form action="/module" method="post">
+                                                {
+                                                    modules.length > 0 ? (
+                                                        modules.map((item, i) => {
+                                                            if (item.remarks === "approved") {
+                                                                if (item.number <= user.current_module) {
+                                                                    return (
+                                                                        <li key={i.toString()}>
+                                                                            <a 
+                                                                                href={"/student/module?" + item.number}
+                                                                            >
+                                                                                Module {item.number}
+                                                                            </a>
+                                                                        </li>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return (
+                                                                        <li className="disabled" key={i.toString()}>
+                                                                            <a>Module {item.number}
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                                                                    <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
+                                                                                </svg>
+                                                                            </a>
+                                                                        </li>
+                                                                    )
+                                                                }
+                                                            }
+                                                        })
+                                                    ) : (
+                                                        <li>No Module Available</li>
+                                                    )
+                                                }
+                                                {/* <?php
+                                    $result = mysqli_query($conn, 'SELECT * from tb_modules');
+
+                                    if (mysqli_num_rows($result) > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            if ($row['remarks'] == 'Approved') {
+                                                if ($row['number'] <= $_SESSION['userCurrentmodule']) {
+                                                    echo '<li><button type="submit" name="editItem" value="' . $row['id'] . '">Module ' . $row['number'] . '</button></li>';
+                                                } else {
+                                                    echo '<li className="disabled"><a>Module ' . $row['number'] . ' <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                                <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
+                                                </svg></a></li>';
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        echo '<li>No Module Available</li>';
+                                    }
+                                    ?> */}
+                                            </form>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="navbar-end">
+                            <div className="flex justify-end flex-1">
+                                <div className="flex items-stretch">
+                                    <div className="dropdown dropdown-end">
+                                        <label tabIndex="0" className="btn btn-ghost rounded-btn lg:gap-4 p-0 lg:px-4">
+                                            <div className="avatar">
+                                                {/* <!-- <div className=" h-10 rounded-full">
+                                        <img src="" alt="" />
+                                        
+                                    </div> --> */}
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                                                    <path fill="currentColor" d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5Z" />
+                                                    <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2Zm7.992 22.926A5.002 5.002 0 0 0 19 20h-6a5.002 5.002 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0Z" />
+                                                </svg>
+                                            </div>
+                                            <div className="lg:flex flex-col items-start hidden">
+                                                <div className="font-bold">
+                                                    {user.name}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                                    <path fill="currentColor" d="m7 10l5 5l5-5z" />
+                                                </svg>
+                                            </div>
+                                        </label>
+                                        <ul tabIndex="0" className="menu menu-compact dropdown-content p-2 shadow bg-base-200 rounded-box w-52 mt-4">
+                                            <li><Link to="/student/settings">Student Settings</Link></li>
+                                            <li><span onClick={logout}>Logout</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="hidden lg:block">
+                        <div className="divider"></div>
+                    </div>
+                </div>
+            </div>
+
+        </>
+    )
+}
