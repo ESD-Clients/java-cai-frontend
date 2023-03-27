@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helper } from "../controllers/_Controllers";
 import { clearModal, showConfirmationBox } from "../modals/Modal";
 
@@ -63,7 +63,7 @@ export default function FacultyNavBar({ user }) {
                   </div>
                 </label>
                 <ul tabIndex="0" className="menu menu-compact dropdown-content p-2 shadow bg-base-200 rounded-box w-52 mt-4 sticky">
-                  <li><a href="/faculty/settings">Faculty Settings</a></li>
+                  <li><Link to="/faculty/settings">Faculty Settings</Link></li>
                   <li><span onClick={logout}>Logout</span></li>
                 </ul>
               </div>

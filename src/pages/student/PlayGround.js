@@ -8,8 +8,11 @@ import { Helper } from "../../controllers/_Controllers";
 export default function PlayGround() {
 
   const user = Helper.getCurrentUser();
+
+  const initialCode = Helper.getPlaygroundCode();
+
   const [loading, setLoading] = useState(false);
-  const [codes, setCodes] = useState('');
+  const [codes, setCodes] = useState(initialCode ? initialCode : '');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
 
@@ -65,7 +68,11 @@ export default function PlayGround() {
                   defaultLanguage="java"
                   className="textarea z-0"
                   theme="vs-dark"
-                  onChange={(value) => setCodes(value)}
+                  value={codes}
+                  onChange={(value) => {
+                    Helper.setPlaygroundCode(value)
+                    setCodes(value)
+                  }}
                 />
                 <div className="m-2"></div>
 

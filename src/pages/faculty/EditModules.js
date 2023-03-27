@@ -6,15 +6,22 @@ import FacultySideBar from "../../components/FacultySideBar";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
 import { showLoading, showMessageBox } from "../../modals/Modal";
 import config from "../../config.json";
+import Editor from "@monaco-editor/react";
+import axios from "axios";
+import QueryString from "qs";
 
 export default function EditModules() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const formType = location.state.type;
 
   const [module, setModule] = useState(location.state.item);
+
+  const [compiling, setCompiling] = useState(false);
+  const [code, setCode] = useState(module.sample_code);
+  const [output, setOutput] = useState('');
 
   const [loaded, setLoaded] = useState(false);
   const [multiChoices, setMultiChoices] = useState([]);
@@ -23,29 +30,62 @@ export default function EditModules() {
 
   const [selectedType, setSelectedType] = useState("multi_choices");
 
+
   useEffect(() => {
 
     console.log(module);
     console.log(`${config.host}/${module.file_uri}`);
 
-    async function fetchData () {
+    async function fetchData() {
 
-      let multiChoices = await ModuleController.getQuestions({module: module.id, type: "multi_choices"});
+      let multiChoices = await ModuleController.getQuestions({ module: module.id, type: "multi_choices" });
       setMultiChoices(multiChoices);
 
-      let fillBlanks = await ModuleController.getQuestions({module: module.id, type: "fill_blank"});
+      let fillBlanks = await ModuleController.getQuestions({ module: module.id, type: "fill_blank" });
       setFillBlanks(fillBlanks);
 
-      let codings = await ModuleController.getQuestions({module: module.id, type: "coding"});
+      let codings = await ModuleController.getQuestions({ module: module.id, type: "coding" });
       setCodings(codings);
 
       setLoaded(true);
     }
 
-    if(formType === "question" && !loaded) {
+    if (formType === "question" && !loaded) {
       fetchData();
     }
   }, [formType, loaded])
+
+  useEffect(() => {
+    if (module && module.sample_code) {
+      compile();
+    }
+  }, [module])
+
+  async function compile() {
+
+    setCompiling(true);
+    let data = QueryString.stringify({
+      'code': code,
+      'language': 'java',
+      'input': ''
+    });
+
+    let config = {
+      method: 'post',
+      url: 'https://api.codex.jaagrav.in',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data
+    };
+
+    await axios(config)
+      .then(function (response) {
+        setOutput(response.data.output);
+      })
+
+    setCompiling(false);
+  }
 
 
   async function addQuestion(e) {
@@ -56,12 +96,12 @@ export default function EditModules() {
     showLoading({
       message: "Saving..."
     })
-    
+
     let values = Helper.getEventFormData(e);
     values.module = module.id;
     values.type = selectedType;
 
-    if(selectedType === "multi_choices") {
+    if (selectedType === "multi_choices") {
       let choices = [
         e.target.choice1.value,
         e.target.choice2.value,
@@ -98,8 +138,8 @@ export default function EditModules() {
   }
 
 
-  async function updateModule (e) {
-    
+  async function updateModule(e) {
+
     e.preventDefault();
 
     showLoading({
@@ -157,37 +197,37 @@ export default function EditModules() {
                       <label className="label">
                         <span className="label-text">Multiple Choice Question</span>
                       </label>
-                      <input type="text" name="question" placeholder="Question" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="question" placeholder="Question" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">1st Choice</span>
                       </label>
-                      <input type="text" name="choice1" placeholder="1st Choice" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="choice1" placeholder="1st Choice" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">2nd Choice</span>
                       </label>
-                      <input type="text" name="choice2" placeholder="2nd Choice" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="choice2" placeholder="2nd Choice" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">3rd Choice</span>
                       </label>
-                      <input type="text" name="choice3" placeholder="3rd Choice" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="choice3" placeholder="3rd Choice" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">4th Choice</span>
                       </label>
-                      <input type="text" name="choice4" placeholder="4th Choice" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="choice4" placeholder="4th Choice" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">Correct Answer</span>
                       </label>
-                      <input type="text" name="answer" placeholder="Correct Answer" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="answer" placeholder="Correct Answer" className="input input-bordered w-full max-w-xs" required />
                     </div>
                   </>
                 ) : selectedType === "fill_blank" ? (
@@ -196,13 +236,13 @@ export default function EditModules() {
                       <label className="label">
                         <span className="label-text">Coding Question</span>
                       </label>
-                      <input type="text" name="question" placeholder="Question" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="question" placeholder="Question" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">Answer</span>
                       </label>
-                      <input type="text" name="answer" placeholder="Answer" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="answer" placeholder="Answer" className="input input-bordered w-full max-w-xs" required />
                     </div>
                   </>
                 ) : selectedType === "coding" ? (
@@ -211,13 +251,13 @@ export default function EditModules() {
                       <label className="label">
                         <span className="label-text">Fill in the Blank Question</span>
                       </label>
-                      <input type="text" name="question" placeholder="Question" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="question" placeholder="Question" className="input input-bordered w-full max-w-xs" required />
                     </div>
                     <div className="form-control w-full max-w-xs">
                       <label className="label">
                         <span className="label-text">Answer</span>
                       </label>
-                      <input type="text" name="answer" placeholder="Answer" className="input input-bordered w-full max-w-xs" required/>
+                      <input type="text" name="answer" placeholder="Answer" className="input input-bordered w-full max-w-xs" required />
                     </div>
                   </>
                 ) : null
@@ -310,39 +350,87 @@ export default function EditModules() {
                             <label className="label">
                               <span className="label-text">Title</span>
                             </label>
-                            <input type="text" name="title" className="input input-bordered w-full" defaultValue={module.title} required/>
+                            <input type="text" name="title" className="input input-bordered w-full" defaultValue={module.title} required />
                           </div>
-                          <div className="form-control w-full">
+                          <div className="form-control">
                             <label className="label">
                               <span className="label-text">Content</span>
                             </label>
-                            <textarea 
-                              className="textarea textarea-bordered p-1 border rounded h-full w-full" 
-                              name="content" 
-                              defaultValue={module.content} 
+                            <textarea
+                              className="textarea textarea-bordered p-1 border rounded h-full w-full min-h-[20rem]"
+                              name="content"
+                              defaultValue={module.content}
                               required
-                            >
-                            </textarea>
-
+                            />
                             {
                               module.file_uri ? (
-                                <>
-                                  <label className="label">
-                                    <span className="label-text">Video</span>
-                                  </label>
-                                  <div className="h-96 mt-4">
-                                    <ReactPlayer
-                                      url={`${config.host}/${module.file_uri}`}
-                                      width='100%'
-                                      height='100%'
-                                      controls
-                                    />
-                                  </div>
-                                </>
+                                <div className="h-96 mt-4">
+                                  <ReactPlayer
+                                    url={`${config.host}/${module.file_uri}`}
+                                    width='100%'
+                                    height='100%'
+                                    controls
+                                  />
+                                </div>
                               ) : null
                             }
                           </div>
-                          
+                          {/* <label className="label">
+                            <span className="label-text">Change Video</span>
+                          </label>
+                          <div>
+                            <input name="video" type="file" accept="video/mp4,video/x-m4v,video/*" className="file-input file-input-bordered w-full max-w-xs" />
+                          </div> */}
+
+
+                          <div className="form-control w-full">
+                            <label className="label">
+                              <span className="label-text">Example Code:</span>
+                            </label>
+                            <textarea
+                              name="sample_code"
+                              value={code}
+                              className="w-0 h-0"
+                              onChange={() => { }}
+                            // required
+                            />
+                            <div className="flex flex-wrap">
+                              
+                              <Editor
+                                language="java"
+                                defaultLanguage="java"
+                                theme="vs-dark"
+                                height="20rem"
+                                width="60rem"
+                                value={code}
+                                onChange={setCode}
+                                
+                              />
+                              <div className="my-2 mx-4">
+                                <div className="flex justify-between">
+                                  <div id="output-span">Output:</div>
+                                  <div>
+                                    {
+                                      compiling ? (
+                                        <div className="mr-4">
+                                          <span className="loader"></span>
+                                        </div>
+                                      ) : (
+                                        <button className="btn btn-primary" onClick={compile}>Run</button>
+                                      )
+                                    }
+
+                                  </div>
+                                </div>
+                                <div id="output-container" className="p-4 w-[20rem]">
+                                  <p className="textarea w-full h-full font-mono whitespace-pre-line">
+                                    {output}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
                         </form>
                       ) : formType === "question" ? (
                         <>
@@ -372,7 +460,7 @@ export default function EditModules() {
 
                                 let choices = JSON.parse(item.choices);
 
-                                return(
+                                return (
                                   <div className="border rounded mx-2 p-1" key={i.toString()}>
                                     <div>
                                       <div>Question: {item.question}</div>

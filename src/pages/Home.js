@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
 import { AdminController, FacultyController, Helper, StudentController } from "../controllers/_Controllers";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Home () {
   
@@ -155,10 +155,13 @@ export default function Home () {
         <div className="container">
           <div className="navbar">
             <div className="flex-1">
-              <span className="btn btn-ghost text-2xl font-bold" href="/">
+              <Link 
+                className="btn btn-ghost text-2xl font-bold" 
+                to="/"
+              >
                 <span className="lowercase font-thin">cai</span>
                 <span className="uppercase">JAVA</span>
-              </span>
+              </Link>
             </div>
             <div className="flex-none">
               <ul className="menu menu-horizontal p-0 gap-x-2">
@@ -179,9 +182,12 @@ export default function Home () {
                 <br className="lg:block hidden" />
                 and greatest technologies to prepare them for their first dev role
               </p>
-              <button className="btn btn-primary">
+              <Link 
+                className="btn btn-primary"
+                to="/enroll"
+              >
                 Start The Enrollment
-              </button>
+              </Link>
             </div>
             <div className="w-2/5 hidden lg:block">
               <svg id="ab47acfe-844d-4101-aa7b-df38aa50dbe4" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 971.0518 628.38145">

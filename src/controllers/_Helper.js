@@ -23,3 +23,20 @@ export const getEventFormData = (e) => {
 
   return values;
 }
+
+export const isPasswordValid = (password) => {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,16}$/;
+  return passwordRegex.test(password);
+};
+
+export const setPlaygroundCode = (code) => {
+  window.localStorage.setItem("playground-code", code);
+}
+
+export const getPlaygroundCode = () => {
+  return window.localStorage.getItem("playground-code");
+}
+
+export const clearPlaygroundCode = () => {
+  window.localStorage.removeItem("playground-code");
+}

@@ -7,6 +7,7 @@ import Loading from "../../modals/Loading";
 export default function Dashboard() {
 
   const user = Helper.getCurrentUser();
+  console.log(user);
 
   const [loaded, setLoaded] = useState(false);
 
@@ -99,19 +100,28 @@ export default function Dashboard() {
                           </div>
                         </div>
                       ) : (
-                        modules.length > 0 ? (
-                          <div className="px-8 w-full">
-                            <h1 className="text-5xl font-bold">
-                              Congratulations!
-                            </h1>
-                          </div>
+                        user.current_module ? (
+                          modules.length > 0 ? (
+                            <div className="px-8 w-full">
+                              <h1 className="text-5xl font-bold">
+                                Congratulations!
+                              </h1>
+                            </div>
+                          ) : (
+                            <div className="px-8 w-full">
+                              <h1 className="text-2xl text-gray-600">
+                                No modules yet
+                              </h1>
+                            </div>
+                          )
                         ) : (
                           <div className="px-8 w-full">
-                            <h1 className="text-2xl">
-                              No modules yet
+                            <h1 className="text-2xl text-gray-600">
+                              You don't have assigned modules yet.
                             </h1>
                           </div>
                         )
+                        
                       )
                     }
                   </div>

@@ -14,9 +14,13 @@ export default function Faculty () {
 
   const navigate = useNavigate();
   const user = Helper.getCurrentUser();
+  
 
   useEffect(() => {
+
+    console.log("USER",user);
     if(!user || user.type !== "faculty") {
+      console.log("No User");
       navigate("/");
     }
     else {
@@ -33,20 +37,25 @@ export default function Faculty () {
 
       updateUser();
     }
-  }, [user])
+  }, [])
 
-  return (
-    <>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard user={user} />} />
-        <Route path="/add-module" element={<AddModule user={user} />} />
-        <Route path="/edit-module" element={<EditModules user={user} />} />
-        <Route path="/faculty-list" element={<FacultyList user={user} />} />
-        <Route path="/messages" element={<Messages user={user} />} />
-        <Route path="/modules" element={<Modules user={user} />} />
-        <Route path="/student-list" element={<StudentList user={user} />} />
-        <Route path="/" element={<Navigate to="/faculty/dashboard" replace />} />
-      </Routes>
-    </>
-  )
+  if(user) {
+    return (
+      <>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route path="/add-module" element={<AddModule user={user} />} />
+          <Route path="/edit-module" element={<EditModules user={user} />} />
+          <Route path="/faculty-list" element={<FacultyList user={user} />} />
+          <Route path="/messages" element={<Messages user={user} />} />
+          <Route path="/modules" element={<Modules user={user} />} />
+          <Route path="/student-list" element={<StudentList user={user} />} />
+          <Route path="/" element={<Navigate to="/faculty/dashboard" replace />} />
+        </Routes>
+      </>
+    )
+  }
+  else {
+    return null;
+  }
 }

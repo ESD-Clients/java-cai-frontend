@@ -7,7 +7,7 @@ import { FacultyController, ModuleController, StudentController } from "../../co
 import Loading from "../../modals/Loading";
 
 export default function Dashboard({user}) {
-
+  
   const [loaded, setLoaded] = useState(false);
 
   const [students, setStudents] = useState([]);

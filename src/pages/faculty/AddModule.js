@@ -1,3 +1,4 @@
+import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import FacultyNavBar from "../../components/FacultyNavBar";
@@ -8,6 +9,7 @@ import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 export default function AddModule({ user }) {
 
   const [video, setVideo] = useState(null);
+  const [code, setCode] = useState('');
 
   async function addItem(e) {
     e.preventDefault();
@@ -20,6 +22,9 @@ export default function AddModule({ user }) {
 
     
     let values = Helper.getEventFormData(e);
+    if(code) {
+      values.sample_code = code;
+    }
     delete values["video"];
 
     let valueString = JSON.stringify(values);
@@ -86,7 +91,7 @@ export default function AddModule({ user }) {
                         </div>
                       </div>
                       <div className="divider"></div>
-                      <div className="flex flex-row justify-between w-1/2">
+                      <div className="flex flex-row justify-between w-1/2 space-x-2">
                         <div className="form-control w-full max-w-xs">
                           <label className="label">
                             <span className="label-text">Module Number</span>
@@ -108,10 +113,24 @@ export default function AddModule({ user }) {
                           <textarea className="textarea textarea-bordered mt-2 p-1 border rounded h-full w-full" placeholder="Module Content" name="content" required></textarea>
                         </div>
                         <div className="form-control w-full">
-                          <label className="label">Module Video</label>
+                          <label className="label">
+                            <span className="label-text">Module Video</span>
+                          </label>
                           <div>
                             <input name="video" type="file" accept="video/mp4,video/x-m4v,video/*" className="file-input file-input-bordered w-full max-w-xs" />
                           </div>
+                        </div>
+                        <div className="form-control w-full">
+                          <label className="label">
+                            <span className="label-text">Example Code:</span>
+                          </label>
+                          <Editor
+                            language="java"
+                            defaultLanguage="java"
+                            theme="vs-dark"
+                            height="20rem"
+                            onChange={setCode}
+                          />
                         </div>
                       </div>
                     </form>
