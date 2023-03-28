@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import { AdminController, Helper } from "../controllers/_Controllers";
+import { Helper } from "../controllers/_Controllers";
 import ApproveModules from "./admin/ApproveModules";
 import Dashboard from "./admin/Dashboard";
 import EditModules from "./admin/EditModules";
@@ -22,14 +22,14 @@ export default function Admin () {
     }
     else {
       async function updateUser () {
-        let newUser = await AdminController.get(user.id);
-        if(newUser && newUser.id) {
-          newUser.type = "admin";
-          Helper.setCurrentUser(newUser);
-        }
-        else {
-          Helper.logout();
-        }
+        // let newUser = await AdminController.get(user.id);
+        // if(newUser && newUser.id) {
+        //   newUser.type = "admin";
+        //   Helper.setCurrentUser(newUser);
+        // }
+        // else {
+        //   Helper.logout();
+        // }
       }
 
       updateUser();

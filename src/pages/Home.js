@@ -68,7 +68,8 @@ export default function Home () {
     else {
       showMessageBox({
         type: "danger",
-        message: "Incorrect email or password!",
+        title: "Error",
+        message: result.code,
         onPress: () => {
           document.getElementById("login").click();
         }
