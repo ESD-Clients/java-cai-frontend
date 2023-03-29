@@ -49,6 +49,7 @@ export default function Home () {
     }
 
   
+    console.log("Login", result);
 
     if(result && result.id) {
 
@@ -56,20 +57,15 @@ export default function Home () {
       Helper.setCurrentUser(result);
       e.target.reset();
       clearModal();
-      // showMessageBox({
-      //   type: "success",
-      //   message: "Login Success!"
-      // });
 
       navigate(`/${tab}`);
-
       
     }
     else {
       showMessageBox({
         type: "danger",
         title: "Error",
-        message: result.code,
+        message: result.message,
         onPress: () => {
           document.getElementById("login").click();
         }

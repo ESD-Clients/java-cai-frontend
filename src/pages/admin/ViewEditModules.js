@@ -53,8 +53,8 @@ export default function ViewEditModules({user}) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
-          <AdminNavBar user={user} />
-          
+          {/* <AdminNavBar user={user} />
+           */}
           {/* <!-- Page content here --> */}
           <div className="p-6">
             <div className="flex xl:flex-row flex-col justify-between">
@@ -110,7 +110,7 @@ export default function ViewEditModules({user}) {
             </div>
           </div>
         </div>
-        <AdminSideBar />
+        {/* <AdminSideBar /> */}
       </div>
     </>
 

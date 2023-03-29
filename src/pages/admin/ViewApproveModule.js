@@ -59,7 +59,7 @@ export default function ViewApproveModule({user}) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
-          <AdminNavBar user={user} />
+          {/* <AdminNavBar user={user} /> */}
           
           
           {/* <!-- Page content here --> */}
@@ -120,7 +120,7 @@ export default function ViewApproveModule({user}) {
             </div>
           </div>
         </div>
-        <AdminSideBar />
+        {/* <AdminSideBar /> */}
       </div>
     </>
 

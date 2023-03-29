@@ -1,25 +1,39 @@
-import axios from "axios";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, firestore } from "../config/initFirebase";
+import { auth } from "../config/initFirebase";
+import BaseController from "./_BaseController";
 
-export async function authenticate ({email, password}) {
+class AdminController extends BaseController {
 
-    let result = null;
+    constructor() {
+        super('admins');
+    }
 
-    await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-    )
-    .then(async (res) => {
-        console.log("success");
-        result = await getDoc(doc(firestore, 'admins', res.user.uid));
-    })
-    .catch( err => {
-        result = err;
-        console.log(err)
-    })
+    authenticate = async ({ email, password }) => {
+        var result = null;
 
-    return result;
+        try {
+            await auth
+                .signInWithEmailAndPassword(email, password)
+                .then(async res => {
+                    let userData = await this.get(res.user.uid);
+                    if(userData) {
+                        result = userData;
+                    }
+                    else {
+                        result = {
+                            message: "Incorrect email or password!"
+                        }
+                    }
+                })
+                .catch(err => {
+                    result = err;
+                })
+
+        } catch (err) {
+            result = err;
+        }
+
+        return result;
+    }
 }
+
+export default AdminController;

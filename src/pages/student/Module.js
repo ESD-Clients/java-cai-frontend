@@ -146,7 +146,7 @@ export default function Module() {
                         <div className="flex">
                           <div className="flex-1">
                             <label className="label">Example:</label>
-                            <p className="textarea whitespace-pre font-mono">{module.sample_code}</p>
+                            <p className="textarea whitespace-pre-line font-mono">{module.sample_code}</p>
                           </div>
                           <div className="ml-4">
                             <div className="flex justify-between">

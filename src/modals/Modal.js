@@ -38,3 +38,7 @@ showConfirmationBox.propTypes = {
   onNo: PropTypes.func,
   type: PropTypes.oneOf(["info", "success", "warning", "danger"])
 }
+
+showConfirmationBox.defaultProps = {
+  title: "Confirmation"
+}

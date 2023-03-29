@@ -35,7 +35,7 @@ export default function StudentList({ user }) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
-          <AdminNavBar user={user} />
+          {/* <AdminNavBar user={user} /> */}
 
           {/* <!-- Page content here --> */}
           <div className="p-6">
@@ -102,11 +102,11 @@ export default function StudentList({ user }) {
                   </div>
                 </div>
               </div>
-              <AdminStatBar />
+              {/* <AdminStatBar /> */}
             </div>
           </div>
         </div>
-        <AdminSideBar />
+        {/* <AdminSideBar /> */}
       </div>
     </>
   )

@@ -99,19 +99,16 @@ export default function Enroll () {
     })
 
 
-    let values = Helper.getEventFormData(e);
-    values.current_module = 1;
-    values.progress = 0;
-    let valueString = JSON.stringify(values);
-    
-    let data = new FormData();
-    data.append("params", valueString);
+    let data = Helper.getEventFormData(e);
+    data.current_module = 1;
+    data.progress = 0;
+
     if(imgFile) {
-      data.append("image", imgFile);
-      console.log("Has Image")
+      let imageUri = await StudentController.uploadFile(imgFile, 'image/student/profile');
+      data.image = imageUri;
     }
 
-    let result = await StudentController.store(data);
+    let result = await StudentController.register(data);
     clearModal();
 
     console.log(result);
@@ -237,7 +234,7 @@ export default function Enroll () {
       <section className="min-h-[85vh]">
         <form className="flex flex-col justify-start items-center mb-16" onSubmit={enroll}>
           <div className="input-group items-start my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Avatar:</label>
+            <label className="text-right w-32 mr-8">Avatar:</label>
             <div className="flex flex-col items-center">
               <input 
                 className="w-0 h-0" 
@@ -281,46 +278,46 @@ export default function Enroll () {
             </div>
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Account Name:</label>
+            <label className="text-right w-32 mr-8">Account Name:</label>
             <input className="input flex-1" name="name" required />
             <label className="ml-2 text-red-500">*</label>
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Email:</label>
+            <label className="text-right w-32 mr-8">Email:</label>
             <input className="input flex-1" name="email" type="email" required />
             <label className="ml-2 text-red-500">*</label>
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Password:</label>
+            <label className="text-right w-32 mr-8">Password:</label>
             <input className="input flex-1" name="password" type="password" required />
             <label className="ml-2 text-red-500">*</label>
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Confrim Password:</label>
+            <label className="text-right w-32 mr-8">Confrim Password:</label>
             <input className="input flex-1" name="retype" type="password" required />
             <label className="ml-2 text-red-500">*</label>
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Date of Birth:</label>
+            <label className="text-right w-32 mr-8">Date of Birth:</label>
             <input className="input flex-1" name="date_of_birth" type="date" max="2020-12-31" required />
             <label className="ml-2 text-red-500">*</label>
           </div>
 
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">School:</label>
+            <label className="text-right w-32 mr-8">School:</label>
             <input className="input flex-1" name="school" />
             <label className="ml-2 text-transparent">*</label>
           </div>
-          <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Grade:</label>
+          {/* <div className="input-group items-center my-4 w-[40rem]">
+            <label className="text-right w-32 mr-8">Grade:</label>
             <input className="input flex-1" name="grade" />
             <label className="ml-2 text-transparent">*</label>
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-64 mr-8">Section:</label>
+            <label className="text-right w-32 mr-8">Section:</label>
             <input className="input flex-1" name="section" />
             <label className="ml-2 text-transparent">*</label>
-          </div>
+          </div> */}
 
           <div className="w-[40rem] form-control items-end">
             <p>All forms marked with red asterisk (<span className="text-red-500">*</span>) are required.</p>

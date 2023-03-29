@@ -43,7 +43,7 @@ export default function Dashboard({user}) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
-          <FacultyNavBar user={user} />
+          {/* <FacultyNavBar user={user} /> */}
           {/* <!-- Page content here --> */}
           <div>
             <div className="p-6">
@@ -55,7 +55,7 @@ export default function Dashboard({user}) {
                       {/* <?php echo $_SESSION['facultyName']; ?> */}
                     </div>
                   </div>
-                  <div className="flex flex-col items-center mb-8">
+                  {/* <div className="flex flex-col items-center mb-8">
                     <span className="mb-2">Dashboard Menu</span>
                     <ul className="menu menu-horizontal bg-base-200 rounded-box p-2">
                       <li className="tooltip tooltip-bottom" data-tip="Approve Modules">
@@ -107,9 +107,9 @@ export default function Dashboard({user}) {
                         </span>
                       </li>
                     </ul>
-                  </div>
+                  </div> */}
                   {/* <!--// TODO: ALL THE "NO NEW -- SHOULD BE CHANGED AS DATABASE PRODUCTS" --> */}
-                  <div className="grid lg:grid-cols-2 gap-x-14 gap-y-8 h-full">
+                  {/* <div className="grid lg:grid-cols-2 gap-x-14 gap-y-8 h-full">
                     <div className="flex flex-col">
                       <div className="text-center">Student List</div>
                       <Link to="/faculty/student-list" className="border rounded-md h-full">
@@ -236,14 +236,14 @@ export default function Dashboard({user}) {
                       }
                     </Link>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
-                <AdminStatBar />
+                {/* <AdminStatBar /> */}
               </div>
             </div>
           </div>
         </div>
-        <FacultySideBar />
+        {/* <FacultySideBar /> */}
       </div>
     </>
   )

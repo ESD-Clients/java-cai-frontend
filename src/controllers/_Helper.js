@@ -1,3 +1,5 @@
+import firebase from "firebase/app";
+
 export const setCurrentUser = (user) => {
   let value = JSON.stringify(user);
   window.localStorage.setItem("java-cai-usr", value);
@@ -39,4 +41,37 @@ export const getPlaygroundCode = () => {
 
 export const clearPlaygroundCode = () => {
   window.localStorage.removeItem("playground-code");
+}
+
+/** FIREBASE */
+export const getDocData = (doc) => {
+  let item = doc.data();
+  item.id = doc.id;
+
+  return item;
+}
+
+export const getErrorMessage = (err) => {
+
+  return err.message ? err.message :
+    err.code ? err.code :
+    "Something went wrong!";
+}
+
+export const getCurrentTimestamp = () => {
+  const timestamp = firebase.firestore.Timestamp.now();
+  return timestamp.toMillis();
+};
+
+
+/** MEDIA */
+export function getFileType(file) {
+  const fileType = file.type;
+  if (fileType.startsWith('image/')) {
+    return "image";
+  } else if (fileType.startsWith('video/')) {
+    return "video";
+  } else {
+    return fileType;
+  }
 }

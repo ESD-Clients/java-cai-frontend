@@ -45,7 +45,7 @@ export default function Dashboard({ user }) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
-          <AdminNavBar user={user} />
+          {/* <AdminNavBar user={user} /> */}
 
           <div className="p-6">
             <div className="flex xl:flex-row flex-col justify-between">
@@ -153,7 +153,7 @@ export default function Dashboard({ user }) {
                             <table className="table w-full">
                               <thead>
                                 <tr>
-                                  <th></th>
+                                  {/* <th></th> */}
                                   <th>Name</th>
                                 </tr>
                               </thead>
@@ -161,8 +161,8 @@ export default function Dashboard({ user }) {
                                 {
                                   faculties.map((item, i) => (
                                     <tr key={i.toString()}>
-                                      <td>{item.id}</td>
-                                      <td>{item.name}</td>
+                                      {/* <td>{item.id}</td> */}
+                                      <td>{item.data().name}</td>
                                     </tr>
                                   ))
                                 }
@@ -239,11 +239,11 @@ export default function Dashboard({ user }) {
                   </div>
                 </div>
               </div>
-              <AdminStatBar />
+              {/* <AdminStatBar /> */}
             </div>
           </div>
         </div>
-        <AdminSideBar />
+        {/* <AdminSideBar /> */}
       </div>
     </>
   );

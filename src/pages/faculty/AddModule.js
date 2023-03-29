@@ -1,46 +1,112 @@
 import Editor from "@monaco-editor/react";
+import { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import ReactModal from "react-modal";
+import { Link, useNavigate } from "react-router-dom";
 import FacultyNavBar from "../../components/FacultyNavBar";
 import FacultySideBar from "../../components/FacultySideBar";
+import HDivider from "../../components/HDivider";
+import TextArea from "../../components/TextArea";
+import TextField from "../../components/TextField";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
+import { getFileType } from "../../controllers/_Helper";
 import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 
 export default function AddModule({ user }) {
 
-  const [video, setVideo] = useState(null);
-  const [code, setCode] = useState('');
+  const navigate = useNavigate();
 
-  async function addItem(e) {
+  /** MODULE */
+  const [title, setTitle] = useState('');
+  const [sypnosis, setSypnosis] = useState('');
+  const [topics, setTopics] = useState([]);
+
+  /** ADD TOPIC */
+  const [add, setAdd] = useState(false);
+  const [topicTitle, setTopicTitle] = useState('');
+  const [topicContent, setTopicContent] = useState('');
+  const [topicCode, setTopicCode] = useState('');
+
+  useEffect(() => {
+    setTopicTitle('');
+    setTopicContent('');
+    setTopicCode('');
+  }, [add])
+
+  function addTopic (e) {
+
     e.preventDefault();
+
+    let topic = {
+      title: topicTitle,
+      content: topicContent,
+      code: topicCode
+    };
+
+    
+    if(e.target.media.files.length > 0) {
+      topic.file = e.target.media.files[0];
+    }
+
+    let newList = [...topics];
+    newList.push(topic);
+
+    setTopics(newList);
+
+    setAdd(false);
+  }
+
+  function removeTopic (index) {
+    let newList = [...topics];
+    newList.splice(index, 1);
+    setTopics(newList);
+  }
+
+  async function addModule(e) {
+    e.preventDefault();
+
+    if(topics.length === 0) {
+      showMessageBox({
+        title: "Warning",
+        type: "warning",
+        message: "Please add atleast one (1) topic."
+      })
+      return;
+    }
 
     showLoading({
       message: "Saving..."
     })
 
-    // console.log(e.target.video.files[0]);
+    let module = {
+      title: title,
+      sypnosis: sypnosis,
+      remarks: "unapproved"
+    };
 
-    
-    let values = Helper.getEventFormData(e);
-    if(code) {
-      values.sample_code = code;
-    }
-    delete values["video"];
 
-    let valueString = JSON.stringify(values);
-    // console.log(valueString);
+    let result = await ModuleController.store(module);
 
-    let data = new FormData();
-    data.append("params", valueString);
-    data.append("video", e.target.video.files[0]);
-
-    let result = await ModuleController.store(data);
-
-    clearModal();
-
-    console.log(result);
-    
     if (result && result.id) {
+
+      for(let topic of topics) {
+
+        if(topic.file) {
+          topic.media = {
+            type: getFileType(topic.file),
+            url: await ModuleController.uploadFile(topic.file, `module/${result.id}`)
+          }
+        }
+        delete topic.file;
+
+        await ModuleController.addTopic({
+          moduleId: result.id,
+          topic: topic
+        });
+      }
+
+      clearModal();
+
       showMessageBox({
         title: "Success",
         message: "Success",
@@ -51,6 +117,7 @@ export default function AddModule({ user }) {
       })
     }
     else {
+      
       showMessageBox({
         title: "Error",
         message: "Something went wrong",
@@ -63,89 +130,173 @@ export default function AddModule({ user }) {
 
   return (
     <>
-      <div className="drawer drawer-mobile">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col">
-          {/* <!-- Navbar --> */}
-          <FacultyNavBar user={user} />
-          {/* <!-- Page content here --> */}
-          <div>
-            <div className="p-6">
-              <div className="flex xl:flex-row flex-col justify-between">
-                <div className="w-full lg:pr-8 p-0">
-                  <div className="overflow-x-auto">
-                    <form method="post" id="addModuleInputForm" onSubmit={addItem}>
-                      <div className="flex justify-between">
-                        <div>
-                          <Link to="/faculty/modules" id="btnBack">
-                            <button className="btn btn-primary">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
-                              </svg>
-                              <p>Back</p>
-                            </button>
-                          </Link>
-                        </div>
-                        <div>
-                          <button className="btn btn-success" type="submit">Save</button>
-                        </div>
-                      </div>
-                      <div className="divider"></div>
-                      <div className="flex flex-row justify-between w-1/2 space-x-2">
-                        <div className="form-control w-full max-w-xs">
-                          <label className="label">
-                            <span className="label-text">Module Number</span>
-                          </label>
-                          <input type="number" placeholder="e.g. 1" className="input input-bordered w-full max-w-xs" name="number" required />
-                        </div>
-                        <div className="form-control w-full max-w-xs">
-                          <label className="label">
-                            <span className="label-text">Module Title</span>
-                          </label>
-                          <input type="text" placeholder="Flowchart" className="input input-bordered w-full max-w-xs" name="title" required />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="form-control w-full">
-                          <label className="label">
-                            <span className="label-text">Module Content</span>
-                          </label>
-                          <textarea className="textarea textarea-bordered mt-2 p-1 border rounded h-full w-full" placeholder="Module Content" name="content" required></textarea>
-                        </div>
-                        <div className="form-control w-full">
-                          <label className="label">
-                            <span className="label-text">Module Video</span>
-                          </label>
-                          <div>
-                            <input name="video" type="file" accept="video/mp4,video/x-m4v,video/*" className="file-input file-input-bordered w-full max-w-xs" />
-                          </div>
-                        </div>
-                        <div className="form-control w-full">
-                          <label className="label">
-                            <span className="label-text">Example Code:</span>
-                          </label>
-                          <Editor
-                            language="java"
-                            defaultLanguage="java"
-                            theme="vs-dark"
-                            height="20rem"
-                            onChange={setCode}
-                          />
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
+      {/* Modal for ADD TOPIC */}
+      <ReactModal 
+        isOpen={add}
+        ariaHideApp={false}
+        style={{overlay: {zIndex: 49, background: "transparent"}}}
+        className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "
+      >
+        <form 
+          className="bg-base-200 p-4 sm:w-2/3 rounded relative"
+          onSubmit={addTopic}
+        >
+          <div className="my-4">
+            <h1 className="text-lg font-semibold">New Topic</h1>
+          </div>
+          <TextField 
+            label="Title" 
+            value={topicTitle}
+            onChange={setTopicTitle}
+            required />
+          <TextArea 
+            label="Content" 
+            value={topicContent}
+            onChange={setTopicContent}
+            required />
+
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Media</span>
+            </label>
+            <div>
+              <input 
+                type="file" 
+                name="media"
+                accept="video/*, image/*" 
+                className="file-input file-input-bordered w-full max-w-xs" />
             </div>
           </div>
+
+          <label className="label label-text">
+            Example Code
+          </label>
+          <Editor
+            language="java"
+            defaultLanguage="java"
+            theme="vs-dark"
+            height="20rem"
+            value={topicCode}
+            onChange={setTopicCode}
+          />
+
+          <div className="flex justify-end my-4 space-x-2">
+            <button 
+              className="btn btn-ghost"
+              onClick={() => setAdd(false)}
+            >CANCEL</button>
+            <button className="btn btn-success">ADD TOPIC</button>
+          </div>
+        </form>
+      </ReactModal>
+
+      {/* Content */}
+      <div className="flex justify-between">
+        <div>
+          <button className="btn btn-primary" onClick={() => navigate(-1)}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+              <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
+            </svg>
+            <p>Back</p>
+          </button>
         </div>
+        <div>
+          <button className="btn btn-success" form="module-form" type="submit">Save Module</button>
+        </div>
+      </div>
 
-        <FacultySideBar />
+      <HDivider />
 
+      <div>
+        <form id="module-form" onSubmit={addModule}>
+          <div className="my-4">
+            <h1 className="text-lg font-bold">Module Information</h1>
+          </div>
+
+          <div className="flex space-x-2">
+            {/* <TextField label="Module No" type="number" width="xs"/> */}
+            <TextField 
+              label="Module Title" 
+              value={title}
+              onChange={setTitle}
+              required />
+          </div>
+
+          <TextArea 
+            label="Sypnosis" 
+            value={sypnosis}
+            onChange={setSypnosis}
+            required />
+
+          <div className="mt-8 flex justify-between">
+            <h1 className="text-lg font-bold">Topics</h1>
+            <button 
+              className="btn btn-info" 
+              type="button"
+              onClick={() => setAdd(true)}
+            >
+              ADD TOPIC
+            </button>
+          </div>
+
+          <div>
+            {
+              topics.map((item, index) => (
+                <div
+                  key={index.toString()}
+                  className="w-full flex bg-base-300 rounded p-4 mt-4"
+                >
+                  <div className="flex-1">
+                    <h6 className="font-semibold">{item.title}</h6>
+                    <p className="text-sm overflow-hidden text-ellipsis max-h-14 mt-2">
+                      {item.content}
+                    </p>
+                    <div className="flex space-x-2 mt-2">
+                      {
+                        item.file && (
+                          <span>
+                            <svg className="svg-icon fill-current" height={24} width={24} viewBox="0 0 20 20">
+                              <path d="M4.317,16.411c-1.423-1.423-1.423-3.737,0-5.16l8.075-7.984c0.994-0.996,2.613-0.996,3.611,0.001C17,4.264,17,5.884,16.004,6.88l-8.075,7.984c-0.568,0.568-1.493,0.569-2.063-0.001c-0.569-0.569-0.569-1.495,0-2.064L9.93,8.828c0.145-0.141,0.376-0.139,0.517,0.005c0.141,0.144,0.139,0.375-0.006,0.516l-4.062,3.968c-0.282,0.282-0.282,0.745,0.003,1.03c0.285,0.284,0.747,0.284,1.032,0l8.074-7.985c0.711-0.71,0.711-1.868-0.002-2.579c-0.711-0.712-1.867-0.712-2.58,0l-8.074,7.984c-1.137,1.137-1.137,2.988,0.001,4.127c1.14,1.14,2.989,1.14,4.129,0l6.989-6.896c0.143-0.142,0.375-0.14,0.516,0.003c0.143,0.143,0.141,0.374-0.002,0.516l-6.988,6.895C8.054,17.836,5.743,17.836,4.317,16.411"></path>
+                            </svg>
+                          </span>
+                        )
+                      }
+
+                      {
+                        item.code && (
+                          <span>
+                            <svg className="svg-icon fill-current" height={24} width={24} viewBox="0 0 20 20">
+                              <path d="M17.728,4.419H2.273c-0.236,0-0.429,0.193-0.429,0.429v10.304c0,0.234,0.193,0.428,0.429,0.428h15.455c0.235,0,0.429-0.193,0.429-0.428V4.849C18.156,4.613,17.963,4.419,17.728,4.419 M17.298,14.721H2.702V9.57h14.596V14.721zM17.298,8.712H2.702V7.424h14.596V8.712z M17.298,6.566H2.702V5.278h14.596V6.566z M9.142,13.005c0,0.235-0.193,0.43-0.43,0.43H4.419c-0.236,0-0.429-0.194-0.429-0.43c0-0.236,0.193-0.429,0.429-0.429h4.292C8.948,12.576,9.142,12.769,9.142,13.005"></path>
+                            </svg>
+                          </span>
+                        )
+                      }
+                    </div>
+                  </div>
+                  <div className="flex justify-center items-center ml-4">
+                    {/* <span className="btn btn-ghost">
+                      <svg className="svg-icon text-blue-400 fill-current" height={24} width={24} viewBox="0 0 20 20">
+                        <path d="M18.303,4.742l-1.454-1.455c-0.171-0.171-0.475-0.171-0.646,0l-3.061,3.064H2.019c-0.251,0-0.457,0.205-0.457,0.456v9.578c0,0.251,0.206,0.456,0.457,0.456h13.683c0.252,0,0.457-0.205,0.457-0.456V7.533l2.144-2.146C18.481,5.208,18.483,4.917,18.303,4.742 M15.258,15.929H2.476V7.263h9.754L9.695,9.792c-0.057,0.057-0.101,0.13-0.119,0.212L9.18,11.36h-3.98c-0.251,0-0.457,0.205-0.457,0.456c0,0.253,0.205,0.456,0.457,0.456h4.336c0.023,0,0.899,0.02,1.498-0.127c0.312-0.077,0.55-0.137,0.55-0.137c0.08-0.018,0.155-0.059,0.212-0.118l3.463-3.443V15.929z M11.241,11.156l-1.078,0.267l0.267-1.076l6.097-6.091l0.808,0.808L11.241,11.156z"></path>
+                      </svg>
+                    </span> */}
+
+                    <span className="btn btn-ghost" onClick={() => removeTopic(index)}>
+                      <svg className="svg-icon text-red-400 fill-current" height={24} width={24} viewBox="0 0 20 20">
+                        <path d="M17.114,3.923h-4.589V2.427c0-0.252-0.207-0.459-0.46-0.459H7.935c-0.252,0-0.459,0.207-0.459,0.459v1.496h-4.59c-0.252,0-0.459,0.205-0.459,0.459c0,0.252,0.207,0.459,0.459,0.459h1.51v12.732c0,0.252,0.207,0.459,0.459,0.459h10.29c0.254,0,0.459-0.207,0.459-0.459V4.841h1.511c0.252,0,0.459-0.207,0.459-0.459C17.573,4.127,17.366,3.923,17.114,3.923M8.394,2.886h3.214v0.918H8.394V2.886z M14.686,17.114H5.314V4.841h9.372V17.114z M12.525,7.306v7.344c0,0.252-0.207,0.459-0.46,0.459s-0.458-0.207-0.458-0.459V7.306c0-0.254,0.205-0.459,0.458-0.459S12.525,7.051,12.525,7.306M8.394,7.306v7.344c0,0.252-0.207,0.459-0.459,0.459s-0.459-0.207-0.459-0.459V7.306c0-0.254,0.207-0.459,0.459-0.459S8.394,7.051,8.394,7.306"></path>
+                      </svg>
+                    </span>
+
+       
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </form>
       </div>
     </>
 
     // TODO: SCRIPTS
   )
 }
+

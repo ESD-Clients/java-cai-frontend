@@ -1,11 +1,92 @@
 import axios from "axios";
 import BaseController from "./_BaseController";
+import { getCurrentTimestamp } from "./_Helper";
 
 class ModuleController extends BaseController {
     constructor() {
-        super('module');
+        super('modules');
     }
 
+    addTopic = async ({moduleId, topic}) => {
+
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('topics')
+                .add({
+                    ...topic,
+                    createdAt: getCurrentTimestamp()
+                })
+                .then(res => {
+                    result = res.get();
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    updateTopic = async ({moduleId, topicId, data}) => {
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('topics')
+                .doc(topicId)
+                .update(data)
+                .then(() => {
+                    result = {
+                        id: topicId
+                    };
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    deleteTopic = async ({moduleId, topicId}) => {
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('topics')
+                .doc(topicId)
+                .delete()
+                .then(() => {
+                    result = true;
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    subscribeTopics = (moduleId, onSnapshot) => {
+        return this.collectionRef
+            .doc(moduleId)
+            .collection('topics')
+            .orderBy('createdAt', 'asc')
+            .onSnapshot(onSnapshot);
+    }
+
+
+
+
+    /** OLD */
     //QUIZ
     getQuizResult = async ({student, module}) => {
         var result = [];

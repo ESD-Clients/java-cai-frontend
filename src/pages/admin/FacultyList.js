@@ -1,29 +1,35 @@
-import { success } from "daisyui/src/colors";
 import { useEffect } from "react";
 import { useState } from "react";
-import AdminNavBar from "../../components/AdminNavBar";
-import AdminSideBar from "../../components/AdminSideBar";
-import AdminStatBar from "../../components/AdminStatBar";
 import { FacultyController, Helper } from "../../controllers/_Controllers";
-import Loading from "../../modals/Loading";
-import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
+import { getErrorMessage } from "../../controllers/_Helper";
+import { showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 
 export default function FacultyList({ user }) {
 
-  const [loaded, setLoaded] = useState(false);
   const [faculties, setFaculties] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      let faculties = await FacultyController.getActiveList();
-      setFaculties(faculties);
-      setLoaded(true);
-    }
 
-    if (!loaded) {
-      fetchData();
-    }
-  }, [loaded])
+    let unsubscribe = FacultyController.subscribeActiveList(res => {
+      setFaculties(res.docs);
+    })
+
+    return () => unsubscribe();
+    
+  }, [])
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     console.log("Fetching...");
+  //     let faculties = await FacultyController.getActiveList();
+  //     setFaculties(faculties);
+  //     setLoaded(true);
+  //   }
+
+  //   if (!loaded) {
+  //     fetchData();
+  //   }
+  // }, [loaded])
 
   async function addItem(e) {
     e.preventDefault();
@@ -33,8 +39,9 @@ export default function FacultyList({ user }) {
       message: "Saving..."
     })
 
-    let result = await FacultyController.store({ 
-      params: Helper.getEventFormData(e) 
+    let result = await FacultyController.register({
+      ...Helper.getEventFormData(e),
+      status: 1
     });
 
     if(result && result.id) {
@@ -50,7 +57,7 @@ export default function FacultyList({ user }) {
     else {
       showMessageBox({
         title: "Error",
-        message: "Email is already taken",
+        message: getErrorMessage(result),
         type: "danger",
         onPress: () => {
           document.getElementById("addFaculty").click();
@@ -76,7 +83,7 @@ export default function FacultyList({ user }) {
             message: "Success",
             type: "success",
             onPress: () => {
-              window.location.reload();
+              // window.location.reload();
             }
           })
           // setLoaded(false);
@@ -93,7 +100,7 @@ export default function FacultyList({ user }) {
     })
   }
 
-  if(!loaded) return <Loading />
+  // if(!loaded) return <Loading />
 
   return (
     <>
@@ -142,7 +149,7 @@ export default function FacultyList({ user }) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* <!-- Navbar --> */}
-          <AdminNavBar user={user} />
+          {/* <AdminNavBar user={user} /> */}
 
           {/* <!-- Page content here --> */}
           <div className="p-6">
@@ -176,7 +183,6 @@ export default function FacultyList({ user }) {
                           <table className="table table-compact w-full">
                             <thead>
                               <tr>
-                                <th></th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Action</th>
@@ -186,9 +192,8 @@ export default function FacultyList({ user }) {
                               {
                                 faculties.map((item, i) => (
                                   <tr key={i.toString()}>
-                                    <td>{item.id}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.email}</td>
+                                    <td>{item.data().name}</td>
+                                    <td>{item.data().email}</td>
                                     <td>
                                       <button className="btn btn-error" onClick={() => deleteItem(item)}>
                                         Delete
@@ -207,11 +212,11 @@ export default function FacultyList({ user }) {
                   </div>
                 </div>
               </div>
-              <AdminStatBar />
+              {/* <AdminStatBar /> */}
             </div>
           </div>
         </div>
-        <AdminSideBar />
+        {/* <AdminSideBar /> */}
       </div>
     </>
     // TODO: SCRIPT

@@ -11,49 +11,37 @@ export default function Modules({user}) {
 
   const navigate = useNavigate();
 
-  const [loaded, setLoaded] = useState(false);
-
   const [modules, setModules] = useState([]);
 
   useEffect(() => {
 
-    async function fetchData() {
-      let modules = await ModuleController.getActiveList();
-      setModules(modules);
-      setLoaded(true)
-    }
+    const unsubscribe = ModuleController.subscribeList((snapshot) => {
+      setModules(snapshot.docs);
+    })
 
-    if (!loaded) fetchData();
-  }, [loaded])
+    return () => unsubscribe();
+  }, [])
 
   function viewItem (item) {
-    navigate('/faculty/edit-module', {
-      state: {
-        item: item,
-        type: "content"
-      }
-    })
+    navigate('/faculty/module?'+item)
   }
 
   function viewQuestions (item) {
-    navigate('/faculty/edit-module', {
-      state: {
-        item: item,
-        type: "question"
-      }
-    })
+    navigate('/faculty/questions?'+item)
+    // navigate('/faculty/edit-module', {
+    //   state: {
+    //     item: item,
+    //     type: "question"
+    //   }
+    // })
   }
 
-  if(!loaded) return <Loading />
 
   return (
     <>
       <div className="drawer drawer-mobile">
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
-          {/* <!-- Navbar --> */}
-          <FacultyNavBar user={user} />
-          {/* <!-- Page content here --> */}
           <div>
             <div className="p-6">
               <div className="flex xl:flex-row flex-col justify-between">
@@ -70,9 +58,9 @@ export default function Modules({user}) {
                       <table className="table table-compact w-full">
                         <thead>
                           <tr>
-                            <th>Module No.</th>
-                            <th>Name</th>
+                            <th>Title</th>
                             <th>Remarks</th>
+                            <th>Topics</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -80,11 +68,11 @@ export default function Modules({user}) {
                           {
                             modules.map((item, i) => (
                               <tr key={i.toString()}>
-                                <td>{item.number}</td>
-                                <td>{item.title}</td>
-                                <td>{item.remarks}</td>
+                                <td>{item.data().title}</td>
+                                <td>{item.data().remarks}</td>
+                                <td>{item.data().topics.length}</td>
                                 <td>
-                                  <button className="btn btn-sm btn-primary" onClick={() => viewItem(item)}>
+                                  <button className="btn btn-sm btn-primary" onClick={() => viewItem(item.id)}>
                                     View Content
                                   </button>
                                   <button className="btn btn-sm btn-primary ml-1" onClick={() => viewQuestions(item)}>
@@ -104,13 +92,10 @@ export default function Modules({user}) {
                     </Link>
                   </div>
                 </div>
-                
-                <AdminStatBar />
               </div>
             </div>
           </div>
         </div>
-        <FacultySideBar />
       </div>
     </>
   )

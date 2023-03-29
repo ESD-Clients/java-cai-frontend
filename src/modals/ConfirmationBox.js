@@ -6,7 +6,7 @@ import ReactModal from "react-modal";
 export default function ConfirmationBox ({title, message, onYes, onNo, type}) {
 
   return(
-    <ReactModal isOpen ariaHideApp={false} className="bg-modal absolute flex w-full h-full backdrop-blur-sm z-50 items-center justify-center">
+    <ReactModal isOpen ariaHideApp={false} style={{overlay: { zIndex: 50}}} className="bg-modal absolute flex w-full h-full backdrop-blur-sm z-50 items-center justify-center">
       <div className="bg-base-200 shadow-md flex flex-col px-8 py-4" style={{ minWidth: "240px" }}>
         <div className="flex flex-col  md:flex-row-reverse md:justify-between md:items-center mb-4">
           {
