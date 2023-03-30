@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import CryptoJS from "crypto-js";
 
 export const setCurrentUser = (user) => {
   let value = JSON.stringify(user);
@@ -63,6 +64,10 @@ export const getCurrentTimestamp = () => {
   return timestamp.toMillis();
 };
 
+export const hashData = (data) => {
+  let hashedData = CryptoJS.SHA256(data).toString();
+  return hashedData;
+}
 
 /** MEDIA */
 export function getFileType(file) {

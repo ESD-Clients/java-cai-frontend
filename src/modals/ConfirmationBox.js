@@ -21,7 +21,7 @@ export default function ConfirmationBox ({title, message, onYes, onNo, type}) {
           }
           <h1 className="mb-2 text-sm font-bold mt-4 md:mt-0">{title}</h1>
         </div>
-        <p className="mb-2 tex whitespace-pre-line">{message}</p>
+        <p className="mb-2 tex whitespace-pre-wrap">{message}</p>
 
         <div className="pt-6">
           <div className="flex flex-col md:flex-row md:justify-end space-y-2 space-x-0 md:space-y-0">

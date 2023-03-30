@@ -275,58 +275,58 @@ export default function EditModules() {
 
       {/* <!-- Page content here --> */}
       <div>
-        <div className="p-6">
-          <div className="flex xl:flex-row flex-col justify-between">
-            <div className="w-full lg:pr-8 p-0">
-              <div>
+            <div className="p-6">
+              <div className="flex xl:flex-row flex-col justify-between">
+                <div className="w-full lg:pr-8 p-0">
+                  <div>
 
-                {
-                  formType === "content" ? (
-                    <form onSubmit={updateModule}>
-                      <div className="flex justify-between">
-                        <div>
-                          <button className="btn btn-primary" type="button" onClick={() => navigate(-1)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
-                            </svg>
-                            <p>Back</p>
-                          </button>
-                        </div>
-                        <div>
-                          <button className="btn btn-success">Save</button>
-                        </div>
-                      </div>
-
-                      <div className="form-control w-full mt-2">
-                        <label className="label">
-                          <span className="label-text">Title</span>
-                        </label>
-                        <input type="text" name="title" className="input input-bordered w-full" defaultValue={module.title} required />
-                      </div>
-                      <div className="form-control">
-                        <label className="label">
-                          <span className="label-text">Content</span>
-                        </label>
-                        <textarea
-                          className="textarea textarea-bordered p-1 border rounded h-full w-full min-h-[20rem]"
-                          name="content"
-                          defaultValue={module.content}
-                          required
-                        />
-                        {
-                          module.file_uri ? (
-                            <div className="h-96 mt-4">
-                              <ReactPlayer
-                                url={`${config.host}/${module.file_uri}`}
-                                width='100%'
-                                height='100%'
-                                controls
-                              />
+                    {
+                      formType === "content" ? (
+                        <form onSubmit={updateModule}>
+                          <div className="flex justify-between">
+                            <div>
+                              <button className="btn btn-primary" type="button" onClick={() => navigate(-1)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                  <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
+                                </svg>
+                                <p>Back</p>
+                              </button>
                             </div>
-                          ) : null
-                        }
-                      </div>
-                      {/* <label className="label">
+                            <div>
+                              <button className="btn btn-success">Save</button>
+                            </div>
+                          </div>
+
+                          <div className="form-control w-full mt-2">
+                            <label className="label">
+                              <span className="label-text">Title</span>
+                            </label>
+                            <input type="text" name="title" className="input input-bordered w-full" defaultValue={module.title} required />
+                          </div>
+                          <div className="form-control">
+                            <label className="label">
+                              <span className="label-text">Content</span>
+                            </label>
+                            <textarea
+                              className="textarea textarea-bordered p-1 border rounded h-full w-full min-h-[20rem]"
+                              name="content"
+                              defaultValue={module.content}
+                              required
+                            />
+                            {
+                              module.file_uri ? (
+                                <div className="h-96 mt-4">
+                                  <ReactPlayer
+                                    url={`${config.host}/${module.file_uri}`}
+                                    width='100%'
+                                    height='100%'
+                                    controls
+                                  />
+                                </div>
+                              ) : null
+                            }
+                          </div>
+                          {/* <label className="label">
                             <span className="label-text">Change Video</span>
                           </label>
                           <div>
@@ -334,130 +334,130 @@ export default function EditModules() {
                           </div> */}
 
 
-                      <div className="form-control w-full">
-                        <label className="label">
-                          <span className="label-text">Example Code:</span>
-                        </label>
-                        <textarea
-                          name="sample_code"
-                          value={code}
-                          className="w-0 h-0"
-                          onChange={() => { }}
-                        // required
-                        />
-                        <div className="flex flex-wrap">
+                          <div className="form-control w-full">
+                            <label className="label">
+                              <span className="label-text">Example Code:</span>
+                            </label>
+                            <textarea
+                              name="sample_code"
+                              value={code}
+                              className="w-0 h-0"
+                              onChange={() => { }}
+                            // required
+                            />
+                            <div className="flex flex-wrap">
+                              
+                              <Editor
+                                language="java"
+                                defaultLanguage="java"
+                                theme="vs-dark"
+                                height="20rem"
+                                width="60rem"
+                                value={code}
+                                onChange={setCode}
+                                
+                              />
+                              <div className="my-2 mx-4">
+                                <div className="flex justify-between">
+                                  <div id="output-span">Output:</div>
+                                  <div>
+                                    {
+                                      compiling ? (
+                                        <div className="mr-4">
+                                          <span className="loader"></span>
+                                        </div>
+                                      ) : (
+                                        <button className="btn btn-primary" onClick={compile}>Run</button>
+                                      )
+                                    }
 
-                          <Editor
-                            language="java"
-                            defaultLanguage="java"
-                            theme="vs-dark"
-                            height="20rem"
-                            width="60rem"
-                            value={code}
-                            onChange={setCode}
-
-                          />
-                          <div className="my-2 mx-4">
-                            <div className="flex justify-between">
-                              <div id="output-span">Output:</div>
-                              <div>
-                                {
-                                  compiling ? (
-                                    <div className="mr-4">
-                                      <span className="loader"></span>
-                                    </div>
-                                  ) : (
-                                    <button className="btn btn-primary" onClick={compile}>Run</button>
-                                  )
-                                }
-
+                                  </div>
+                                </div>
+                                <div id="output-container" className="p-4 w-[20rem]">
+                                  <p className="textarea w-full h-full font-mono whitespace-pre-wrap">
+                                    {output}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                            <div id="output-container" className="p-4 w-[20rem]">
-                              <p className="textarea w-full h-full font-mono whitespace-pre-line">
-                                {output}
-                              </p>
                             </div>
                           </div>
-                        </div>
-                      </div>
 
-                    </form>
-                  ) : formType === "question" ? (
-                    <>
-                      <div className="flex justify-between">
-                        <div>
-                          <a href="/faculty/modules">
-                            <button className="btn btn-primary">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
-                              </svg>
-                              <p>Back</p>
-                            </button>
-                          </a>
-                        </div>
-                        <div>
-                          <label htmlFor="addQuestionsModal" className="btn btn-primary">Add Question</label>
-                          {/* <button className="btn btn-success">Save</button> */}
-                        </div>
-                      </div>
-                      <div className="divider"></div>
-                      <div className="flex flex-col gap-2 mt-2">
+                        </form>
+                      ) : formType === "question" ? (
+                        <>
+                          <div className="flex justify-between">
+                            <div>
+                              <a href="/faculty/modules">
+                                <button className="btn btn-primary">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
+                                  </svg>
+                                  <p>Back</p>
+                                </button>
+                              </a>
+                            </div>
+                            <div>
+                              <label htmlFor="addQuestionsModal" className="btn btn-primary">Add Question</label>
+                              {/* <button className="btn btn-success">Save</button> */}
+                            </div>
+                          </div>
+                          <div className="divider"></div>
+                          <div className="flex flex-col gap-2 mt-2">
 
-                        {/* Multiple Choices */}
-                        <div>Multiple Choice :</div>
-                        {
-                          multiChoices.map((item, i) => {
+                            {/* Multiple Choices */}
+                            <div>Multiple Choice :</div>
+                            {
+                              multiChoices.map((item, i) => {
 
-                            let choices = JSON.parse(item.choices);
+                                let choices = JSON.parse(item.choices);
 
-                            return (
-                              <div className="border rounded mx-2 p-1" key={i.toString()}>
-                                <div>
+                                return (
+                                  <div className="border rounded mx-2 p-1" key={i.toString()}>
+                                    <div>
+                                      <div>Question: {item.question}</div>
+                                    </div>
+                                    <div>
+                                      <div>1st Choice: {choices[0]}</div>
+                                      <div>2nd Choice: {choices[1]}</div>
+                                      <div>3rd Choice: {choices[2]}</div>
+                                      <div>4th Choice: {choices[3]}</div>
+                                    </div>
+                                    <div>Correct Answer: {item.answer}</div>
+                                  </div>
+                                )
+                              })
+                            }
+
+                            {/* Identifications */}
+                            <div className="mt-2">Coding Question :</div>
+                            {
+                              codings.map((item, i) => (
+                                <div className="border rounded mx-2 p-1" key={i.toString()}>
                                   <div>Question: {item.question}</div>
+                                  <div>Answer: {item.answer}</div>
                                 </div>
-                                <div>
-                                  <div>1st Choice: {choices[0]}</div>
-                                  <div>2nd Choice: {choices[1]}</div>
-                                  <div>3rd Choice: {choices[2]}</div>
-                                  <div>4th Choice: {choices[3]}</div>
+                              ))
+                            }
+
+                            {/* Fill in the blank */}
+                            <div className="mt-2">Fill in the Blank :</div>
+                            {
+                              fillBlanks.map((item, i) => (
+                                <div className="border rounded mx-2 p-1" key={i.toString()}>
+                                  <div>Question: {item.question}</div>
+                                  <div>Answer: {item.answer}</div>
                                 </div>
-                                <div>Correct Answer: {item.answer}</div>
-                              </div>
-                            )
-                          })
-                        }
-
-                        {/* Identifications */}
-                        <div className="mt-2">Coding Question :</div>
-                        {
-                          codings.map((item, i) => (
-                            <div className="border rounded mx-2 p-1" key={i.toString()}>
-                              <div>Question: {item.question}</div>
-                              <div>Answer: {item.answer}</div>
-                            </div>
-                          ))
-                        }
-
-                        {/* Fill in the blank */}
-                        <div className="mt-2">Fill in the Blank :</div>
-                        {
-                          fillBlanks.map((item, i) => (
-                            <div className="border rounded mx-2 p-1" key={i.toString()}>
-                              <div>Question: {item.question}</div>
-                              <div>Answer: {item.answer}</div>
-                            </div>
-                          ))
-                        }
-                      </div>
-                    </>
-                  ) : null
-                }
+                              ))
+                            }
+                          </div>
+                        </>
+                      ) : null
+                    }
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </>
 
     //TODO: Scripts

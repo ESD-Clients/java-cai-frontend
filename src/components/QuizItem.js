@@ -149,7 +149,7 @@ export default function QuizItem ({item, index}) {
           <div className="mb-2">{(index + 1).toString() + ". " + item.question}</div>
           {
             item.remarks !== undefined ? (
-              <p className={"textarea textarea-bordered max-w-xs w-full whitespace-pre-line border " + (
+              <p className={"textarea textarea-bordered max-w-xs w-full whitespace-pre-wrap border " + (
                 item.answer === item.student_answer ? "border-green-400" : "border-red-400 "
               )}>
                 {item.student_answer}
@@ -166,7 +166,7 @@ export default function QuizItem ({item, index}) {
                 <textarea 
                   name={item.id}
                   value={answer}  
-                  className="w-2 h-2 absolute top-14 left-20 bg-transparent outline-none opacity-0 whitespace-pre-line" 
+                  className="w-2 h-2 absolute top-14 left-20 bg-transparent outline-none opacity-0 whitespace-pre-wrap" 
                   onChange={() => {}}
                   required
                 />

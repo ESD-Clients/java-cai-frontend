@@ -51,29 +51,29 @@ export default function Faculty() {
           <div className="fixed w-80 bg-base-200 h-full">
             <FacultySideBar />
           </div>
-          <div className=" ml-80 mr-56">
+          <div className=" ml-80">
             <div className="sticky top-0 w-full" style={{zIndex: 1}}>
               <FacultyNavBar user={user} />
             </div>
-            <div className="pt-4">
+            <div className="pt-4 p-4">
               <Routes>
                 <Route path="/dashboard" element={<Dashboard user={user} />} />
                 <Route path="/module" element={<ViewModule user={user} />} />
                 <Route path="/questions" element={<ViewQuestions user={user} />} />
                 <Route path="/add-module" element={<AddModule user={user} />} />
                 <Route path="/edit-module" element={<EditModules user={user} />} />
-                <Route path="/faculty-list" element={<FacultyList user={user} />} />
+                {/* <Route path="/faculty-list" element={<FacultyList user={user} />} /> */}
                 <Route path="/messages" element={<Messages user={user} />} />
                 <Route path="/modules" element={<Modules user={user} />} />
-                <Route path="/student-list" element={<StudentList user={user} />} />
+                <Route path="/students" element={<StudentList user={user} />} />
                 <Route path="/" element={<Navigate to="/faculty/dashboard" replace />} />
               </Routes>
             </div>
 
           </div>
-          <div className="fixed h-full bg-base-200 right-0 top-0">
+          {/* <div className="fixed h-full bg-base-200 right-0 top-0">
             <AdminStatBar />
-          </div>
+          </div> */}
         </div>
       </>
     )

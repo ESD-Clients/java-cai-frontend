@@ -15,8 +15,14 @@ export default function Modules({user}) {
 
   useEffect(() => {
 
-    const unsubscribe = ModuleController.subscribeList((snapshot) => {
-      setModules(snapshot.docs);
+    const unsubscribe = ModuleController.subscribeList(async (snapshot) => {
+      let docs = snapshot.docs;
+
+      for(let doc of docs) {
+        let topics = await ModuleController.getTopics(doc.id);
+        doc.topics = topics;
+      }
+      setModules(docs);
     })
 
     return () => unsubscribe();
@@ -35,7 +41,6 @@ export default function Modules({user}) {
     //   }
     // })
   }
-
 
   return (
     <>
@@ -70,12 +75,12 @@ export default function Modules({user}) {
                               <tr key={i.toString()}>
                                 <td>{item.data().title}</td>
                                 <td>{item.data().remarks}</td>
-                                <td>{item.data().topics.length}</td>
+                                <td>{item.topics.length}</td>
                                 <td>
                                   <button className="btn btn-sm btn-primary" onClick={() => viewItem(item.id)}>
                                     View Content
                                   </button>
-                                  <button className="btn btn-sm btn-primary ml-1" onClick={() => viewQuestions(item)}>
+                                  <button className="btn btn-sm btn-primary ml-1" onClick={() => viewQuestions(item.id)}>
                                     View Questions
                                   </button>
                                 </td>

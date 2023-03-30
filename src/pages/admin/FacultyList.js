@@ -40,8 +40,7 @@ export default function FacultyList({ user }) {
     })
 
     let result = await FacultyController.register({
-      ...Helper.getEventFormData(e),
-      status: 1
+      ...Helper.getEventFormData(e)
     });
 
     if(result && result.id) {
@@ -148,11 +147,7 @@ export default function FacultyList({ user }) {
       <div className="drawer drawer-mobile">
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
-          {/* <!-- Navbar --> */}
-          {/* <AdminNavBar user={user} /> */}
-
-          {/* <!-- Page content here --> */}
-          <div className="p-6">
+          <div className="px-6">
             <div className="flex xl:flex-row flex-col justify-between">
               <div className="w-full lg:pr-8 p-0">
                 <div className="flex flex-col items-center justify-center mb-8">

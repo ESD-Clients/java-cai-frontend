@@ -3,6 +3,7 @@ import { getCurrentTimestamp, getDocData } from "./_Helper";
 import { v4 as uuidv4 } from 'uuid';
 class BaseController {
     constructor(collectionName) {
+        this.collectionName = collectionName;
         this.collectionRef = firestore.collection(collectionName);
     }
 
@@ -11,6 +12,7 @@ class BaseController {
 
         try {
             await this.collectionRef
+                .orderBy('createdAt', 'asc')
                 .get()
                 .then(res => {
                     result = res.docs;
@@ -30,10 +32,10 @@ class BaseController {
 
         try {
             await this.collectionRef
-                .where('status', '==', 1)
+                .where('docStatus', '==', 1)
                 .get()
                 .then(res => {
-                    console.log("Collection", res.docs);
+                    console.log(`Collection [${this.collectionName}]`, res.docs);
                     result = res.docs;
                 })
 
@@ -137,6 +139,27 @@ class BaseController {
         return result;
     };
 
+    disable = async (id) => {
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(id)
+                .update({
+                    docStatus: 0
+                })
+                .then(() => {
+                    result = true;
+                })
+        }
+        catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    };
+
     destroy = async (id) => {
         var result = false;
 
@@ -156,6 +179,30 @@ class BaseController {
         return result;
     };
 
+    /** INCREMENT ID */
+    getIncrementId = async () => {
+        let counterRef = firestore.collection('collectionCounter')
+            .doc(this.collectionName);
+
+        let doc = await counterRef.get();
+
+        let id = 0;
+
+        if(doc.exists) {
+            id = doc.data().value;
+
+            await counterRef.update({
+                value: id + 1
+            })
+        }
+        else {
+            await counterRef.set({
+                value: id + 1
+            })
+        }
+
+        return id + 1;
+    }
     
 
     /** MEDIA */
@@ -189,7 +236,7 @@ class BaseController {
 
     subscribeActiveList = (onSnapshot) => {
         return this.collectionRef
-            .where('status', '==', 1)
+            .where('docStatus', '==', 1)
             .onSnapshot(onSnapshot);
     }
 }

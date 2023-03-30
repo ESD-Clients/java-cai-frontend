@@ -34,7 +34,7 @@ export default function AddModule({ user }) {
     data.append("params", valueString);
     data.append("video", e.target.video.files[0]);
 
-    let result = await ModuleController.storeOnId(data);
+    let result = await ModuleController.st(data);
 
     clearModal();
 

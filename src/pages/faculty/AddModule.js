@@ -14,6 +14,8 @@ import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 
 export default function AddModule({ user }) {
 
+  console.log(user);
+
   const navigate = useNavigate();
 
   /** MODULE */
@@ -54,6 +56,10 @@ export default function AddModule({ user }) {
     setTopics(newList);
 
     setAdd(false);
+  }
+
+  function updateTopic () {
+    
   }
 
   function removeTopic (index) {
@@ -274,10 +280,16 @@ export default function AddModule({ user }) {
                     </div>
                   </div>
                   <div className="flex justify-center items-center ml-4">
-                    {/* <span className="btn btn-ghost">
-                      <svg className="svg-icon text-blue-400 fill-current" height={24} width={24} viewBox="0 0 20 20">
-                        <path d="M18.303,4.742l-1.454-1.455c-0.171-0.171-0.475-0.171-0.646,0l-3.061,3.064H2.019c-0.251,0-0.457,0.205-0.457,0.456v9.578c0,0.251,0.206,0.456,0.457,0.456h13.683c0.252,0,0.457-0.205,0.457-0.456V7.533l2.144-2.146C18.481,5.208,18.483,4.917,18.303,4.742 M15.258,15.929H2.476V7.263h9.754L9.695,9.792c-0.057,0.057-0.101,0.13-0.119,0.212L9.18,11.36h-3.98c-0.251,0-0.457,0.205-0.457,0.456c0,0.253,0.205,0.456,0.457,0.456h4.336c0.023,0,0.899,0.02,1.498-0.127c0.312-0.077,0.55-0.137,0.55-0.137c0.08-0.018,0.155-0.059,0.212-0.118l3.463-3.443V15.929z M11.241,11.156l-1.078,0.267l0.267-1.076l6.097-6.091l0.808,0.808L11.241,11.156z"></path>
-                      </svg>
+                    {/* <span className="btn btn-ghost"
+                      onClick={() => {
+                        setAdd(true);
+                        setTopicTitle(item.title)
+                        setTopicContent(item.content)
+                        setTopicCode(item.code)
+                      
+                      }}
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current text-blue-400" width="24" height="24" viewBox="0 0 24 24" fill="none"  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>
                     </span> */}
 
                     <span className="btn btn-ghost" onClick={() => removeTopic(index)}>

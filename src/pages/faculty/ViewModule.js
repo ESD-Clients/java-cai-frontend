@@ -411,7 +411,7 @@ export default function ViewModule () {
                 </div>
               </div>
               
-              <p className="whitespace-pre-line text-sm leading-5">
+              <p className="whitespace-pre-wrap text-sm leading-5">
                 {item.data().content}
               </p>
 
@@ -424,9 +424,9 @@ export default function ViewModule () {
                     />
                   ) : (
                     <div className="mt-4">
-                      <label className="label label-text font-semibold">
+                      {/* <label className="label label-text font-semibold">
                         Demo
-                      </label>
+                      </label> */}
                       <div className="h-96 border border-base-300 ">
                         <ReactPlayer
                           url={item.data().media.url}
@@ -442,12 +442,12 @@ export default function ViewModule () {
 
               
               {
-                item.code && (
+                item.data().code && (
                   <div className="mt-4">
                     <label className="label label-text font-semibold">
                       Example Code:
                     </label>
-                    <p className="textarea font-mono whitespace-pre-line">
+                    <p className="textarea font-mono whitespace-pre-wrap">
                       {item.data().code}
                     </p>
                   </div>

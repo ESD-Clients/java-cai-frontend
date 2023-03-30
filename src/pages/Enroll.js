@@ -100,8 +100,7 @@ export default function Enroll () {
 
 
     let data = Helper.getEventFormData(e);
-    data.current_module = 1;
-    data.progress = 0;
+    data.finishedModules = [];
 
     if(imgFile) {
       let imageUri = await StudentController.uploadFile(imgFile, 'image/student/profile');

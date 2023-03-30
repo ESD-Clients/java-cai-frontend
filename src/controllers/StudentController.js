@@ -1,6 +1,6 @@
-import axios from "axios";
 import { auth } from "../config/initFirebase";
 import BaseController from "./_BaseController";
+import { hashData } from "./_Helper";
 
 class StudentController extends BaseController {
     constructor() {
@@ -60,7 +60,9 @@ class StudentController extends BaseController {
         try {
             await auth.createUserWithEmailAndPassword(item.email, item.password)
                 .then(async res => {
-                    delete item.password;
+                    item.student_no = await this.getIncrementId();
+                    item.password = hashData(item.password);
+                    item.docStatus = 1;
                     result = await this.storeOnId(res.user.uid, item);
                 })
         } catch (err) {

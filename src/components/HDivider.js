@@ -1,7 +1,7 @@
 
-export default function HDivider () {
+export default function HDivider (props) {
   
   return (
-    <div className="bg-base-100 w-full h-[2px] my-4" />
+    <div className="divider" {...props} />
   )
 }

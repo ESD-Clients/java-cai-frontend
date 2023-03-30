@@ -7,6 +7,49 @@ class ModuleController extends BaseController {
         super('modules');
     }
 
+    getApprovedModules = async () => {
+        var result = [];
+
+        try {
+            await this.collectionRef
+                .where('docStatus', '==', 1)
+                .where('remarks', '==', 'approved')
+                .orderBy('createdAt', 'asc')
+                .get()
+                .then(res => {
+                    result = res.docs;
+                })
+        } catch (err) {
+            console.error(err);
+            result = [];
+        }
+
+        return result;
+    }
+
+    /** TOPICS */
+
+    getTopics = async (moduleId) => {
+        var result = [];
+        
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('topics')
+                .orderBy('createdAt', 'asc')
+                .get()
+                .then(res => {
+                    result = res.docs;
+                })
+        }
+        catch (err) {
+            console.error(err);
+            result = [];
+        }
+
+        return result;
+    }
+
     addTopic = async ({moduleId, topic}) => {
 
         var result = false;
@@ -83,7 +126,104 @@ class ModuleController extends BaseController {
             .onSnapshot(onSnapshot);
     }
 
+    /** QUESTIONS */
+    subscribeQuestions = (moduleId, onSnapshot) => {
+        return this.collectionRef
+            .doc(moduleId)
+            .collection('questions')
+            .orderBy('createdAt', 'asc')
+            .onSnapshot(onSnapshot);
+    }
 
+    addQuestion = async (moduleId, question) => {
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('questions')
+                .add({
+                    ...question,
+                    createdAt: getCurrentTimestamp()
+                })
+                .then(res => {
+                    result = res.get();
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    updateQuestion = async (moduleId, questionId, data) => {
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('questions')
+                .doc(questionId)
+                .update(data)
+                .then(() => {
+                    result = {
+                        id: questionId
+                    }
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    deleteQuestion = async ({moduleId, questionId}) => {
+        var result = false;
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('questions')
+                .doc(questionId)
+                .delete()
+                .then(() => {
+                    result = true;
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    /** HELPER */
+    isModuleUnlocked = ({student, lastId}) => {
+    
+        if (!lastId) {
+            return true;
+        }
+        else {
+            if(lastId && student.finishedModules.includes(lastId)) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
+
+    isModuleFinished = (student, moduleId) => {
+        if (student.finishedModules.includes(moduleId)) {
+            return true;
+        }
+    
+        return false;
+    }
 
 
     /** OLD */
@@ -131,22 +271,6 @@ class ModuleController extends BaseController {
         }
     }
 
-    addQuestion = async (item) => {
-        var result = null;
-
-        try {
-            await axios.post(`${this.baseUrl}/questions/add`, item).then((res) => {
-                result = res.data;
-            });
-
-            return result;
-
-        } catch (err) {
-
-            return err;
-        }
-    }
-
     getModulesByNumber = async (number) => {
         var result = [];
 
@@ -160,24 +284,6 @@ class ModuleController extends BaseController {
             .then((res) => {
                 result = res.data;
             })
-            return result;
-        } catch (err) {
-            return err;
-        }
-    }
-
-    getApprovedModules = async () => {
-        var result = [];
-
-        try {
-            await axios.post(`${this.baseUrl}/index`, {
-                condition: [
-                    ['status', 1],
-                    ['remarks', 'approved']
-                ]
-            }).then((res) => {
-                result = res.data;
-            });
             return result;
         } catch (err) {
             return err;

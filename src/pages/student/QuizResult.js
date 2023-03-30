@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import QuizItem from "../../components/QuizItem";
-import UserNavbar from "../../components/UserNavBar";
+import StudentNavBar from "../../components/StudentNavBar";
 import { Helper } from "../../controllers/_Controllers";
 
 export default function QuizResult() {
@@ -31,7 +31,7 @@ export default function QuizResult() {
 
   return (
     <>
-      <UserNavbar user={user} />
+      <StudentNavBar user={user} />
 
       <div className="w-screen flex flex-row justify-center ">
         <div className="lg:w-[70vw] w-full lg:mt-4 m-0 lg:px-8 px-4">
