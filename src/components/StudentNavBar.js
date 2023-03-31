@@ -89,10 +89,10 @@ export default function StudentNavBar({ user }) {
                             ) : (
                               <li className="disabled" key={i.toString()}>
                                 <span>
-                                  <span>{item.data().title}</span>
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
                                   </svg>
+                                  <span>{item.data().title}</span>
                                 </span>
                               </li>
                             )
@@ -118,7 +118,7 @@ export default function StudentNavBar({ user }) {
                         <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
                       </svg>
                     </a>
-                    <ul className="p-2 bg-base-200 z-50">
+                    <ul className="p-2 bg-base-200 z-50 max-w-[24rem]">
                       {
                         modules.length > 0 ? (
                           modules.map((item, i) => (
@@ -129,17 +129,18 @@ export default function StudentNavBar({ user }) {
                               <li key={i.toString()}>
                                 <Link
                                   to={"/student/module?" + item.id}
+                                  className="block overflow-hidden whitespace-nowrap text-ellipsis hover:whitespace-normal"
                                 >
                                   {item.data().title}
                                 </Link>
                               </li>
                             ) : (
                               <li className="disabled" key={i.toString()}>
-                                <span>
-                                  <span>{item.data().title}</span>
+                                <span className="flex items-center">
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
                                   </svg>
+                                  <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{item.data().title}</span>
                                 </span>
                               </li>
                             )

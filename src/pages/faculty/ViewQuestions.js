@@ -365,7 +365,7 @@ export default function ViewQuestions () {
                     >
                       <div className="flex flex-col items-start md:flex-row">
                         <span className="w-20">Question: </span>
-                        <span className="font-bold ml-4">{item.data().question}</span>
+                        <span className="font-semibold ml-4">{item.data().question}</span>
                       </div>
 
                       <div className="flex flex-col items-start md:flex-row mt-2">
@@ -375,7 +375,7 @@ export default function ViewQuestions () {
 
                       <div className="flex flex-col items-start md:flex-row mt-2">
                         <span className="w-20">Choices: </span>
-                        <span className="font-bold ml-4">{item.data().choices.toString()}</span>
+                        <span className="ml-4">{item.data().choices.toString()}</span>
                       </div>
                     </div>
                     <QuestionAction item={item} />
@@ -393,7 +393,7 @@ export default function ViewQuestions () {
                     >
                       <div className="flex flex-col items-start md:flex-row">
                         <span className="w-20">Question: </span>
-                        <span className="font-bold ml-4">{item.data().question}</span>
+                        <span className="font-semibold ml-4">{item.data().question}</span>
                       </div>
 
                       <div className="flex flex-col items-start md:flex-row mt-2">
@@ -416,7 +416,7 @@ export default function ViewQuestions () {
                     >
                       <div className="flex flex-col items-start md:flex-row">
                         <span className="w-20">Question: </span>
-                        <span className="font-bold ml-4">{item.data().question}</span>
+                        <span className="font-semibold ml-4">{item.data().question}</span>
                       </div>
 
                       <div className="flex flex-col items-start md:flex-row mt-2">

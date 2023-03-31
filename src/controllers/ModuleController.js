@@ -7,12 +7,18 @@ class ModuleController extends BaseController {
         super('modules');
     }
 
+    subscribeList = (onSnapshot) => {
+        return this.collectionRef
+            .orderBy('createdAt', 'asc')
+            .onSnapshot(onSnapshot);
+    }
+
     getApprovedModules = async () => {
         var result = [];
 
         try {
             await this.collectionRef
-                .where('docStatus', '==', 1)
+                // .where('docStatus', '==', 1)
                 .where('remarks', '==', 'approved')
                 .orderBy('createdAt', 'asc')
                 .get()
@@ -127,6 +133,26 @@ class ModuleController extends BaseController {
     }
 
     /** QUESTIONS */
+    getQuestions = async (moduleId) => {
+        var result = [];
+
+        try {
+            await this.collectionRef
+                .doc(moduleId)
+                .collection('questions')
+                .orderBy('createdAt', 'asc')
+                .get()
+                .then(res => {
+                    result = res.docs;
+                })
+
+        } catch (err) {
+            console.error(err)
+        }
+
+        return result;
+    }
+
     subscribeQuestions = (moduleId, onSnapshot) => {
         return this.collectionRef
             .doc(moduleId)
@@ -256,20 +282,7 @@ class ModuleController extends BaseController {
     }
 
     //QUESTIONS
-    getQuestions = async ({type, module}) => {
-        var result = [];
 
-        try {
-            await axios.post(`${this.baseUrl}/questions?module=${module}&type=${type}`)
-            .then((res) => {
-                result = res.data;
-            })
-            
-            return result;
-        } catch (error) {
-            return error
-        }
-    }
 
     getModulesByNumber = async (number) => {
         var result = [];

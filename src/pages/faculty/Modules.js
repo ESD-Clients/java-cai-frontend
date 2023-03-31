@@ -34,12 +34,6 @@ export default function Modules({user}) {
 
   function viewQuestions (item) {
     navigate('/faculty/questions?'+item)
-    // navigate('/faculty/edit-module', {
-    //   state: {
-    //     item: item,
-    //     type: "question"
-    //   }
-    // })
   }
 
   return (

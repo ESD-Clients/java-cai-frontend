@@ -142,15 +142,13 @@ export default function Module() {
                     View Quiz Result
                   </Link>
                 ) : (
-                  null
-                  // <Link
-                  //   className="btn btn-success"
-                  //   to="/"
-                  //   state={{ module: moduleId }}
-                    
-                  // >
-                  //   Take Quiz
-                  // </Link>
+                  <Link
+                    className="btn btn-success"
+                    to="/student/quiz"
+                    state={{ moduleId: moduleId }}
+                  >
+                    Take Quiz
+                  </Link>
                 )
               }
             </div>
@@ -163,7 +161,8 @@ export default function Module() {
           <div className="flex h-full">
 
             {/* TOPICS NAVIGATION */}
-            <div className="w-[44rem] sticky h-full right-0 top-52">
+            <div className="">
+            <div className="w-[12rem] sticky overflow-y-auto h-[80vh] right-0 top-28 scrollbar-thin scrollbar-thumb-base-100 pr-2">
               <h1 className="text-sm uppercase mb-4 font-semibold mt-2">Topics</h1>
               <ul className="w-full">
                 <li
@@ -187,7 +186,8 @@ export default function Module() {
                 }
               </ul>
             </div>
-            <div className="divider divider-horizontal" />
+            </div>
+            <div className="divider divider-horizontal ml-0" />
             <div className="pb-16">
               {
                 moduleId && module && (

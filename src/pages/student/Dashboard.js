@@ -76,7 +76,7 @@ export default function Dashboard() {
               <div className="stat">
                 <div className="stat-title">Progress</div>
                 <div className="stat-desc">
-                  <progress className="progress progress-primary w-full lg:w-56" value={progress} max="100"></progress>
+                  {/* <progress className="progress progress-primary w-full lg:w-56" value={progress} max="100"></progress> */}
                 </div>
               </div>
             </div>
@@ -148,9 +148,10 @@ export default function Dashboard() {
                     student: user,
                     lastId: i > 0 ? modules[i - 1].id : ''
                   }) ? (
-                    <li key={i.toString()}>
+                    <li key={i.toString()} className="relative">
                       <Link
                         to={"/student/module?" + item.id}
+                        className="overflow-hidden text-ellipsis block w-[13rem] whitespace-nowrap hover:whitespace-normal transition-all"
                       >
                         {item.data().title}
                       </Link>
@@ -158,7 +159,9 @@ export default function Dashboard() {
                   ) : (
                     <li className="disabled" key={i.toString()}>
                       <span>
-                        <span>{item.data().title}</span>
+                        <span
+                          className="overflow-hidden text-ellipsis block w-[10rem] whitespace-nowrap"
+                        >{item.data().title}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                           <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
                         </svg>

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import PasswordField from "../../components/PasswordField";
 import { FacultyController, Helper } from "../../controllers/_Controllers";
 import { getErrorMessage } from "../../controllers/_Helper";
 import { showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
@@ -123,7 +124,12 @@ export default function FacultyList({ user }) {
             <div className="form-control py-1">
               <label className="input-group">
                 <span>Password</span>
-                <input type="password" name="password" className="input input-bordered w-full" required />
+                <PasswordField
+                  className="rounded-l-none"
+                  name="password"
+                  required
+                />
+                {/* <input type="password" name="password" className="input input-bordered w-full" required /> */}
               </label>
             </div>
             <div className="modal-action">

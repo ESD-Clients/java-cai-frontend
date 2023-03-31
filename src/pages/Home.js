@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
 import { AdminController, FacultyController, Helper, StudentController } from "../controllers/_Controllers";
 import { Link, useNavigate } from "react-router-dom";
+import TextField from "../components/TextField";
+import PasswordField from "../components/PasswordField";
+import LoginModal from "../components/LoginModal";
 
 export default function Home () {
   
   const navigate = useNavigate();
   const user = Helper.getCurrentUser();
-
-  const [tab, setTab] = useState("student");
 
   useEffect(() => {
     if(user) {
@@ -26,22 +27,23 @@ export default function Home () {
 
     let email = e.target.email.value;
     let password = e.target.password.value;
+    let type = e.target.type.value;
 
     let result = false;
 
-    if(tab === "student") {
+    if(type === "student") {
       result = await StudentController.authenticate({
         email: email,
         password: password
       })
     }
-    else if(tab === "faculty") {
+    else if(type === "faculty") {
       result = await FacultyController.authenticate({
         email: email,
         password: password
       })
     }
-    else if(tab === "admin") {
+    else if(type === "admin") {
       result = await AdminController.authenticate({
         email: email,
         password: password
@@ -53,12 +55,12 @@ export default function Home () {
 
     if(result && result.id) {
 
-      result.type = tab;
+      result.type = type;
       Helper.setCurrentUser(result);
       e.target.reset();
       clearModal();
 
-      navigate(`/${tab}`);
+      navigate(`/${type}`);
       
     }
     else {
@@ -75,78 +77,7 @@ export default function Home () {
 
   return (
     <>
-      <input type="checkbox" id="login" className="modal-toggle" />
-      <label className="modal modal-bottom sm:modal-middle" htmlFor="login">
-        <div className="flex flex-col items-center w-full">
-          <div className="flex items-start lg:justify-start lg:w-96">
-            <div className="tabs bg-base-200 rounded-t-md">
-              <div 
-                className={"tab tab-lifted " + (tab === "student" ? "tab-active" : "")} 
-                id="studentTab"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTab("student");
-                }}
-              >
-                Student
-              </div>
-              <div
-                className={"tab tab-lifted " + (tab === "faculty" ? "tab-active" : "")} 
-                id="studentTab"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTab("faculty");
-                }}
-              >
-                Faculty
-              </div>
-              <div 
-                className={"tab tab-lifted " + (tab === "admin" ? "tab-active" : "")} 
-                id="studentTab"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTab("admin");
-                }}
-              >
-                Admin
-              </div>
-            </div>
-          </div>
-          <label className="modal-box" htmlFor="">
-            <div className="w-full flex justify-center">
-              <h3 className="font-bold text-lg my-4" id="modalTitle">
-                Login as
-                {
-                  tab === "student" ? (" Student") :
-                  tab === "faculty" ? (" Faculty") :
-                  tab === "admin" ? (" Admin") :
-                  ""
-                }
-              </h3>
-            </div>
-            <form id="loginForm" onSubmit={login}>
-              <div className="form-control">
-                <label className="input-group">
-                  <span>Email</span>
-                  <input 
-                    type="text" name="email" className="input input-bordered w-full" id="emailInput" required />
-                </label>
-              </div>
-              <div className="my-3"></div>
-              <div className="form-control">
-                <label className="input-group">
-                  <span>Password</span>
-                  <input type="password" name="password" className="input input-bordered w-full" id="passwordInput" required />
-                </label>
-              </div>
-              <div id="errorPlaceholder"></div>
-              <div className="mt-6 flex flex-row items-center justify-end">
-                <button type="submit" className="btn btn-primary">Login</button>
-              </div>
-            </form>
-          </label>
-        </div>
-      </label>
+      <LoginModal onSubmit={login} />
 
       <div className="flex flex-row justify-center bg-base-200 sticky top-0">
         <div className="container">

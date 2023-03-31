@@ -64,3 +64,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+/* Prevent eye icon on showing up in password fields */
+input::-ms-reveal {
+  display: none;
+}
+
+.custom-password-field:focus{
+  /* outline: none; */
+  outline: 2px solid hsla(var(--bc) / 0.2);
+  outline-offset: 2px;
+}

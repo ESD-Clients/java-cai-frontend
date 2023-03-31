@@ -6,7 +6,7 @@ export default function QuizItem ({item, index}) {
   const [answer, setAnswer] = useState('');
 
 
-  if(item.type === "multi_choices") {
+  if(item.type === "choices") {
 
     let choices = JSON.parse(item.choices);
 
@@ -110,7 +110,7 @@ export default function QuizItem ({item, index}) {
       </div>
     )
   }
-  else if (item.type === "fill_blank") {
+  else if (item.type === "blank") {
     return (
       <div>
         <div className="p-2">
