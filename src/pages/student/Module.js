@@ -9,6 +9,7 @@ import axios from "axios";
 import QueryString from "qs";
 import { setPlaygroundCode } from "../../controllers/_Helper";
 import HDivider from "../../components/HDivider";
+import RichText from "../../components/RichText";
 
 export default function Module() {
   const location = useLocation();
@@ -195,11 +196,14 @@ export default function Module() {
                     <h1 className="text-4xl uppercase font-bold">{module.title}</h1>
                     
                     <HDivider id="sypnosis"/>
-                    <p 
+                    <RichText
+                      value={module.sypnosis}
+                    />
+                    {/* <p 
                       className="pt-20"
                     >
                       {module.sypnosis}
-                    </p>
+                    </p> */}
 
                     {/* TOPICS */}
 
@@ -216,9 +220,12 @@ export default function Module() {
                             <h4 className="text-2xl font-bold">
                               {item.data().title}
                             </h4>
-                            <p className="mt-4">
+                            <RichText
+                              value={item.data().content}
+                            />
+                            {/* <p className="mt-4 whitespace-pre-line">
                               {item.data().content}
-                            </p>
+                            </p> */}
                           </div>
 
                           {/* Media */}
@@ -227,7 +234,7 @@ export default function Module() {
                               item.data().media.type === "image" ? (
                                 <img
                                   src={item.data().media.url}
-                                  className="w-full my-4"
+                                  className="max-h-[20rem] max-w-[80rem] my-4"
                                 />
                               ) : (
                                 <div className="mt-4">

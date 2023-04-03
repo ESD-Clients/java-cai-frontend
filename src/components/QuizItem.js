@@ -8,7 +8,8 @@ export default function QuizItem ({item, index}) {
 
   if(item.type === "choices") {
 
-    let choices = JSON.parse(item.choices);
+
+    let choices = item.choices;
 
     return (
       <div>

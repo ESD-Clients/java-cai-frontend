@@ -75,9 +75,9 @@ export default function Quiz() {
   }
 
   async function checkAnswers(answers) {
-    showLoading({
-      message: "Submitting Answer...",
-    });
+    // showLoading({
+    //   message: "Submitting Answer...",
+    // });
 
     let score = 0;
     // let total = 0;
@@ -86,12 +86,18 @@ export default function Quiz() {
       studCoding = [];
 
     for (let question of multiChoices) {
-      let studentAnswer = question;
+      let studentAnswer = {
+        correctAnswer: question.data().answer,
+        questionId: question.id,
+        question: question.data().question,
+        type: question.data().type,
+      }
+      
       studentAnswer.student_answer = answers.multi_choices[question.id];
       studentAnswer.remarks = 0;
 
       //Check answer
-      if (question.answer === answers.multi_choices[question.id]) {
+      if (question.data().answer === answers.multi_choices[question.id]) {
         score++;
         studentAnswer.remarks = 1;
       }
@@ -100,12 +106,18 @@ export default function Quiz() {
     }
 
     for (let question of fillBlanks) {
-      let studentAnswer = question;
+      let studentAnswer = {
+        correctAnswer: question.data().answer,
+        questionId: question.id,
+        question: question.data().question,
+        type: question.data().type,
+      }
+
       studentAnswer.student_answer = answers.fill_blank[question.id];
       studentAnswer.remarks = 0;
 
       //Check answer
-      if (question.answer === answers.fill_blank[question.id]) {
+      if (question.data().answer === answers.fill_blank[question.id]) {
         score++;
         studentAnswer.remarks = 1;
       }
@@ -114,12 +126,18 @@ export default function Quiz() {
     }
 
     for (let question of codings) {
-      let studentAnswer = question;
+      let studentAnswer = {
+        correctAnswer: question.data().answer,
+        questionId: question.id,
+        question: question.data().question,
+        type: question.data().type,
+      }
+
       studentAnswer.student_answer = answers.coding[question.id];
       studentAnswer.remarks = 0;
 
       //Check answer
-      if (question.answer === answers.coding[question.id]) {
+      if (question.data().answer === answers.coding[question.id]) {
         score++;
         studentAnswer.remarks = 1;
       }
@@ -135,6 +153,7 @@ export default function Quiz() {
 
     console.log("ALL ANSWER", studentAnswer);
 
+    return;
     // Submit Answers
 
     let result = await ModuleController.addQuizResult({
@@ -175,8 +194,11 @@ export default function Quiz() {
 
   return (
     <>
+      <div className="fixed top-0 left-0 bg-base-100 w-full h-20 flex items-center justify-center">
+        Timer Goes Here
+      </div>
       <div className="flex flex-row justify-center">
-        <div className="w-full lg:px-8 p-0 lg:mr-8 m-0">
+        <div className="w-full max-w-[48rem] lg:px-8 p-0 lg:mr-8 m-0">
           <div>
             <div className="flex flex-col gap-2 mb-4">
               {moduleId ? (

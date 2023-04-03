@@ -19,9 +19,9 @@ import RichTextEditor from "../../components/RichTextEditor";
 import RichText from "../../components/RichText";
 
 
-export default function ViewModule() {
+export default function ViewModule () {
 
-
+  
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -47,7 +47,7 @@ export default function ViewModule() {
   useEffect(() => {
 
     const unsubscribeModule = ModuleController.subscribeDoc(moduleId, (snapshot) => {
-
+      
       console.log("MODULE", snapshot)
       let item = snapshot.data();
       item.id = moduleId;
@@ -66,13 +66,13 @@ export default function ViewModule() {
       unsubscribeModule();
       unsubscribeTopics();
     };
-
+    
   }, [])
 
-  async function saveDetails(e) {
+  async function saveDetails (e) {
 
     e.preventDefault();
-
+    
     showLoading({
       message: "Saving..."
     })
@@ -86,7 +86,7 @@ export default function ViewModule() {
 
     setDetailsModal(false);
 
-    if (result && result.id) {
+    if(result && result.id) {
       showMessageBox({
         title: "Success",
         message: "Success",
@@ -102,7 +102,7 @@ export default function ViewModule() {
     }
   }
 
-  async function saveTopic(e) {
+  async function saveTopic (e) {
 
     e.preventDefault();
 
@@ -119,13 +119,13 @@ export default function ViewModule() {
     // if(topicMedia) {
     //   topic.media = topicMedia;
     // }
-
-
-    if (removeMedia) {
+    
+    
+    if(removeMedia) {
       topic.media = null;
     }
     else {
-      if (e.target.media.files.length > 0) {
+      if(e.target.media.files.length > 0) {
         let file = e.target.media.files[0];
 
         topic.media = {
@@ -137,7 +137,7 @@ export default function ViewModule() {
 
     let result = false;
 
-    if (topicId) {
+    if(topicId) {
       result = await ModuleController.updateTopic({
         moduleId: moduleId,
         topicId: topicId,
@@ -156,7 +156,7 @@ export default function ViewModule() {
 
     setTopicModal(false);
 
-    if (result && result.id) {
+    if(result && result.id) {
       showMessageBox({
         title: "Success",
         message: "Success",
@@ -170,11 +170,11 @@ export default function ViewModule() {
         type: "danger"
       });
     }
-
+    
 
   }
 
-  function addTopic() {
+  function addTopic () {
     setTopicId(null);
     setTopicTitle('');
     setTopicContent('');
@@ -183,18 +183,18 @@ export default function ViewModule() {
     setTopicModal(true);
   }
 
-  function editTopic(index) {
+  function editTopic (index) {
     setTopicId(topics[index].id);
     setTopicTitle(topics[index].data().title);
     setTopicContent(topics[index].data().content);
     setTopicCode(topics[index].data().code);
 
     // setTopicMedia(topics[index].media);
-
+    
     setTopicModal(true);
   }
 
-  function deleteTopic(index) {
+  function deleteTopic (index) {
     showConfirmationBox({
       message: "Are you sure you want to remove this topic?",
       type: "warning",
@@ -210,7 +210,7 @@ export default function ViewModule() {
 
         clearModal();
 
-        if (result !== true) {
+        if(result !== true) {
           showMessageBox({
             title: "Error",
             type: "error",
@@ -222,131 +222,242 @@ export default function ViewModule() {
   }
 
 
-  if (!moduleId || !module) return null;
+  if(!moduleId || !module) return null;
 
-  if (topicModal) return (
-    <form
-      className="bg-base-200 p-4 rounded relative"
-      onSubmit={saveTopic}
-    >
-      <div className="my-4">
-        <h1 className="text-lg font-semibold">
-          {topicId ? "Edit Topic" : "New Topic"}
-        </h1>
-      </div>
-      <TextField
-        label="Title"
-        value={topicTitle}
-        onChange={setTopicTitle}
-        required />
-      <RichTextEditor
-        label="Content"
-        value={topicContent}
-        onChange={setTopicContent}
-        required />
-      {
-        topicId ? (
-          <div className="form-control w-full">
-            <Header2 value="Media" />
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="checkbox"
-                checked={removeMedia}
-                onChange={e => setRemoveMedia(e.target.checked)}
-              />
-              <label className="label">
-                <span className="label-text">Remove Media</span>
-              </label>
-            </div>
-            <div>
-              <label className="label">
-                <span className="label-text">Replace Media</span>
-              </label>
-              <input
-                type="file"
-                name="media"
-                accept="video/*, image/*"
-                disabled={removeMedia}
-                className="file-input file-input-bordered w-full max-w-xs" />
-            </div>
+  if(topicModal) {
+    return (
+      <form 
+          className="bg-base-200 p-4 rounded relative"
+          onSubmit={saveTopic}
+        >
+          <div className="my-4">
+            <h1 className="text-lg font-semibold">
+              {topicId ? "Edit Topic" : "New Topic"}
+            </h1>
           </div>
-        ) : (
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Media</span>
-            </label>
-            <div>
-              <input
-                type="file"
-                name="media"
-                accept="video/*, image/*"
-                className="file-input file-input-bordered w-full max-w-xs" />
-            </div>
+          <TextField 
+            label="Title" 
+            value={topicTitle}
+            onChange={setTopicTitle}
+            required />
+          <RichTextEditor
+            label="Content" 
+            value={topicContent}
+            onChange={setTopicContent}
+            required />
+          {/* <TextArea 
+            label="Content" 
+            value={topicContent}
+            onChange={setTopicContent}
+            required /> */}
+
+          {
+            topicId ? (
+              <div className="form-control w-full">
+                <Header2 value="Media" />
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox"
+                    className="checkbox"
+                    checked={removeMedia}
+                    onChange={e => setRemoveMedia(e.target.checked)}
+                    />
+                    <label className="label">
+                      <span className="label-text">Remove Media</span>
+                    </label>
+                </div>
+                <div>
+                  <label className="label">
+                    <span className="label-text">Replace Media</span>
+                  </label>
+                  <input 
+                    type="file" 
+                    name="media"
+                    accept="video/*, image/*" 
+                    disabled={removeMedia}
+                    className="file-input file-input-bordered w-full max-w-xs" />
+                </div>
+              </div>
+            ) : (
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Media</span>
+                </label>
+                <div>
+                  <input 
+                    type="file" 
+                    name="media"
+                    accept="video/*, image/*" 
+                    className="file-input file-input-bordered w-full max-w-xs" />
+                </div>
+              </div>
+            )
+          }
+
+          <label className="label label-text">
+            Example Code
+          </label>
+          <Editor
+            language="java"
+            defaultLanguage="java"
+            theme="vs-dark"
+            height="20rem"
+            value={topicCode}
+            onChange={setTopicCode}
+          />
+
+          <div className="flex justify-end my-4 space-x-2">
+            <button 
+              className="btn btn-ghost"
+              onClick={() => setTopicModal(false)}
+            >CANCEL</button>
+            <button className="btn btn-success">SAVE TOPIC</button>
           </div>
-        )
-      }
+        </form>
+    )
+  }
 
-      <label className="label label-text">
-        Example Code
-      </label>
-      <Editor
-        language="java"
-        defaultLanguage="java"
-        theme="vs-dark"
-        height="20rem"
-        value={topicCode}
-        onChange={setTopicCode}
-      />
-
-      <div className="flex justify-end my-4 space-x-2">
-        <button
-          className="btn btn-ghost"
-          onClick={() => setTopicModal(false)}
-        >CANCEL</button>
-        <button className="btn btn-success">SAVE TOPIC</button>
-      </div>
-    </form>
-  )
-
-  if (detailsModal) return (
-    <form
-      className="bg-base-200 p-4 rounded relative"
-      onSubmit={saveDetails}
-    >
-      <div className="my-4">
-        <h1 className="text-lg font-semibold">Edit Details</h1>
-      </div>
-
-      <TextField
-        label="Title"
-        value={title}
-        onChange={setTitle}
-        required />
-
-      <RichTextEditor
-        label="Sypnosis"
-        value={sypnosis}
-        onChange={setSypnosis}
-      />
-      {/* <TextArea 
+  return (
+    <>
+      {/* Details Modal */}
+      <ReactModal 
+        isOpen={detailsModal}
+        ariaHideApp={false}
+        style={{overlay: {zIndex: 49, background: "transparent"}}}
+        className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "
+      >
+        <form 
+          className="bg-base-200 p-4 sm:w-2/3 rounded relative"
+          onSubmit={saveDetails}
+        >
+          <div className="my-4">
+            <h1 className="text-lg font-semibold">Edit Details</h1>
+          </div>
+          
+          <TextField 
+            label="Title" 
+            value={title}
+            onChange={setTitle}
+            required />
+            
+          <RichTextEditor
+            label="Sypnosis" 
+            value={sypnosis}
+            onChange={setSypnosis}
+          />
+          {/* <TextArea 
             label="Sypnosis" 
             value={sypnosis}
             onChange={setSypnosis}
             required /> */}
 
-      <div className="flex justify-end my-4 space-x-2">
-        <button
-          className="btn btn-ghost"
-          onClick={() => setDetailsModal(false)}
-        >CANCEL</button>
-        <button className="btn btn-success">SAVE DETAILS</button>
-      </div>
-    </form>
-  )
+          <div className="flex justify-end my-4 space-x-2">
+            <button 
+              className="btn btn-ghost"
+              onClick={() => setDetailsModal(false)}
+            >CANCEL</button>
+            <button className="btn btn-success">SAVE DETAILS</button>
+          </div>
+        </form>
+      </ReactModal>
 
-  return (
-    <>
+      {/* Modal for Edit TOPIC */}
+      <ReactModal 
+        // isOpen={topicModal}
+        ariaHideApp={false}
+        style={{overlay: {zIndex: 49, background: "transparent"}}}
+        className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "
+      >
+        <form 
+          className="bg-base-200 p-4 sm:w-2/3 rounded relative"
+          onSubmit={saveTopic}
+        >
+          <div className="my-4">
+            <h1 className="text-lg font-semibold">
+              {topicId ? "Edit Topic" : "New Topic"}
+            </h1>
+          </div>
+          <TextField 
+            label="Title" 
+            value={topicTitle}
+            onChange={setTopicTitle}
+            required />
+          <RichTextEditor
+            label="Content" 
+            value={topicContent}
+            onChange={setTopicContent}
+            required />
+          {/* <TextArea 
+            label="Content" 
+            value={topicContent}
+            onChange={setTopicContent}
+            required /> */}
+
+          {
+            topicId ? (
+              <div className="form-control w-full">
+                <Header2 value="Media" />
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox"
+                    className="checkbox"
+                    checked={removeMedia}
+                    onChange={e => setRemoveMedia(e.target.checked)}
+                    />
+                    <label className="label">
+                      <span className="label-text">Remove Media</span>
+                    </label>
+                </div>
+                <div>
+                  <label className="label">
+                    <span className="label-text">Replace Media</span>
+                  </label>
+                  <input 
+                    type="file" 
+                    name="media"
+                    accept="video/*, image/*" 
+                    disabled={removeMedia}
+                    className="file-input file-input-bordered w-full max-w-xs" />
+                </div>
+              </div>
+            ) : (
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text">Media</span>
+                </label>
+                <div>
+                  <input 
+                    type="file" 
+                    name="media"
+                    accept="video/*, image/*" 
+                    className="file-input file-input-bordered w-full max-w-xs" />
+                </div>
+              </div>
+            )
+          }
+
+          <label className="label label-text">
+            Example Code
+          </label>
+          <Editor
+            language="java"
+            defaultLanguage="java"
+            theme="vs-dark"
+            height="20rem"
+            value={topicCode}
+            onChange={setTopicCode}
+          />
+
+          <div className="flex justify-end my-4 space-x-2">
+            <button 
+              className="btn btn-ghost"
+              onClick={() => setTopicModal(false)}
+            >CANCEL</button>
+            <button className="btn btn-success">SAVE TOPIC</button>
+          </div>
+        </form>
+      </ReactModal>
+
       {/* Content */}
       <div>
         <div className="flex justify-between">
@@ -357,16 +468,16 @@ export default function ViewModule() {
             <p>Back</p>
           </button>
 
-          <button className="btn btn-primary" onClick={() => navigate('/faculty/questions?' + moduleId)}>
+          <button className="btn btn-primary" onClick={() => navigate('/faculty/questions?'+moduleId)}>
             <p>VIEW QUESTIONS</p>
           </button>
         </div>
-        <div className="flex justify-between mt-4">
-
+        <div className="flex justify-between">
+          
           <Header2 value="Module Details" />
           <div>
-            <button
-              className="btn btn-ghost"
+            <button 
+              className="btn btn-ghost" 
               name="Edit"
               onClick={() => setDetailsModal(true)}
             >
@@ -379,36 +490,36 @@ export default function ViewModule() {
         <RichText label="Sypnosis" value={module.sypnosis} />
 
         <div className="flex items-center justify-between mt-4">
-          <Header2 value="Topics" />
-          <button className="btn btn-info" onClick={addTopic}>
-            ADD TOPIC
-          </button>
+        <Header2 value="Topics" />
+        <button className="btn btn-info" onClick={addTopic}>
+          ADD TOPIC
+        </button>
         </div>
         {
           topics.map((item, index) => (
-            <div
+            <div 
               key={index.toString()}
               className="my-4"
             >
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-lg mb-4">{item.data().title}</h3>
                 <div>
-                  <button
-                    className="btn btn-ghost"
-                    name="Edit"
+                  <button 
+                    className="btn btn-ghost" 
+                    name="Edit" 
                     onClick={() => editTopic(index)}
                   >
                     <span className="mr-2">Edit</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#757c8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon><line x1="3" y1="22" x2="21" y2="22"></line></svg>
                   </button>
-                  <button
-                    className="btn btn-ghost"
-                    name="Edit"
+                  <button 
+                    className="btn btn-ghost" 
+                    name="Edit" 
                     onClick={() => deleteTopic(index)}
                   >
                     <span className="mr-2 text-red-400">DELETE</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87272" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
+                    <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
                     </svg>
                   </button>
                 </div>
@@ -417,7 +528,7 @@ export default function ViewModule() {
               <RichText
                 value={item.data().content}
               />
-
+              
               {/* <p className="whitespace-pre-wrap text-sm leading-5">
                 {item.data().content}
               </p> */}
@@ -447,7 +558,7 @@ export default function ViewModule() {
                 )
               }
 
-
+              
               {
                 item.data().code && (
                   <div className="mt-4">
@@ -464,7 +575,7 @@ export default function ViewModule() {
             </div>
           ))
         }
-      </div>
+      </div>    
     </>
   )
 }

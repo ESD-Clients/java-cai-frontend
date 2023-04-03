@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import { useLocation, useNavigate } from "react-router-dom"
 import Header2 from "../../components/FormTitle";
 import HDivider from "../../components/HDivider";
+import RichText from "../../components/RichText";
 import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
 import TextInfo from "../../components/TextInfo";
@@ -144,7 +145,10 @@ export default function ViewModule () {
         <Header2 value="Module Details" />
         <TextInfo label="Title" value={module.title} />
         <TextInfo label="Remarks" value={module.remarks.toUpperCase()} />
-        <TextInfo label="Sypnosis" value={module.sypnosis} />
+        <RichText
+          value={module.sypnosis}
+        />
+        {/* <TextInfo label="Sypnosis" value={module.sypnosis} /> */}
 
         <div className="flex items-center justify-between mt-4">
           <Header2 value="Topics" />
@@ -156,10 +160,12 @@ export default function ViewModule () {
               className="my-4"
             >
               <h3 className="font-semibold text-lg mb-4">{item.data().title}</h3>
-              
-              <p className="whitespace-pre-wrap text-sm leading-5">
+              <RichText
+                value={item.data().content}
+              />
+              {/* <p className="whitespace-pre-wrap text-sm leading-5">
                 {item.data().content}
-              </p>
+              </p> */}
 
               {
                 item.data().media && (

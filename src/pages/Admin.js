@@ -72,7 +72,7 @@ export default function Admin () {
 
         </div>
         {
-          !location.pathname.includes('dashboard') && (
+          !location.pathname.includes('admin/dashboard') && (
             <div className="fixed right-0">
               <AdminStatBar />
             </div>

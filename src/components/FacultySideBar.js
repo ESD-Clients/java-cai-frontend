@@ -1,12 +1,43 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function FacultySideBar () {
 
+  const [open, setOpen] = useState(false);
+
+  function toggleDrawer () {
+    let element = document.getElementById('drawer');
+    if(open) {
+      element.style.left = 0;
+      setOpen(false);
+    }
+    else {
+      element.style.left = 'auto';
+      setOpen(true);
+    }
+  }
+
   return (
     <>
-      <div className="drawer-side">
+      <div className="fixed left-2 top-2 z-20 lg:hidden">
+        <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost" onClick={toggleDrawer}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </label>
+      </div>
+      <div id="drawer" className="fixed drawer-side z-30 transition-all">
         <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
         <ul className="menu overflow-y-auto w-[19rem] bg-base-200 px-3">
+          <div className="relative lg:hidden">
+            <div className="absolute right-0 top-2">
+              <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost" onClick={toggleDrawer}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </label>
+            </div>
+          </div>
           <div className="flex justify-center ">
             <div className="btn btn-ghost mb-10 text-2xl font-bold mt-6">
               <span className="lowercase font-thin">cai</span>
@@ -35,13 +66,6 @@ export default function FacultySideBar () {
               </svg>Messages
             </Link>
           </li>
-          {/* <li>
-            <Link className="rounded-md" to="/faculty/faculty-list">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
-                <path fill="currentColor" d="M10 9.25c-2.27 0-2.73-3.44-2.73-3.44C7 4.02 7.82 2 9.97 2c2.16 0 2.98 2.02 2.71 3.81c0 0-.41 3.44-2.68 3.44zm0 2.57L12.72 10c2.39 0 4.52 2.33 4.52 4.53v2.49s-3.65 1.13-7.24 1.13c-3.65 0-7.24-1.13-7.24-1.13v-2.49c0-2.25 1.94-4.48 4.47-4.48z" />
-              </svg>Faculty List
-            </Link>
-          </li> */}
           <li>
             <Link className="rounded-md" to="/faculty/students">
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">

@@ -48,10 +48,10 @@ export default function Faculty() {
     return (
       <>
         <div className="">
-          <div className="fixed w-80 bg-base-200 h-full">
+          <div className="w-80 bg-base-200 h-full absolute -left-80 lg:fixed lg:left-0">
             <FacultySideBar />
           </div>
-          <div className=" ml-80">
+          <div className=" lg:ml-80">
             <div className="sticky top-0 w-full" style={{zIndex: 1}}>
               <FacultyNavBar user={user} />
             </div>

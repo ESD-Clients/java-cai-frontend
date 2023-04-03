@@ -2,13 +2,14 @@ import Editor from "@monaco-editor/react";
 import { useEffect } from "react";
 import { useState } from "react";
 import ReactModal from "react-modal";
-import { Link, useNavigate } from "react-router-dom";
-import FacultyNavBar from "../../components/FacultyNavBar";
-import FacultySideBar from "../../components/FacultySideBar";
+
+import { useNavigate } from "react-router-dom";
 import HDivider from "../../components/HDivider";
+import RichText from "../../components/RichText";
+import RichTextEditor from "../../components/RichTextEditor";
 import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
-import { Helper, ModuleController } from "../../controllers/_Controllers";
+import { ModuleController } from "../../controllers/_Controllers";
 import { getFileType } from "../../controllers/_Helper";
 import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 
@@ -118,7 +119,8 @@ export default function AddModule({ user }) {
         message: "Success",
         type: "success",
         onPress: () => {
-          document.getElementById("btnBack").click();
+          navigate(-1);
+          // document.getElementById("btnBack").click();
         }
       })
     }
@@ -155,11 +157,17 @@ export default function AddModule({ user }) {
             value={topicTitle}
             onChange={setTopicTitle}
             required />
-          <TextArea 
+          <RichTextEditor 
             label="Content" 
             value={topicContent}
             onChange={setTopicContent}
             required />
+          
+          {/* <TextArea 
+            label="Content" 
+            value={topicContent}
+            onChange={setTopicContent}
+            required /> */}
 
           <div className="form-control w-full">
             <label className="label">
@@ -228,11 +236,18 @@ export default function AddModule({ user }) {
               required />
           </div>
 
-          <TextArea 
+          <RichTextEditor
             label="Sypnosis" 
             value={sypnosis}
             onChange={setSypnosis}
-            required />
+            required 
+          />
+
+          {/* <TextArea 
+            label="Sypnosis" 
+            value={sypnosis}
+            onChange={setSypnosis}
+            required /> */}
 
           <div className="mt-8 flex justify-between">
             <h1 className="text-lg font-bold">Topics</h1>
@@ -254,9 +269,12 @@ export default function AddModule({ user }) {
                 >
                   <div className="flex-1">
                     <h6 className="font-semibold">{item.title}</h6>
-                    <p className="text-sm overflow-hidden text-ellipsis max-h-14 mt-2">
+                    <RichText
+                      value={item.content}
+                    />
+                    {/* <p className="text-sm overflow-hidden text-ellipsis max-h-14 mt-2">
                       {item.content}
-                    </p>
+                    </p> */}
                     <div className="flex space-x-2 mt-2">
                       {
                         item.file && (

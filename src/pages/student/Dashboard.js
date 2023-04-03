@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
+import RichText from "../../components/RichText";
 import StudentNavBar from "../../components/StudentNavBar";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
@@ -93,11 +94,14 @@ export default function Dashboard() {
                       <h1 className="text-5xl font-bold">
                         {currentModule.data().title}
                       </h1>
-                      <p className="py-6 whitespace-pre-wrap">
+                      <RichText
+                        value={currentModule.data().sypnosis}
+                      />
+                      {/* <p className="py-6 whitespace-pre-wrap">
                         {
                           currentModule.data().sypnosis
                         }
-                      </p>
+                      </p> */}
                       <div className="divider"></div>
                       <div className="flex flex-row justify-end">
                         <Link

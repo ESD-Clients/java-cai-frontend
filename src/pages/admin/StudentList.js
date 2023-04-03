@@ -7,6 +7,7 @@ import AdminStatBar from "../../components/AdminStatBar";
 import { StudentController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 
+
 export default function StudentList({ user }) {
 
   const [loaded, setLoaded] = useState(false);
@@ -15,7 +16,7 @@ export default function StudentList({ user }) {
 
   useEffect(() => {
     async function fetchData() {
-      let students = await StudentController.getActiveList();
+      let students = await StudentController.getList();
       setStudents(students);
       setLoaded(true);
     }
@@ -68,8 +69,6 @@ export default function StudentList({ user }) {
                                 <th>Email</th>
                                 <th>Current Module</th>
                                 <th>Progress</th>
-                                <th>Grade</th>
-                                <th>Section</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
@@ -77,13 +76,11 @@ export default function StudentList({ user }) {
                               {
                                 students.map((item, i) => (
                                   <tr key={i.toString()}>
-                                    <td>{item.id}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.email}</td>
+                                    <td>{item.data().student_no}</td>
+                                    <td>{item.data().name}</td>
+                                    <td>{item.data().email}</td>
                                     <td>{item.current_module}</td>
-                                    <td>{item.progress}</td>
-                                    <td>{item.grade}</td>
-                                    <td>{item.section}</td>
+                                    <td>{item.data().progress}</td>
                                     <td>
                                       <button className="btn btn-info" onClick={() => viewItem(item)}>
                                         View

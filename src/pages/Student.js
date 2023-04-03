@@ -1,6 +1,6 @@
 
 import { useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import StudentNavBar from "../components/StudentNavBar";
 import { Helper, StudentController } from "../controllers/_Controllers";
 import Dashboard from "./student/Dashboard";
@@ -12,6 +12,8 @@ import QuizResult from "./student/QuizResult";
 export default function Student () {
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const user = Helper.getCurrentUser();
 
   useEffect(() => {
@@ -50,9 +52,13 @@ export default function Student () {
             </Routes>
           </div>
         </div>
-        <div className="fixed w-full top-0">
-          <StudentNavBar user={user} />
-        </div>
+        {
+          !location.pathname.includes("student/quiz") && (
+            <div className="fixed w-full top-0">
+              <StudentNavBar user={user} />
+            </div>
+          )
+        }
       </div>
 
     </>
