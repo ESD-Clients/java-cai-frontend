@@ -73,16 +73,16 @@ export default function FacultySideBar () {
               </svg>Students
             </Link>
           </li>
-          {/* <!-- <li>
-            <a className="rounded-md" to="/faculty/rooms">
+          <li>
+            <Link className="rounded-md" to="/faculty/rooms">
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                 <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
                   <path d="M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3" />
                   <path d="m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36V2Zm7 10v2" />
                 </g>
               </svg>Rooms
-            </a>
-          </li> --> */}
+            </Link>
+          </li>
           <li>
             <Link className="rounded-md" to="/faculty/settings">
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">

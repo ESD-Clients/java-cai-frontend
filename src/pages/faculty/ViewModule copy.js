@@ -224,104 +224,132 @@ export default function ViewModule () {
 
   if(!moduleId || !module) return null;
 
-  if(topicModal) {
-    return (
-      <form 
-          className="bg-base-200 p-4 rounded relative"
-          onSubmit={saveTopic}
-        >
-          <div className="my-4">
-            <h1 className="text-lg font-semibold">
-              {topicId ? "Edit Topic" : "New Topic"}
-            </h1>
-          </div>
-          <TextField 
-            label="Title" 
-            value={topicTitle}
-            onChange={setTopicTitle}
-            required />
-          <RichTextEditor
-            label="Content" 
-            value={topicContent}
-            onChange={setTopicContent}
-            required />
-          {/* <TextArea 
-            label="Content" 
-            value={topicContent}
-            onChange={setTopicContent}
-            required /> */}
-
-          {
-            topicId ? (
-              <div className="form-control w-full">
-                <Header2 value="Media" />
-                <div className="flex items-center">
-                  <input 
-                    type="checkbox"
-                    className="checkbox"
-                    checked={removeMedia}
-                    onChange={e => setRemoveMedia(e.target.checked)}
-                    />
-                    <label className="label">
-                      <span className="label-text">Remove Media</span>
-                    </label>
-                </div>
-                <div>
-                  <label className="label">
-                    <span className="label-text">Replace Media</span>
-                  </label>
-                  <input 
-                    type="file" 
-                    name="media"
-                    accept="video/*, image/*" 
-                    disabled={removeMedia}
-                    className="file-input file-input-bordered w-full max-w-xs" />
-                </div>
-              </div>
-            ) : (
-              <div className="form-control w-full">
+  if(topicModal) return (
+    <form 
+      className="bg-base-200 p-4 rounded relative"
+      onSubmit={saveTopic}
+    >
+      <div className="my-4">
+        <h1 className="text-lg font-semibold">
+          {topicId ? "Edit Topic" : "New Topic"}
+        </h1>
+      </div>
+      <TextField 
+        label="Title" 
+        value={topicTitle}
+        onChange={setTopicTitle}
+        required />
+      <RichTextEditor
+        label="Content" 
+        value={topicContent}
+        onChange={setTopicContent}
+        required />
+      {
+        topicId ? (
+          <div className="form-control w-full">
+            <Header2 value="Media" />
+            <div className="flex items-center">
+              <input 
+                type="checkbox"
+                className="checkbox"
+                checked={removeMedia}
+                onChange={e => setRemoveMedia(e.target.checked)}
+                />
                 <label className="label">
-                  <span className="label-text">Media</span>
+                  <span className="label-text">Remove Media</span>
                 </label>
-                <div>
-                  <input 
-                    type="file" 
-                    name="media"
-                    accept="video/*, image/*" 
-                    className="file-input file-input-bordered w-full max-w-xs" />
-                </div>
-              </div>
-            )
-          }
-
-          <label className="label label-text">
-            Example Code
-          </label>
-          <Editor
-            language="java"
-            defaultLanguage="java"
-            theme="vs-dark"
-            height="20rem"
-            value={topicCode}
-            onChange={setTopicCode}
-          />
-
-          <div className="flex justify-end my-4 space-x-2">
-            <button 
-              className="btn btn-ghost"
-              onClick={() => setTopicModal(false)}
-            >CANCEL</button>
-            <button className="btn btn-success">SAVE TOPIC</button>
+            </div>
+            <div>
+              <label className="label">
+                <span className="label-text">Replace Media</span>
+              </label>
+              <input 
+                type="file" 
+                name="media"
+                accept="video/*, image/*" 
+                disabled={removeMedia}
+                className="file-input file-input-bordered w-full max-w-xs" />
+            </div>
           </div>
-        </form>
-    )
-  }
+        ) : (
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Media</span>
+            </label>
+            <div>
+              <input 
+                type="file" 
+                name="media"
+                accept="video/*, image/*" 
+                className="file-input file-input-bordered w-full max-w-xs" />
+            </div>
+          </div>
+        )
+      }
+
+      <label className="label label-text">
+        Example Code
+      </label>
+      <Editor
+        language="java"
+        defaultLanguage="java"
+        theme="vs-dark"
+        height="20rem"
+        value={topicCode}
+        onChange={setTopicCode}
+      />
+
+      <div className="flex justify-end my-4 space-x-2">
+        <button 
+          className="btn btn-ghost"
+          onClick={() => setTopicModal(false)}
+        >CANCEL</button>
+        <button className="btn btn-success">SAVE TOPIC</button>
+      </div>
+    </form>
+  )
+
+  if(detailsModal) return (
+    <form 
+      className="bg-base-200 p-4 sm:w-2/3 rounded relative"
+      onSubmit={saveDetails}
+    >
+      <div className="my-4">
+        <h1 className="text-lg font-semibold">Edit Details</h1>
+      </div>
+      
+      <TextField 
+        label="Title" 
+        value={title}
+        onChange={setTitle}
+        required />
+        
+      <RichTextEditor
+        label="Sypnosis" 
+        value={sypnosis}
+        onChange={setSypnosis}
+      />
+      {/* <TextArea 
+        label="Sypnosis" 
+        value={sypnosis}
+        onChange={setSypnosis}
+        required /> */}
+
+      <div className="flex justify-end my-4 space-x-2">
+        <button 
+          className="btn btn-ghost"
+          onClick={() => setDetailsModal(false)}
+        >CANCEL</button>
+        <button className="btn btn-success">SAVE DETAILS</button>
+      </div>
+    </form>
+  )
 
   return (
     <>
       {/* Details Modal */}
       <ReactModal 
-        isOpen={detailsModal}
+        // isOpen={detailsModal}
         ariaHideApp={false}
         style={{overlay: {zIndex: 49, background: "transparent"}}}
         className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "

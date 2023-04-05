@@ -2,7 +2,7 @@
 export default function Select ({width, label, type, placeholder, name, required, value, onChange, options, disabled}) {
   
   return (
-    <div className={"form-control w-full " + (
+    <div className={"form-control " + (
       width ? (`max-w-${width}`) : ""
     )}>
       <label className="label justify-start">

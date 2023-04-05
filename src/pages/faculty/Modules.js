@@ -47,10 +47,18 @@ export default function Modules({user}) {
                 <div className="w-full lg:pr-8 p-0">
                   <div className="flex flex-col items-center justify-center mb-8">
                     <div className="font-bold uppercase mb-4">Module List</div>
-                    <div className="font-thin">Total Number of Available Modules: <span className="font-bold">
-                      {/* <?php echo mysqli_num_rows(mysqli_query($conn, 'SELECT * from tb_modules')) ?> */}
-                    </span></div>
+                    <div className="font-thin">Total Number of Available Modules: 
+                      <span className="font-bold ml-2">
+                        {modules.length}
+                      </span>
+                    </div>
                   </div>
+                  <div className="mt-4 flex flex-row justify-center">
+                    <Link to="/faculty/modules/add" className="btn btn-primary">
+                      Add Module
+                    </Link>
+                  </div>
+                  <div className="divider" />
                   <div className="overflow-x-auto">
                     <div>
 
@@ -85,11 +93,7 @@ export default function Modules({user}) {
                       </table>
                     </div>
                   </div>
-                  <div className="mt-4 flex flex-row justify-center">
-                    <Link to="/faculty/add-module" className="btn btn-primary">
-                      Add Module
-                    </Link>
-                  </div>
+
                 </div>
               </div>
             </div>

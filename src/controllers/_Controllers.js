@@ -4,6 +4,7 @@ import Student from './StudentController';
 import Module from './ModuleController';
 import Message from './MessageController';
 import Playground from './PlaygroundController';
+import Room from './RoomController';
 
 export * as Helper from './_Helper';
 export const AdminController = new Admin();
@@ -12,3 +13,4 @@ export const StudentController = new Student();
 export const ModuleController = new Module();
 export const MessageController = new Message();
 export const PlaygroundController = new Playground();
+export const RoomController = new Room();

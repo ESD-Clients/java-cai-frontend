@@ -1,5 +1,5 @@
 
-export default function TextField ({className, width, label, type, placeholder, name, required, value, onChange}) {
+export default function TextField ({className, width, label, type, placeholder, name, required, value, onChange, maxLength}) {
   
   return (
     <div className={"form-control w-full " + (
@@ -21,6 +21,7 @@ export default function TextField ({className, width, label, type, placeholder, 
         required={required}
         value={value}
         onChange={ e => onChange && onChange(e.target.value)}
+        maxLength={maxLength}
       />
     </div>
   )

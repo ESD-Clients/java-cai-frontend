@@ -72,6 +72,25 @@ class StudentController extends BaseController {
 
         return result;
     }
+
+    getStudentsByRoom = async (roomId) => {
+        var result = [];
+
+        try {
+            await this.collectionRef
+                .where('currentRoom', '==', roomId)
+                .get()
+                .then( res => {
+                    result = res.docs;
+                })
+            
+        } catch (err) {
+            console.error(err);
+            result = [];
+        }
+
+        return result;
+    }
 }
 
 export default StudentController;
