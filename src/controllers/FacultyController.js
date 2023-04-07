@@ -42,7 +42,7 @@ class FacultyController extends BaseController {
         try {
             await auth.createUserWithEmailAndPassword(item.email, item.password)
                 .then(async res => {
-                    item.faculty_no = await this.getIncrementId();
+                    item.facultyNo = await this.getIncrementId();
                     item.password = hashData(item.password);
                     item.docStatus = 1;
                     result = await this.storeOnId(res.user.uid, item);

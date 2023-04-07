@@ -22,7 +22,7 @@ export default function StudentList() {
   }, [loaded])
   
   function viewItem () {
-
+    
   }
 
   if(!loaded) return <Loading />
@@ -52,7 +52,7 @@ export default function StudentList() {
                 </div>
                 <div className="divider"></div>
                 <div className="overflow-x-auto">
-                  <div id="viewStudentInfo">
+                  <div>
                   {
                       students.length > 0 ? (
                         <>

@@ -1,15 +1,14 @@
 import { useState } from "react"
 import ReactModal from "react-modal";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import PasswordField from "../../components/PasswordField";
-import Select from "../../components/Select";
+import PasswordField from "../../../components/PasswordField";
+import Select from "../../../components/Select";
 import { v1 as uuidv1 } from 'uuid';
-import TextField from "../../components/TextField";
-import { firestore } from "../../config/initFirebase";
-import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
-import { getCurrentTimestamp, getErrorMessage } from "../../controllers/_Helper";
+import TextField from "../../../components/TextField";
+import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
+import { getCurrentTimestamp, getErrorMessage } from "../../../controllers/_Helper";
 import { useEffect } from "react";
-import { RoomController } from "../../controllers/_Controllers";
+import { RoomController, StudentController } from "../../../controllers/_Controllers";
 
 export default function RoomList ({user}) {
 
@@ -54,6 +53,7 @@ export default function RoomList ({user}) {
       createdAt: getCurrentTimestamp(),
       type: type,
       students: [],
+      requests: [],
       password: type === "close" ? password : "",
     })
 
@@ -74,6 +74,68 @@ export default function RoomList ({user}) {
       })
     }
   }
+
+  
+  function deleteRoom (roomId) {
+    showConfirmationBox({
+      message: "Are you sure you want to delete this room?",
+      type: "danger",
+      onYes: async () => {
+
+        showLoading({
+          message: "Deleting Room..."
+        })
+
+        try{
+          //REMOVE STUDENT CURRENT ROOM
+          await StudentController.getStudentsByRoom(roomId)
+          .then(async res => {
+            for(let student of res) {
+              await StudentController.update(student.id, {
+                currentRoom: ""
+              })
+            }
+          })
+        
+          //REMOVE INVITES
+          await StudentController.getStudentsByRoomInvites(roomId)
+            .then(async res => {
+              for(let student of res) {
+
+                let roomInvites = student.data().roomInvites;
+                let index = roomInvites.indexOf(roomId);
+                roomInvites.splice(index, 1);
+
+                await StudentController.update(student.id, {
+                  roomInvites: roomInvites
+                })
+              }
+            })
+          
+          //DELETE ROOM
+          await RoomController.destroy(roomId);
+
+          clearModal();
+
+          showMessageBox({
+            title: "Success",
+            message: "Room deleted successfully!"
+          })
+        }
+        catch(err) {
+          console.error(err);
+          clearModal();
+
+          showMessageBox({
+            title: "Error",
+            message: "Something went wrong"
+          })
+        }
+
+      }
+    })  
+  }
+
 
   return (
     <>
@@ -199,7 +261,7 @@ export default function RoomList ({user}) {
                             </button>
                             <button 
                               className="btn btn-xs btn-error"
-                              // onClick={() => viewItem(item)}
+                              onClick={() => deleteRoom(item.id)}
                             >
                               Delete
                             </button>

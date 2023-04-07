@@ -44,6 +44,15 @@ export const clearPlaygroundCode = () => {
   window.localStorage.removeItem("playground-code");
 }
 
+export const padIdNo = (num) => {
+  let size = 6;
+
+  num = num.toString();
+  while (num.length < size) num = "0" + num;
+  
+  return num;
+}
+
 /** FIREBASE */
 export const getDocData = (doc) => {
   let item = doc.data();

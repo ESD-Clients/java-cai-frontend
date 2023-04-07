@@ -60,7 +60,7 @@ class StudentController extends BaseController {
         try {
             await auth.createUserWithEmailAndPassword(item.email, item.password)
                 .then(async res => {
-                    item.student_no = await this.getIncrementId();
+                    item.studentNo = await this.getIncrementId();
                     item.password = hashData(item.password);
                     item.docStatus = 1;
                     result = await this.storeOnId(res.user.uid, item);
@@ -79,6 +79,7 @@ class StudentController extends BaseController {
         try {
             await this.collectionRef
                 .where('currentRoom', '==', roomId)
+                .orderBy('studentNo', 'asc')
                 .get()
                 .then( res => {
                     result = res.docs;
@@ -91,6 +92,55 @@ class StudentController extends BaseController {
 
         return result;
     }
+
+    getStudentsByRoomInvites = async (roomId) => {
+        var result = [];
+
+        try {
+            await this.collectionRef
+                .where('roomInvites', 'array-contains', roomId)
+                .orderBy('studentNo', 'asc')
+                .get()
+                .then( res => {
+                    result = res.docs;
+                })
+            
+        } catch (err) {
+            console.error(err);
+            result = [];
+        }
+
+        return result;
+    }
+
+    getActiveList= async () => {
+        var result = [];
+
+        try {
+            await this.collectionRef
+                .where('docStatus', '==', 1)
+                .orderBy('studentNo', 'asc')
+                .get()
+                .then(res => {
+                    console.log(`Collection [${this.collectionName}]`, res.docs);
+                    result = res.docs;
+                })
+
+        } catch (err) {
+            console.error(err);
+            result = err
+        }
+
+        return result;
+    }
+
+    subscribeActiveList = (onSnapshot) => {
+        return this.collectionRef
+            .where('docStatus', '==', 1)
+            .orderBy('studentNo', 'asc')
+            .onSnapshot(onSnapshot);
+    }
+    
 }
 
 export default StudentController;

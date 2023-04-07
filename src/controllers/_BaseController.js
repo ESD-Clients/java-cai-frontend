@@ -71,18 +71,21 @@ class BaseController {
 
     store = async (item) => {
 
-        console.log("NO ID");
         var result = null;
+        var data = {
+            ...item,
+            createdAt: getCurrentTimestamp(),
+            updatedAt: getCurrentTimestamp()
+        }
 
         try {
             await this.collectionRef
-                .add({
-                    ...item,
-                    createdAt: getCurrentTimestamp(),
-                    updatedAt: getCurrentTimestamp()
-                })
-                .then(async res => {
-                    result = getDocData(await res.get());
+                .add(data)
+                .then( res => {
+                    result = {
+                        ...data,
+                        id: res.id
+                    }
                 })
 
         } catch (err) {
@@ -94,7 +97,6 @@ class BaseController {
     };
 
     storeOnId = async (id, item) => {
-        console.log("WITH ID");
         var result = null;
 
         try {
@@ -208,9 +210,6 @@ class BaseController {
     /** MEDIA */
     uploadFile = async (file, path) => {
 
-        console.log(file);
-
-
         let fileName = file.name.split('.');
         let uploadName = `${uuidv4()}.${fileName[fileName.length - 1]}`;
         let fileRef = storage.ref(`${path}/${uploadName}`);
@@ -222,8 +221,6 @@ class BaseController {
       
         return fileUri;
     }
-
-    
 
     /** REALTIME */
     subscribeDoc = (id, onSnapshot) => {

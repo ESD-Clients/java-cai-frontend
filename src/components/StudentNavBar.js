@@ -63,7 +63,6 @@ export default function StudentNavBar({ user }) {
                 {/* Small Screen */}
                 <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 backdrop-blur-sm rounded-box w-52">
                   <li><a>Dashboard</a></li>
-                  <li><a>Playground</a></li>
                   <li tabIndex="0">
                     <a>
                       Modules
@@ -101,8 +100,11 @@ export default function StudentNavBar({ user }) {
                           <li>No Module Available</li>
                         )
                       }
+                      
                     </ul>
                   </li>
+                  <li><Link to="/student/playground">Playground</Link></li>
+                  <li><Link to="/student/room">Room</Link></li>
                 </ul>
               </div>
 
@@ -110,7 +112,6 @@ export default function StudentNavBar({ user }) {
               <div className="hidden lg:block">
                 <ul className="menu menu-horizontal p-0">
                   <li><Link to="/student/dashboard">Dashboard</Link></li>
-                  <li><Link to="/student/playground">Playground</Link></li>
                   <li tabIndex="0">
                     <a>
                       Modules
@@ -151,6 +152,8 @@ export default function StudentNavBar({ user }) {
                       }
                     </ul>
                   </li>
+                  <li><Link to="/student/playground">Playground</Link></li>
+                  <li><Link to="/student/room">Room</Link></li>
                 </ul>
               </div>
             </div>

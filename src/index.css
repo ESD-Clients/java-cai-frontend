@@ -75,3 +75,11 @@ input::-ms-reveal {
   outline: 2px solid hsla(var(--bc) / 0.2);
   outline-offset: 2px;
 }
+
+/** QuillJS Editor **/
+.rich-text-editor .ql-container {
+  min-height: 20rem;
+}
+.rich-text-editor .ql-editor {
+  min-height: 20rem;
+}

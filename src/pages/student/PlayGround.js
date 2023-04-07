@@ -81,7 +81,7 @@ export default function PlayGround() {
             </div>
             <div id="output-container" className="h-full px-4 pb-4">
               <textarea
-                className="textarea w-full font-mono h-full"
+                className="textarea textarea-bordered w-full font-mono h-full"
                 onChange={(e) => setInput(e.target.value)}
                 value={input}
               />
@@ -106,12 +106,12 @@ export default function PlayGround() {
             <div id="output-container" className="h-full p-4">
               {
                 compileError ? (
-                  <p className="textarea w-full h-full font-mono text-red-500 whitespace-pre-wrap">
+                  <p className="textarea textarea-bordered w-full h-full font-mono text-red-500 whitespace-pre-wrap">
                     Compiled Error!
                   </p>
 
                 ) : (
-                  <p className="textarea w-full h-full font-mono whitespace-pre-wrap">
+                  <p className="textarea textarea-bordered w-full h-full font-mono whitespace-pre-wrap">
                     {output}
                   </p>
                 )

@@ -8,11 +8,13 @@ import AddModule from "./faculty/AddModule";
 import Dashboard from "./faculty/Dashboard";
 import Messages from "./faculty/Messages";
 import Modules from "./faculty/Modules";
-import RoomView from "./faculty/RoomView";
-import RoomList from "./faculty/RoomList";
+import RoomView from "./faculty/room/RoomView";
+import RoomList from "./faculty/room/RoomList";
 import StudentList from "./faculty/StudentList";
 import ViewModule from "./faculty/ViewModule";
 import ViewQuestions from "./faculty/ViewQuestions";
+import ActivityView from "./faculty/room/ActivityView";
+import ActivityWork from "./faculty/room/ActivityWork";
 
 export default function Faculty() {
 
@@ -64,6 +66,8 @@ export default function Faculty() {
 
                 <Route path="/rooms" element={<RoomList user={user} />} />
                 <Route path="/room" element={<RoomView user={user} />} />
+                <Route path="/activity" element={<ActivityView user={user} />} />
+                <Route path="/activity/work" element={<ActivityWork user={user} />} />
 
                 <Route path="/modules" element={<Modules user={user} />} />
                 <Route path="/modules/add" element={<AddModule user={user} />} />

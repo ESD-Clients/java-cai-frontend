@@ -23,6 +23,7 @@ const tools = {
     [
       'link', 
       'image', 
+      // 'file'
       // 'video'
     ],
     ['clean']
@@ -56,11 +57,7 @@ export default function RichTextEditor ({label, width, required, value, onChange
           onChange={onChange}
           value={value}
           modules={tools}
-          style={{
-            backgroundColor: '#fff',
-            color: '#000',
-            minHeight: '300px',
-          }}
+          className="rich-text-editor text-black"
         />
       </div>
     </div>

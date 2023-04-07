@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import QuizItem from "../../components/QuizItem";
 import StudentNavBar from "../../components/StudentNavBar";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
+import { getDocData } from "../../controllers/_Helper";
 import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 
 export default function Quiz() {
@@ -222,10 +223,7 @@ export default function Quiz() {
                     </div>
                     {multiChoices.map((item, i) => (
                       <QuizItem 
-                        key={i.toString()} item={{
-                          ...item.data(),
-                          id: item.id
-                        }} 
+                        key={i.toString()} item={getDocData(item)} 
                         index={i} 
                       />
                     ))}
@@ -254,10 +252,7 @@ export default function Quiz() {
                     </div>
                     {fillBlanks.map((item, i) => (
                       <QuizItem 
-                        key={i.toString()} item={{
-                          ...item.data(),
-                          id: item.id
-                        }} 
+                        key={i.toString()} item={getDocData(item)} 
                         index={i} 
                       />
                     ))}
@@ -291,10 +286,7 @@ export default function Quiz() {
                     <div className="font-bold mb-4 text-xl">III. Coding</div>
                     {codings.map((item, i) => (
                       <QuizItem 
-                        key={i.toString()} item={{
-                          ...item.data(),
-                          id: item.id
-                        }} 
+                        key={i.toString()} item={getDocData(item)} 
                         index={i} 
                       />
                     ))}
