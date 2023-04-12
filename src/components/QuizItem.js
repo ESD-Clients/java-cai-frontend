@@ -146,7 +146,7 @@ export default function QuizItem ({item, index}) {
 
     return (
       <div>
-        <div className="p-2 relative">
+        <div className="p-2 relative z-0">
           <div className="mb-2">{(index + 1).toString() + ". " + item.question}</div>
           {
             item.remarks !== undefined ? (
@@ -158,9 +158,10 @@ export default function QuizItem ({item, index}) {
             ) : (
               <>
                 <Editor
+                  className="border"
                   language="java"
                   defaultLanguage="java"
-                  theme="vs-dark"
+                  theme="vs-light"
                   height="20rem"
                   onChange={setAnswer}
                 />

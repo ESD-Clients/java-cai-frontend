@@ -128,8 +128,8 @@ export default function RoomStudents({
                     <th>Student No</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Current Module</th>
-                    <th>Progress</th>
+                    {/* <th>Current Module</th>
+                    <th>Progress</th> */}
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -255,8 +255,8 @@ function StudentItem({student, room}) {
       <td>{padIdNo(student.studentNo)}</td>
       <td>{student.name}</td>
       <td>{student.email}</td>
-      <td>{student.current_module}</td>
-      <td>{student.progress}</td>
+      {/* <td>{student.current_module}</td>
+      <td>{student.progress}</td> */}
       <td className="flex gap-2">
         {
           loading ? (
@@ -381,9 +381,7 @@ function InviteItem({ student, room }) {
     let invites = student.data().roomInvites;
     let index = invites.indexOf(room.id);
 
-    console.log("Before", invites);
     invites.splice(index, 1);
-    console.log("After", invites);
 
     await StudentController.update(student.id, {
       roomInvites: invites

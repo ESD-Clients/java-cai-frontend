@@ -5,7 +5,7 @@ import HDivider from "../../../components/HDivider";
 import RichText from "../../../components/RichText";
 import RichTextEditor from "../../../components/RichTextEditor";
 import { RoomController } from "../../../controllers/_Controllers";
-import { clearModal, showLoading, showMessageBox } from "../../../modals/Modal";
+import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
 import { CLR_PRIMARY } from "../../../values/MyColor";
 
 export default function Activity({ user }) {
@@ -53,10 +53,9 @@ export default function Activity({ user }) {
 
         if (activity) {
           let studentWork = await RoomController.getStudentWork(roomId, activityId, user.id);
-          console.log("STUDENT WORK", studentWork);
           setSubmittedWork(studentWork);
         }
-        
+
         setRoom(room);
         setActivity(activity);
         setLoading(false);
@@ -75,48 +74,56 @@ export default function Activity({ user }) {
     setFiles(list);
   }
 
-  async function submitWork() {
-    showLoading({
-      message: "Submitting work..."
+  function submitWork() {
+    showConfirmationBox({
+      title: "Please check your work",
+      message: "Are you sure you want to submit your work? You cannot edit your work once you submit it.",
+      type: "warning",
+      onYes: async () => {
+        showLoading({
+          message: "Submitting work..."
+        })
+
+        let fileUrls = [];
+
+        for (let file of files) {
+          let url = await RoomController.uploadFile(file, `room/activity/${activityId}/studentWork/${user.id}`);
+          fileUrls.push(url);
+        }
+
+        let studentWork = {
+          studentId: user.id,
+          work: work,
+          files: fileUrls
+        }
+
+        let result = await RoomController.submitWork(roomId, activityId, studentWork);
+        let activity = await RoomController.getActivity(roomId, activityId);
+        let studentSubmit = [...activity.submitted, user.id];
+        await RoomController.updateActivity(roomId, activityId, {
+          submitted: studentSubmit
+        })
+
+        clearModal();
+
+        if (result && result.id) {
+          setSubmittedWork(result);
+          showMessageBox({
+            title: "Success",
+            message: "Your work has been submitted successfully!",
+            type: "success"
+          });
+        }
+        else {
+          showMessageBox({
+            title: "Error",
+            message: "Something went wrong!",
+            type: "danger"
+          })
+        }
+      }
     })
 
-    let fileUrls = [];
-
-    for (let file of files) {
-      let url = await RoomController.uploadFile(file, `room/activity/${activityId}/studentWork/${user.id}`);
-      fileUrls.push(url);
-    }
-
-    let studentWork = {
-      studentId: user.id,
-      work: work,
-      files: fileUrls
-    }
-
-    let result = await RoomController.submitWork(roomId, activityId, studentWork);
-    let activity = await RoomController.getActivity(roomId, activityId);
-    let studentSubmit = [...activity.submitted, user.id];
-    await RoomController.updateActivity(roomId, activityId, {
-      submitted: studentSubmit
-    })
-
-    clearModal();
-
-    if (result && result.id) {
-      setSubmittedWork(result);
-      showMessageBox({
-        title: "Success",
-        message: "Your work has been submitted successfully!",
-        type: "success"
-      });
-    }
-    else {
-      showMessageBox({
-        title: "Error",
-        message: "Something went wrong!",
-        type: "danger"
-      })
-    }
   }
 
   function checkWork() {
@@ -129,13 +136,13 @@ export default function Activity({ user }) {
     return false;
   }
 
-  if(loading) {
+  if (loading) {
     return (
       <div className="w-full flex flex-col h-[40vh] items-center justify-center">
         <p>
           Getting room and activity's information...
         </p>
-        
+
         <Dots color={CLR_PRIMARY} />
       </div>
     )
@@ -153,7 +160,7 @@ export default function Activity({ user }) {
     <>
       <div className="flex justify-between gap-4">
         <div>
-          <button className="btn btn-primary" onClick={() => navigate('/student/room')}>
+          <button className="btn btn-ghost" onClick={() => navigate('/student/room')}>
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
               <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
             </svg>
@@ -170,7 +177,16 @@ export default function Activity({ user }) {
       <HDivider />
 
       <div>
-        <h1 className="text-4xl font-bold">{activity.title}</h1>
+        <div className="flex justify-between">
+          <h1 className="text-4xl font-bold">{activity.title}</h1>
+          <div>
+            <h2>Score:</h2>
+            <h6 className="uppercase text-2xl font-bold">{submittedWork.score ? submittedWork.score : "-"} / {activity.points}</h6>
+          </div>
+          
+        </div>
+
+        {/* <h6 className="uppercase font-bold mt-8">{activity.points} Points</h6> */}
         <div className="my-8">
           <h6 className="uppercase font-bold text-xs">Instruction:</h6>
           <RichText
@@ -264,12 +280,12 @@ export default function Activity({ user }) {
                         <span className="flex-1 whitespace-nowrap overflow-hidden text-ellipsis block">
                           {`${activity.title}_${(index + 1)}`}
                         </span>
-                        <a 
+                        <a
                           className="cursor-pointer"
                           target='_blank'
                           href={item}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500 stroke-current" width="20" height="20" viewBox="0 0 24 24" fill="none" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-500 stroke-current" width="20" height="20" viewBox="0 0 24 24" fill="none" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5" /></svg>
                         </a>
                       </div>
                     </li>

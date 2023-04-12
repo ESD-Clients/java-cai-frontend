@@ -23,6 +23,7 @@ export default function ViewQuestions () {
   const [type, setType] = useState('choices');
   const [questionId, setQuestionId] = useState('');
   const [question, setQuestion] = useState('');
+  const [points, setPoints] = useState('');
   const [answer, setAnswer] = useState('');
   const [choice1, setChoice1] = useState('');
   const [choice2, setChoice2] = useState('');
@@ -34,8 +35,6 @@ export default function ViewQuestions () {
 
   useEffect(() => {
     const unsubscribe = ModuleController.subscribeQuestions(moduleId, (snapshot) => {
-
-      console.log("Questions", snapshot.docs)
       
       let multi = [];
       let blank = [];
@@ -72,7 +71,8 @@ export default function ViewQuestions () {
     let item = {
       question: question,
       answer: answer,
-      type: type
+      type: type,
+      points: parseInt(points)
     }
 
     if(type === "choices") {
@@ -123,6 +123,7 @@ export default function ViewQuestions () {
     let data = item.data();
     setQuestionId(item.id);
     setAnswer(data.answer);
+    setPoints(data.points);
     setQuestion(data.question);
     setType(data.type);
 
@@ -136,7 +137,6 @@ export default function ViewQuestions () {
   }
 
   function deleteQuestion (id) {
-    console.log(id);
     showConfirmationBox({
       message: "Are you sure you want to remove this question?",
       type: "warning",
@@ -145,10 +145,7 @@ export default function ViewQuestions () {
           message: "Deleting..."
         })
 
-        let result = await ModuleController.deleteQuestion({
-          moduleId: moduleId,
-          questionId: id
-        });
+        let result = await ModuleController.deleteQuestion(moduleId, id);
 
         clearModal();
 
@@ -253,6 +250,7 @@ export default function ViewQuestions () {
               />
             )
           }
+
           {
             type === "choices" && (
               <>
@@ -280,6 +278,16 @@ export default function ViewQuestions () {
               </>
             )
           }
+
+          <TextField
+            label="Points"
+            name="points"
+            type="number"
+            value={points}
+            onChange={setPoints}
+            required
+          />
+
           <div className="flex justify-end my-4 space-x-2">
             <button 
               className="btn btn-ghost"
@@ -295,7 +303,7 @@ export default function ViewQuestions () {
 
       <div>
         <div className="flex justify-between">
-          <button className="btn btn-primary" onClick={() => navigate(-1)}>
+          <button className="btn btn-ghost" onClick={() => navigate(-1)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
               <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
             </svg>
@@ -320,11 +328,11 @@ export default function ViewQuestions () {
 
         <div>
           <Tabs>
-            <TabList className="flex border-b-2 border-base-100">
+            <TabList className="flex border-y-2">
               <Tab 
                 className={
-                  "flex-1 text-center py-4 px-2 hover:bg-primary-focus cursor-pointer " +
-                  (tab === "choices" && "bg-primary")
+                  "flex-1 text-center py-4 px-2 hover:bg-primary-focus hover:text-white cursor-pointer " +
+                  (tab === "choices" && "bg-primary text-white")
                 }
                 onClick={() => {
                   setTab('choices')
@@ -334,8 +342,8 @@ export default function ViewQuestions () {
                 Mutliple Choice</Tab>
               <Tab 
                 className={
-                  "flex-1 text-center py-4 px-2 hover:bg-primary-focus cursor-pointer " +
-                  (tab === "blank" && "bg-primary")
+                  "flex-1 text-center py-4 px-2 hover:bg-primary-focus hover:text-white cursor-pointer " +
+                  (tab === "blank" && "bg-primary text-white")
                 }
                 onClick={() => {
                   setTab('blank')
@@ -345,8 +353,8 @@ export default function ViewQuestions () {
                 Fill in the Blank</Tab>
               <Tab 
                 className={
-                  "flex-1 text-center py-4 px-2 hover:bg-primary-focus cursor-pointer " +
-                  (tab === "coding" && "bg-primary")
+                  "flex-1 text-center py-4 px-2 hover:bg-primary-focus hover:text-white cursor-pointer " +
+                  (tab === "coding" && "bg-primary text-white")
                 }
                 onClick={() => {
                   setTab('coding')
@@ -377,6 +385,11 @@ export default function ViewQuestions () {
                         <span className="w-20">Choices: </span>
                         <span className="ml-4">{item.data().choices.toString()}</span>
                       </div>
+
+                      <div className="flex flex-col items-start md:flex-row mt-2">
+                        <span className="w-20">Points: </span>
+                        <span className="ml-4">{item.data().points}</span>
+                      </div>
                     </div>
                     <QuestionAction item={item} />
 
@@ -400,6 +413,11 @@ export default function ViewQuestions () {
                         <span className="w-20">Answer: </span>
                         <span className="font-bold ml-4">{item.data().answer}</span>
                       </div>
+
+                      <div className="flex flex-col items-start md:flex-row mt-2">
+                        <span className="w-20">Points: </span>
+                        <span className="ml-4">{item.data().points}</span>
+                      </div>
                     </div>
 
                     <QuestionAction item={item} />
@@ -422,6 +440,11 @@ export default function ViewQuestions () {
                       <div className="flex flex-col items-start md:flex-row mt-2">
                         <span className="w-20">Answer: </span>
                         <p className="textarea font-mono ml-4 whitespace-pre-wrap">{item.data().answer}</p>
+                      </div>
+
+                      <div className="flex flex-col items-start md:flex-row mt-2">
+                        <span className="w-20">Points: </span>
+                        <span className="ml-4">{item.data().points}</span>
                       </div>
                     </div>
 

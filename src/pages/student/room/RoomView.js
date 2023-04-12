@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import HDivider from "../../components/HDivider";
-import { RoomController, StudentController } from "../../controllers/_Controllers";
-import { getDocData } from "../../controllers/_Helper";
-import { clearModal, showConfirmationBox, showLoading } from "../../modals/Modal";
+import HDivider from "../../../components/HDivider";
+import { RoomController, StudentController } from "../../../controllers/_Controllers";
+import { getDocData } from "../../../controllers/_Helper";
+import { clearModal, showConfirmationBox, showLoading } from "../../../modals/Modal";
 
 export default function RoomView({ student }) {
 
@@ -17,8 +17,14 @@ export default function RoomView({ student }) {
       setRoom(getDocData(snapshot));
     })
 
-    const unsubscribeActivities = RoomController.subscribeActivities(student.currentRoom, (snapshot) => {
-      setActivities(snapshot.docs);
+    const unsubscribeActivities = RoomController.subscribeActivities(student.currentRoom, async (snapshot) => {
+
+      let activities = snapshot.docs;
+      for(let activity of activities) {
+        let studentWork = await RoomController.getStudentWork(student.currentRoom, activity.id, student.id);
+        activity.studentWork = studentWork;
+      }
+      setActivities(activities);
     })
 
     return () => {
@@ -87,7 +93,8 @@ export default function RoomView({ student }) {
                     <thead>
                       <tr>
                         <th>Title</th>
-                        <th>Status</th>
+                        <th>Points</th>
+                        <th>Remarks</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -96,11 +103,22 @@ export default function RoomView({ student }) {
                         activities.map((item, i) => (
                           <tr key={i.toString()}>
                             <td>{item.data().title}</td>
+                            <td>{item.data().points}</td>
                             <td>
-                              <span className="italic">No work/s submitted</span>
+                              {
+                                item.studentWork ? (
+                                  item.studentWork.score ? (
+                                    <span className="text-green-500">{item.studentWork.score}</span>
+                                  ) : (
+                                    <span className="italic text-blue-400">Submitted</span>
+                                  )
+                                ) : (
+                                  <span className="italic text-red-400">No work/s submitted</span>
+                                )
+                              }
                             </td>
                             <td>
-                              <button 
+                              <button
                                 className="btn btn-info btn-sm"
                                 onClick={() => navigate(`/student/activity?room=${room.id}&activity=${item.id}`)}
                               >

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { StudentController } from "../../controllers/_Controllers";
-import { getDocData } from "../../controllers/_Helper";
+import { StudentController } from "../../../controllers/_Controllers";
+import { getDocData } from "../../../controllers/_Helper";
 import RoomList from "./RoomList";
 import RoomView from "./RoomView";
 

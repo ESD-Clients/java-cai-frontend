@@ -35,7 +35,6 @@ class BaseController {
                 .where('docStatus', '==', 1)
                 .get()
                 .then(res => {
-                    console.log(`Collection [${this.collectionName}]`, res.docs);
                     result = res.docs;
                 })
 
@@ -112,7 +111,7 @@ class BaseController {
                 })
 
         } catch (err) {
-            console.log(err);
+            console.error(err);
             result = err;
         }
 

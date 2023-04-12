@@ -109,8 +109,6 @@ export default function Enroll () {
 
     let result = await StudentController.register(data);
     clearModal();
-
-    console.log(result);
     
     if (result && result.id) {
       navigate("/");
@@ -126,9 +124,10 @@ export default function Enroll () {
     else {
       showMessageBox({
         title: "Error",
-        message: "Something went wrong",
+        message: result.message,
         type: "danger",
         onPress: () => {
+          
         }
       });
     }

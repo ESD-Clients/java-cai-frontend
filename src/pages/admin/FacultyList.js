@@ -19,19 +19,6 @@ export default function FacultyList({ user }) {
     
   }, [])
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     console.log("Fetching...");
-  //     let faculties = await FacultyController.getActiveList();
-  //     setFaculties(faculties);
-  //     setLoaded(true);
-  //   }
-
-  //   if (!loaded) {
-  //     fetchData();
-  //   }
-  // }, [loaded])
-
   async function addItem(e) {
     e.preventDefault();
     document.getElementById("addFaculty").click();

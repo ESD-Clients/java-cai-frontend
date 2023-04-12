@@ -6,9 +6,8 @@ import { Helper, StudentController } from "../controllers/_Controllers";
 import Dashboard from "./student/Dashboard";
 import Module from "./student/Module";
 import PlayGround from "./student/PlayGround";
-import Quiz from "./student/Quiz";
-import QuizResult from "./student/QuizResult";
-import Room from "./student/Room";
+import Quiz from "./student/quiz/Quiz";
+import Room from "./student/room/Room";
 import Activity from "./student/room/Activity";
 
 export default function Student () {
@@ -51,7 +50,6 @@ export default function Student () {
               <Route path="/room" element={<Room user={user} />} />
               <Route path="/activity" element={<Activity user={user} />} />
               <Route path="/quiz" element={<Quiz user={user} />} />
-              <Route path="/result" element={<QuizResult user={user} />} />
               <Route path="/" element={<Navigate to="/student/dashboard" replace />} />
             </Routes>
           </div>

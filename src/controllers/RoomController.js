@@ -77,6 +77,8 @@ class RoomController extends BaseController {
           
           //Delete activity
           await activity.ref.delete();
+
+          result = true;
         })
 
     } catch (err) {
@@ -93,6 +95,7 @@ class RoomController extends BaseController {
     return this.collectionRef
       .doc(roomId)
       .collection('activities')
+      .orderBy('createdAt', 'asc')
       .onSnapshot(onSnapshot)
   }
 
@@ -199,6 +202,31 @@ class RoomController extends BaseController {
           id: res.id,
         };
       })
+
+    } catch (error) {
+      console.error(error)
+    }
+
+    return result;
+  }
+
+  checkWork = async (roomId, activityId, workId, score) => {
+    var result = false;
+
+
+    try {
+      await this.collectionRef
+        .doc(roomId)
+        .collection('activities')
+        .doc(activityId)
+        .collection('studentWorks')
+        .doc(workId)
+        .update({
+          score: score
+        })
+        .then(() => {
+          result = true
+        })
 
     } catch (error) {
       console.error(error)

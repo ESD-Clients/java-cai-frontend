@@ -40,8 +40,6 @@ export default function RoomView() {
   useEffect(() => {
     let unsubscribeRoom = RoomController.subscribeDoc(roomId, async (snapshot) => {
 
-      console.log("ROOM UPDATED");
-
       let room = getDocData(snapshot)
 
       setRoom(room)
@@ -75,7 +73,6 @@ export default function RoomView() {
     }
     // let students = await StudentController.getStudentsByRoom(roomId);
     setRoomStudents(listStudents);
-    console.log("Getting Students...", students)
 
     let invites = await StudentController.getStudentsByRoomInvites(roomId);
     setRoomInvites(invites);
@@ -96,7 +93,7 @@ export default function RoomView() {
     <>
       <div className="flex justify-between">
         <div>
-          <button className="btn btn-primary" onClick={() => navigate("/faculty/rooms")}>
+          <button className="btn btn-ghost" onClick={() => navigate("/faculty/rooms")}>
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
               <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
             </svg>

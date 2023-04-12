@@ -50,9 +50,6 @@ export default function Home () {
       })
     }
 
-  
-    console.log("Login", result);
-
     if(result && result.id) {
 
       result.type = type;

@@ -22,8 +22,6 @@ export default function Admin () {
   const location = useLocation();
   const user = Helper.getCurrentUser();
 
-  console.log(location.pathname)
-
   useEffect(() => {
     if(!user || user.type !== "admin") {
       navigate("/");

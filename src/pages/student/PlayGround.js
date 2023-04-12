@@ -41,11 +41,9 @@ export default function PlayGround() {
 
     await axios(config)
       .then(function (response) {
-        console.log(response.data);
         setOutput(response.data.output);
       })
       .catch(function (error) {
-        console.log(error);
         setCompileError(true);
       });
 
@@ -62,8 +60,8 @@ export default function PlayGround() {
             {/* <textarea className="textarea textarea-bordered resize-none focus:outline-none leading-snug w-full h-full text-current text-lg" wrap="logical" id="textareaInput"></textarea> */}
             <Editor
               defaultLanguage="java"
-              className="z-0"
-              theme="vs-dark"
+              className="z-0 border"
+              theme="vs-light"
               value={codes}
               onChange={(value) => {
                 Helper.setPlaygroundCode(value)

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import RichTextEditor from "../../../components/RichTextEditor";
 import TextField from "../../../components/TextField";
 import { Helper, RoomController } from "../../../controllers/_Controllers";
-import { clearModal, showLoading, showMessageBox } from "../../../modals/Modal";
+import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
 
 export default function ActivityList({ roomId, roomActivities }) {
 
@@ -33,11 +33,9 @@ export default function ActivityList({ roomId, roomActivities }) {
       submitted: []
     }
 
-    console.log(data);
+    data.points = parseInt(data.points)
 
     let res = await RoomController.createAcvitity(roomId, data);
-
-    console.log("Activity", res);
 
     clearModal();
 
@@ -51,6 +49,32 @@ export default function ActivityList({ roomId, roomActivities }) {
       setCreateModal(false)
     }
 
+  }
+
+  function deleteActivity (activityId) {
+
+    showConfirmationBox({
+      message: "Are you sure you want to delete this activity?",
+      type: "danger",
+      onYes: async () => {
+
+        showLoading({
+          message: "Deleting activity..."
+        })
+
+        let res = await RoomController.destroyActivity(roomId, activityId);
+
+        clearModal();
+        
+        if(res !== true) {
+          showMessageBox({
+            title: "Error",
+            message: "Something went wrong!",
+            type: "danger"
+          })
+        }
+      }
+    })
   }
 
   return (
@@ -72,7 +96,14 @@ export default function ActivityList({ roomId, roomActivities }) {
             onChange={setCreateTitle}
             required
           />
-
+          <TextField
+            label="Points"
+            type="number"
+            min={0}
+            max={100}
+            name="points"
+            required
+          />
           <div className="relative">
             <textarea
               required
@@ -126,6 +157,7 @@ export default function ActivityList({ roomId, roomActivities }) {
                 <thead>
                   <tr>
                     <th>Title</th>
+                    <th>Points</th>
                     <th>Submitted</th>
                     <th>Action</th>
                   </tr>
@@ -135,6 +167,7 @@ export default function ActivityList({ roomId, roomActivities }) {
                     roomActivities.map((item, i) => (
                       <tr key={i.toString()}>
                         <td>{item.data().title}</td>
+                        <td>{item.data().points}</td>
                         <td>{item.data().submitted.length}</td>
                         <td className="flex gap-2">
                           <button 
@@ -145,6 +178,7 @@ export default function ActivityList({ roomId, roomActivities }) {
                           </button>
                           <button 
                             className="btn btn-sm btn-error"
+                            onClick={() => deleteActivity(item.id)}
                           >
                             DELETE
                           </button>

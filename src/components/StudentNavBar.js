@@ -10,19 +10,9 @@ export default function StudentNavBar({ user }) {
   const [loaded, setLoaded] = useState(false);
   const [modules, setModules] = useState([]);
 
-  // useEffect(() => {
-  //     const unsubscribe = ModuleController.subscribeActiveList((snapshot) => {
-  //         console.log("MODULES",snapshot.docs)
-  //         setModules(snapshot.docs);
-  //     })
-
-  //     return () => unsubscribe();
-  // }, [])
-
   useEffect(() => {
     async function fetchData() {
       let modules = await ModuleController.getApprovedModules();
-      console.log("Approved Modules", modules);
       setModules(modules);
     }
 

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import ReactModal from "react-modal";
-import { FacultyController, RoomController, StudentController } from "../../controllers/_Controllers";
-import PasswordField from "../../components/PasswordField";
+import { FacultyController, RoomController, StudentController } from "../../../controllers/_Controllers";
+import PasswordField from "../../../components/PasswordField";
 import { Dots } from "react-activity";
-import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
-import { ROOM_MAX_STUDENT_COUNT } from "../../values/Constants";
+import { clearModal, showLoading, showMessageBox } from "../../../modals/Modal";
+import { ROOM_MAX_STUDENT_COUNT } from "../../../values/Constants";
 
 export default function RoomList ({student}) {
 

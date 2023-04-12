@@ -50,25 +50,6 @@ class FacultyController extends BaseController {
         } catch (err) {
             console.error(err);
             result = err;
-            // if(err.code === "auth/email-already-in-use") {
-            //     console.log("Recover")
-            //     await this.collectionRef
-            //         .where('email', '==', item.email)
-            //         .get()
-            //         .then(async res => {
-            //             if(res.docs.length === 0) {
-            //                 delete item.password;
-            //                 result = await this.store(res.user.uid, item);
-            //             }
-            //         })
-            //         .catch( err => {
-            //             console.error(err)
-            //             result = err;
-            //         })
-            // }
-            // else {
-            //     console.error(err);
-            // }
         }
 
         return result;

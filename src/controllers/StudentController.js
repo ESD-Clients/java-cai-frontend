@@ -122,7 +122,6 @@ class StudentController extends BaseController {
                 .orderBy('studentNo', 'asc')
                 .get()
                 .then(res => {
-                    console.log(`Collection [${this.collectionName}]`, res.docs);
                     result = res.docs;
                 })
 

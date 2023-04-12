@@ -141,7 +141,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="hidden lg:block">
-          <ul className="menu bg-base-200 w-56 p-4 rounded-box">
+          <ul className="menu pl-3 pt-4 bg-base-200 rounded-box">
             <li className="menu-title">
               <span className="uppercase">Module List</span>
             </li>

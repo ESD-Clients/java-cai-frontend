@@ -12,6 +12,7 @@ import HDivider from "../../components/HDivider";
 import RichText from "../../components/RichText";
 
 export default function Module() {
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,11 +35,11 @@ export default function Module() {
 
       let btnGoToTop = document.getElementById("btnGoToTop");
 
-      if(btnGoToTop.style) {
+      if(btnGoToTop && btnGoToTop.style) {
         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-          btnGoToTop.style.display = "flex";
+          btnGoToTop.style.opacity = 1;
         } else {
-          btnGoToTop.style.display = "none";
+          btnGoToTop.style.opacity = 0;
         }
       }
     })
@@ -55,19 +56,10 @@ export default function Module() {
       setModule(module);
 
       let topics = await ModuleController.getTopics(moduleId);
-      console.log("Topics", topics)
       setTopics(topics);
 
-      // let quizResult = await ModuleController.getQuizResult({
-      //   student: user.id,
-      //   module: moduleId
-      // });
-      // setQuizResult(quizResult);
-      // console.log("Quiz", quizResult);
-
-      // if(module[0].sample_code) {
-      //   await compile(module[0].sample_code)
-      // }
+      let quizResult = await ModuleController.getQuizResult(moduleId, user.id);
+      setQuizResult(quizResult);
 
       setLoaded(true);
     }
@@ -76,8 +68,6 @@ export default function Module() {
   }, [loaded])
 
   async function compile(code) {
-
-    console.log("Compiling")
 
     setCompiling(true);
     let data = QueryString.stringify({
@@ -104,7 +94,6 @@ export default function Module() {
   }
 
   function scrollTo (id) {
-    console.log(id);
     document.getElementById(id).scrollIntoView({
       behavior: "smooth"
     });
@@ -115,7 +104,7 @@ export default function Module() {
   return (
     <>
       <button
-        className="fixed hidden z-50 bottom-10 right-10 bg-base-100 h-12 w-12 rounded-full justify-center items-center"
+        className="fixed flex drop-shadow opacity-0 transition-all z-50 bottom-10 right-10 bg-primary text-white h-12 w-12 rounded-full justify-center items-center"
         id="btnGoToTop"
         onClick={() => scrollTo("top")}
       >
@@ -125,7 +114,7 @@ export default function Module() {
         <div className="w-full h-full lg:px-8 p-0 lg:mr-8 m-0">
           <div className="flex justify-between ">
             <div>
-              {/* <button className="btn btn-primary" onClick={() => navigate(-1)}>
+              {/* <button className="btn btn-ghost" onClick={() => navigate(-1)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                   <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
                 </svg>
@@ -133,25 +122,15 @@ export default function Module() {
               </button> */}
             </div>
             <div>
-              {
-                quizResult ? (
-                  <Link
-                    className="btn btn-success"
-                    to="/student/result"
-                    state={{ module: moduleId, result: quizResult }}
-                  >
-                    View Quiz Result
-                  </Link>
-                ) : (
-                  <Link
-                    className="btn btn-success"
-                    to="/student/quiz"
-                    state={{ moduleId: moduleId }}
-                  >
-                    Take Quiz
-                  </Link>
-                )
-              }
+              <Link
+                className="btn btn-success"
+                to="/student/quiz"
+                state={{ module: module }}
+              >
+                {
+                  quizResult ? "View Quiz" : "Take Quiz"
+                }
+              </Link>
             </div>
           </div>
 

@@ -24,9 +24,7 @@ export default function Faculty() {
 
   useEffect(() => {
 
-    // console.log("USER", user);
     if (!user || user.type !== "faculty") {
-      console.log("No User");
       navigate("/");
     }
     else {

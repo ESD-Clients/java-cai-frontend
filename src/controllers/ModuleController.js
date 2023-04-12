@@ -1,325 +1,311 @@
 import axios from "axios";
 import BaseController from "./_BaseController";
-import { getCurrentTimestamp } from "./_Helper";
+import { getCurrentTimestamp, getDocData } from "./_Helper";
 
 class ModuleController extends BaseController {
-    constructor() {
-        super('modules');
+  constructor() {
+    super('modules');
+  }
+
+  subscribeList = (onSnapshot) => {
+    return this.collectionRef
+      .orderBy('createdAt', 'asc')
+      .onSnapshot(onSnapshot);
+  }
+
+  getApprovedModules = async () => {
+    var result = [];
+
+    try {
+      await this.collectionRef
+        // .where('docStatus', '==', 1)
+        .where('remarks', '==', 'approved')
+        .orderBy('createdAt', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+    } catch (err) {
+      console.error(err);
+      result = [];
     }
 
-    subscribeList = (onSnapshot) => {
-        return this.collectionRef
-            .orderBy('createdAt', 'asc')
-            .onSnapshot(onSnapshot);
+    return result;
+  }
+
+  /** TOPICS */
+
+  getTopics = async (moduleId) => {
+    var result = [];
+
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('topics')
+        .orderBy('createdAt', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+    }
+    catch (err) {
+      console.error(err);
+      result = [];
     }
 
-    getApprovedModules = async () => {
-        var result = [];
+    return result;
+  }
 
-        try {
-            await this.collectionRef
-                // .where('docStatus', '==', 1)
-                .where('remarks', '==', 'approved')
-                .orderBy('createdAt', 'asc')
-                .get()
-                .then(res => {
-                    result = res.docs;
-                })
-        } catch (err) {
-            console.error(err);
-            result = [];
-        }
+  addTopic = async ({ moduleId, topic }) => {
 
-        return result;
+    var result = false;
+
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('topics')
+        .add({
+          ...topic,
+          createdAt: getCurrentTimestamp()
+        })
+        .then(res => {
+          result = res.get();
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    /** TOPICS */
+    return result;
+  }
 
-    getTopics = async (moduleId) => {
-        var result = [];
-        
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('topics')
-                .orderBy('createdAt', 'asc')
-                .get()
-                .then(res => {
-                    result = res.docs;
-                })
-        }
-        catch (err) {
-            console.error(err);
-            result = [];
-        }
+  updateTopic = async ({ moduleId, topicId, data }) => {
+    var result = false;
 
-        return result;
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('topics')
+        .doc(topicId)
+        .update(data)
+        .then(() => {
+          result = {
+            id: topicId
+          };
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    addTopic = async ({moduleId, topic}) => {
+    return result;
+  }
 
-        var result = false;
+  deleteTopic = async ({ moduleId, topicId }) => {
+    var result = false;
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('topics')
-                .add({
-                    ...topic,
-                    createdAt: getCurrentTimestamp()
-                })
-                .then(res => {
-                    result = res.get();
-                })
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('topics')
+        .doc(topicId)
+        .delete()
+        .then(() => {
+          result = true;
+        })
 
-        } catch (err) {
-            console.error(err);
-            result = err;
-        }
-
-        return result;
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    updateTopic = async ({moduleId, topicId, data}) => {
-        var result = false;
+    return result;
+  }
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('topics')
-                .doc(topicId)
-                .update(data)
-                .then(() => {
-                    result = {
-                        id: topicId
-                    };
-                })
+  subscribeTopics = (moduleId, onSnapshot) => {
+    return this.collectionRef
+      .doc(moduleId)
+      .collection('topics')
+      .orderBy('createdAt', 'asc')
+      .onSnapshot(onSnapshot);
+  }
 
-        } catch (err) {
-            console.error(err);
-            result = err;
-        }
+  /** QUESTIONS */
+  getQuestions = async (moduleId) => {
+    var result = [];
 
-        return result;
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('questions')
+        .orderBy('createdAt', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+
+    } catch (err) {
+      console.error(err)
     }
 
-    deleteTopic = async ({moduleId, topicId}) => {
-        var result = false;
+    return result;
+  }
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('topics')
-                .doc(topicId)
-                .delete()
-                .then(() => {
-                    result = true;
-                })
+  subscribeQuestions = (moduleId, onSnapshot) => {
+    return this.collectionRef
+      .doc(moduleId)
+      .collection('questions')
+      .orderBy('createdAt', 'asc')
+      .onSnapshot(onSnapshot);
+  }
 
-        } catch (err) {
-            console.error(err);
-            result = err;
-        }
+  addQuestion = async (moduleId, question) => {
+    var result = false;
 
-        return result;
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('questions')
+        .add({
+          ...question,
+          createdAt: getCurrentTimestamp()
+        })
+        .then(res => {
+          result = res.get();
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    subscribeTopics = (moduleId, onSnapshot) => {
-        return this.collectionRef
-            .doc(moduleId)
-            .collection('topics')
-            .orderBy('createdAt', 'asc')
-            .onSnapshot(onSnapshot);
+    return result;
+  }
+
+  updateQuestion = async (moduleId, questionId, data) => {
+    var result = false;
+
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('questions')
+        .doc(questionId)
+        .update(data)
+        .then(() => {
+          result = {
+            id: questionId
+          }
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    /** QUESTIONS */
-    getQuestions = async (moduleId) => {
-        var result = [];
+    return result;
+  }
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('questions')
-                .orderBy('createdAt', 'asc')
-                .get()
-                .then(res => {
-                    result = res.docs;
-                })
+  deleteQuestion = async (moduleId, questionId) => {
+    var result = false;
 
-        } catch (err) {
-            console.error(err)
-        }
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('questions')
+        .doc(questionId)
+        .delete()
+        .then(() => {
+          result = true;
+        })
 
-        return result;
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    subscribeQuestions = (moduleId, onSnapshot) => {
-        return this.collectionRef
-            .doc(moduleId)
-            .collection('questions')
-            .orderBy('createdAt', 'asc')
-            .onSnapshot(onSnapshot);
+    return result;
+  }
+
+  /** QUIZ */
+  submitQuizAnswer = async (moduleId, answers) => {
+
+    var result = null;
+    var data = {
+      ...answers,
+      submittedAt: getCurrentTimestamp()
     }
 
-    addQuestion = async (moduleId, question) => {
-        var result = false;
+    try {
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('questions')
-                .add({
-                    ...question,
-                    createdAt: getCurrentTimestamp()
-                })
-                .then(res => {
-                    result = res.get();
-                })
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('studentAnswers')
+        .add(data)
+        .then(res => {
+          result = {
+            ...data,
+            id: res.id
+          }
+        })
 
-        } catch (err) {
-            console.error(err);
-            result = err;
-        }
-
-        return result;
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    updateQuestion = async (moduleId, questionId, data) => {
-        var result = false;
+    return result;
+  }
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('questions')
-                .doc(questionId)
-                .update(data)
-                .then(() => {
-                    result = {
-                        id: questionId
-                    }
-                })
+  getQuizResult = async (moduleId, studentId) => {
 
-        } catch (err) {
-            console.error(err);
-            result = err;
-        }
+    var result = null;
 
-        return result;
+    try {
+
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('studentAnswers')
+        .where('studentId', '==', studentId)
+        .get()
+        .then(res => {
+          if(res.docs.length > 0) {
+            result = getDocData(res.docs[0])
+          }
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    deleteQuestion = async ({moduleId, questionId}) => {
-        var result = false;
+    return result;
+  }
 
-        try {
-            await this.collectionRef
-                .doc(moduleId)
-                .collection('questions')
-                .doc(questionId)
-                .delete()
-                .then(() => {
-                    result = true;
-                })
+  /** HELPER */
+  isModuleUnlocked = ({ student, lastId }) => {
 
-        } catch (err) {
-            console.error(err);
-            result = err;
-        }
-
-        return result;
+    if (!lastId) {
+      return true;
+    }
+    else {
+      if (lastId && student.finishedModules.includes(lastId)) {
+        return true;
+      }
     }
 
-    /** HELPER */
-    isModuleUnlocked = ({student, lastId}) => {
-    
-        if (!lastId) {
-            return true;
-        }
-        else {
-            if(lastId && student.finishedModules.includes(lastId)) {
-                return true;
-            }
-        }
-    
-        return false;
+    return false;
+  }
+
+  isModuleFinished = (student, moduleId) => {
+    if (student.finishedModules.includes(moduleId)) {
+      return true;
     }
 
-    isModuleFinished = (student, moduleId) => {
-        if (student.finishedModules.includes(moduleId)) {
-            return true;
-        }
-    
-        return false;
-    }
+    return false;
+  }
 
-
-    /** OLD */
-    //QUIZ
-    getQuizResult = async ({student, module}) => {
-        var result = [];
-
-        try {
-            await axios.post(`${this.baseUrl}/quiz_result?student=${student}&module=${module}`)
-            .then((res) => {
-                result = res.data;
-            })
-            
-            return result;
-        } catch (error) {
-            return error
-        }
-    }
-
-    addQuizResult = async (item) => {
-        var result = null;
-        try {
-            await axios.post(`${this.baseUrl}/quiz_result/add`, item).then((res) => {
-                result = res.data;
-            });
-            return result;
-        } catch (err) {
-            return err;
-        }
-    }
-
-    //QUESTIONS
-
-
-    getModulesByNumber = async (number) => {
-        var result = [];
-
-        try {
-            await axios.post(`${this.baseUrl}/index`, {
-                condition: [
-                    ['status', 1],
-                    ['number', number]
-                ]
-            })
-            .then((res) => {
-                result = res.data;
-            })
-            return result;
-        } catch (err) {
-            return err;
-        }
-    }
-
-    getUnapprovedModules = async () => {
-        var result = [];
-
-        try {
-            await axios.post(`${this.baseUrl}/index`, {
-                condition: [
-                    ['status', 1],
-                    ['remarks', '<>','approved']
-                ]
-            }).then((res) => {
-                result = res.data;
-            });
-            return result;
-        } catch (err) {
-            return err;
-        }
-    }
 }
 
 export default ModuleController;

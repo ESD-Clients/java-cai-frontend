@@ -12,7 +12,6 @@ export default function ViewApproveModule({user}) {
   const location = useLocation();
   const navigate = useNavigate();
   const module = location.state.module;
-  console.log(module);
 
   useEffect(() => {
     if(!module) {
@@ -69,7 +68,7 @@ export default function ViewApproveModule({user}) {
                 <div className="flex justify-between">
                   <div>
                     <a href="/admin/approve-modules">
-                      <button className="btn btn-primary">
+                      <button className="btn btn-ghost">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                           <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
                         </svg>

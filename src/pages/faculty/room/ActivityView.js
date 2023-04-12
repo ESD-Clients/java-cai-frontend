@@ -92,7 +92,7 @@ export default function ActivityView ({user}) {
 
       <div className="flex justify-between">
         <div>
-          <button className="btn btn-primary" onClick={() => navigate(-1)}>
+          <button className="btn btn-ghost" onClick={() => navigate(-1)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
               <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
             </svg>
@@ -117,7 +117,10 @@ export default function ActivityView ({user}) {
       </div>
 
       <div className="mt-8">
-        <span className="uppercase font-bold">Instruction :</span>
+        <div className="flex justify-between">  
+          <h6 className="uppercase font-bold">Instruction:</h6>
+          <h6 className="uppercase font-bold">{activity.points} Points</h6>
+        </div>
         <RichText
           value={activity.instruction}
         />
@@ -131,6 +134,7 @@ export default function ActivityView ({user}) {
             <tr>
               <th>Studen No</th>
               <th>Name</th>
+              <th>Remarks</th>
               <th>Submitted At</th>
               <th>Action</th>
             </tr>
@@ -141,6 +145,13 @@ export default function ActivityView ({user}) {
                 <tr key={i.toString()}>
                   <td>{item.student.studentNo}</td>
                   <td>{item.student.name}</td>
+                  {
+                    item.score ? (
+                      <td>{item.score}</td>
+                    ) : (
+                      <td className="italic text-gray-400">Unchecked</td>
+                    )
+                  }
                   <td>{moment(item.submittedAt).format('hh:mm A - DD/MM/yyyy')}</td>
                   <td className="flex gap-2">
                     <button 
