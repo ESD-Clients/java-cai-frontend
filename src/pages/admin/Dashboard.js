@@ -38,18 +38,11 @@ export default function Dashboard({ user }) {
 
   return (
     <>
-      <div className="drawer drawer-mobile">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col">
-          <div className="p-6">
-            <div className="flex xl:flex-row flex-col justify-between">
-              <div className="w-full lg:pr-8 p-0">
-                <div className="flex flex-col items-center justify-center mb-8">
-                  <div className="text-2xl font-thin">
-                    Good Morning, {user.name}
-                  </div>
-                </div>
-              </div>
+      <div className="flex xl:flex-row flex-col justify-between">
+        <div className="w-full lg:pr-8 p-0">
+          <div className="flex flex-col items-center justify-center mb-8">
+            <div className="text-2xl font-thin">
+              Good Morning, {user.name}
             </div>
           </div>
         </div>

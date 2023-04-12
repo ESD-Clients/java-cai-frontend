@@ -16,7 +16,7 @@ export default function FacultyList({ user }) {
     })
 
     return () => unsubscribe();
-    
+
   }, [])
 
   async function addItem(e) {
@@ -31,7 +31,7 @@ export default function FacultyList({ user }) {
       ...Helper.getEventFormData(e)
     });
 
-    if(result && result.id) {
+    if (result && result.id) {
       showMessageBox({
         title: "Success",
         message: "Success",
@@ -64,7 +64,7 @@ export default function FacultyList({ user }) {
         })
 
         let result = await FacultyController.destroy(item.id);
-        if(result) {
+        if (result) {
           showMessageBox({
             title: "Success",
             message: "Success",
@@ -136,76 +136,68 @@ export default function FacultyList({ user }) {
         </div>
       </div>
 
-      <div className="drawer drawer-mobile">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col">
-          <div className="px-6">
-            <div className="flex xl:flex-row flex-col justify-between">
-              <div className="w-full lg:pr-8 p-0">
-                <div className="flex flex-col items-center justify-center mb-8">
-                  <div className="font-bold uppercase mb-4">Faculty List</div>
-                  <div className="flex flex-row">
-                    <div>
-                      <label htmlFor="addFaculty" className="btn btn-primary">Add Faculty</label>
-                    </div>
-                    <div className="divider divider-horizontal"></div>
-                    <form className="form-control" id="searchForm">
-                      <div className="input-group">
-                        <input type="text" name="faculty" placeholder="Search…" className="input input-bordered" />
-                        <button className="btn btn-square" type="submit">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                          </svg>
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-                <div className="divider"></div>
-                <div className="overflow-x-auto" id="tableDisplay">
-                  <div>
-                    {
-                      faculties.length > 0 ? (
-                        <>
-                          <table className="table table-compact w-full">
-                            <thead>
-                              <tr>
-                                <th>Faculty No</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {
-                                faculties.map((item, i) => (
-                                  <tr key={i.toString()}>
-                                    <td>{Helper.padIdNo(item.data().facultyNo)}</td>
-                                    <td>{item.data().name}</td>
-                                    <td>{item.data().email}</td>
-                                    <td>
-                                      <button className="btn btn-error" onClick={() => deleteItem(item)}>
-                                        Delete
-                                      </button>
-                                    </td>
-                                  </tr>
-                                ))
-                              }
-                            </tbody>
-                          </table>
-                        </>
-                      ) : (
-                        <div className="flex justify-center items-center">No Data Available</div>
-                      )
-                    }
-                  </div>
-                </div>
+      <div className="flex xl:flex-row flex-col justify-between">
+        <div className="w-full lg:pr-8 p-0">
+          <div className="flex flex-col items-center justify-center mb-8">
+            <div className="font-bold uppercase mb-4">Faculty List</div>
+            <div className="flex flex-row">
+              <div>
+                <label htmlFor="addFaculty" className="btn btn-primary">Add Faculty</label>
               </div>
-              {/* <AdminStatBar /> */}
+              <div className="divider divider-horizontal"></div>
+              <form className="form-control" id="searchForm">
+                <div className="input-group">
+                  <input type="text" name="faculty" placeholder="Search…" className="input input-bordered" />
+                  <button className="btn btn-square" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div className="divider"></div>
+          <div className="overflow-x-auto" id="tableDisplay">
+            <div>
+              {
+                faculties.length > 0 ? (
+                  <>
+                    <table className="table table-compact w-full">
+                      <thead>
+                        <tr>
+                          <th>Faculty No</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          faculties.map((item, i) => (
+                            <tr key={i.toString()}>
+                              <td>{Helper.padIdNo(item.data().facultyNo)}</td>
+                              <td>{item.data().name}</td>
+                              <td>{item.data().email}</td>
+                              <td>
+                                <button className="btn btn-error" onClick={() => deleteItem(item)}>
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        }
+                      </tbody>
+                    </table>
+                  </>
+                ) : (
+                  <div className="flex justify-center items-center">No Data Available</div>
+                )
+              }
             </div>
           </div>
         </div>
-        {/* <AdminSideBar /> */}
+        {/* <AdminStatBar /> */}
       </div>
     </>
     // TODO: SCRIPT

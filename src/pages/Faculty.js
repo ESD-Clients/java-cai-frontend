@@ -52,12 +52,12 @@ export default function Faculty() {
           <div className="w-80 bg-base-200 h-full absolute -left-80 lg:fixed lg:left-0">
             <FacultySideBar />
           </div>
-          <div className=" lg:ml-80">
+          <div className="min-h-[100vh] flex flex-col lg:ml-80">
             <div className="sticky top-0 w-full" style={{zIndex: 1}}>
               <FacultyNavBar user={user} />
             </div>
 
-            <div className="pt-4 p-4 bg-base-100">
+            <div className="flex-1 pt-4 p-4 bg-base-100">
               <Routes>
                 <Route path="/dashboard" element={<Dashboard user={user} />} />
                 <Route path="/messages" element={<Messages user={user} />} />
