@@ -2,7 +2,7 @@ import Admin from './AdminController';
 import Faculty from './FacultyController';
 import Student from './StudentController';
 import Module from './ModuleController';
-import Message from './MessageController';
+import Feedback from './FeedbackController';
 import Playground from './PlaygroundController';
 import Room from './RoomController';
 
@@ -11,6 +11,6 @@ export const AdminController = new Admin();
 export const FacultyController = new Faculty();
 export const StudentController = new Student();
 export const ModuleController = new Module();
-export const MessageController = new Message();
+export const FeedbackController = new Feedback();
 export const PlaygroundController = new Playground();
 export const RoomController = new Room();

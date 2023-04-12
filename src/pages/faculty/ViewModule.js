@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 import { useLocation, useNavigate } from "react-router-dom"
-import Header2 from "../../components/FormTitle";
+import Header2 from "../../components/Header2";
 import HDivider from "../../components/HDivider";
 import TextField from "../../components/TextField";
 import TextInfo from "../../components/TextInfo";

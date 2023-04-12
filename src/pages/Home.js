@@ -4,7 +4,7 @@ import { AdminController, FacultyController, Helper, StudentController } from ".
 import { Link, useNavigate } from "react-router-dom";
 import TextField from "../components/TextField";
 import PasswordField from "../components/PasswordField";
-import LoginModal from "../components/LoginModal";
+import LoginModal from "../blocks/LoginModal";
 import Footer from "../blocks/Footer";
 
 export default function Home () {
@@ -91,6 +91,11 @@ export default function Home () {
             </div>
             <div className="flex-none">
               <ul className="menu menu-horizontal p-0 gap-x-2">
+                <li>
+                  <Link className="btn btn-ghost rounded" to="/contact">
+                    Contact Us
+                  </Link>
+                </li>
                 <li><label htmlFor="login" className="btn btn-primary rounded text-white">Login</label></li>
               </ul>
             </div>

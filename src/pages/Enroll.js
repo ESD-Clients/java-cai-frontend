@@ -3,7 +3,7 @@ import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
 import { AdminController, FacultyController, Helper, StudentController } from "../controllers/_Controllers";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordField from "../components/PasswordField";
-import LoginModal from "../components/LoginModal";
+import LoginModal from "../blocks/LoginModal";
 
 export default function Enroll () {
   

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import PasswordField from "./PasswordField";
-import TextField from "./TextField";
+import PasswordField from "../components/PasswordField";
+import TextField from "../components/TextField";
 
 export default function LoginModal({onSubmit}) {
 

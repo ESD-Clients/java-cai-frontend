@@ -6,6 +6,7 @@ import Enroll from "./pages/Enroll";
 import Faculty from "./pages/Faculty";
 import Home from "./pages/Home";
 import Student from "./pages/Student";
+import ContactUs from "./pages/ContactUs";
 
 export default function App () {
 
@@ -16,6 +17,7 @@ export default function App () {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/enroll" element={<Enroll />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/faculty/*" element={<Faculty />} />
           <Route path="/student/*" element={<Student />} />

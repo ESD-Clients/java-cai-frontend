@@ -183,6 +183,7 @@ export default function StudentNavBar({ user }) {
                     </label>
                     <ul tabIndex="0" className="menu menu-compact dropdown-content p-2 shadow bg-base-200 rounded-box w-52 mt-4">
                       <li><Link to="/student/settings">Account Settings</Link></li>
+                      <li><Link to="/student/contact">Contact Us</Link></li>
                       <li><span onClick={logout}>Logout</span></li>
                     </ul>
                   </div>

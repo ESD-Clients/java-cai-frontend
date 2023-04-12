@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import Header2 from "../../components/FormTitle";
+import Header2 from "../../components/Header2";
 import Select from "../../components/Select";
 import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
@@ -11,7 +11,7 @@ import { getErrorMessage } from "../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 
 export default function ViewQuestions () {
-  
+
   const location = useLocation();
   const navigate = useNavigate();
 

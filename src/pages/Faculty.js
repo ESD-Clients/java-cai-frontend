@@ -6,7 +6,6 @@ import FacultySideBar from "../blocks/FacultySideBar";
 import { FacultyController, Helper } from "../controllers/_Controllers";
 import AddModule from "./faculty/AddModule";
 import Dashboard from "./faculty/Dashboard";
-import Messages from "./faculty/Messages";
 import Modules from "./faculty/Modules";
 import RoomView from "./faculty/room/RoomView";
 import RoomList from "./faculty/room/RoomList";
@@ -60,7 +59,6 @@ export default function Faculty() {
             <div className="flex-1 pt-4 p-4 bg-base-100">
               <Routes>
                 <Route path="/dashboard" element={<Dashboard user={user} />} />
-                <Route path="/messages" element={<Messages user={user} />} />
 
                 <Route path="/students" element={<StudentList user={user} />} />
 
