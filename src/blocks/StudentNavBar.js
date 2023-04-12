@@ -36,19 +36,16 @@ export default function StudentNavBar({ user }) {
     <>
       <div className="flex flex-row justify-center shadow-lg py-2 ">
         <div className="lg:max-w-[100rem] w-full m-0">
-          
+
           <div className="navbar bg-base-100">
             <div className="navbar-start mb-0">
+
               <div className="dropdown">
                 <label tabIndex="0" className="btn btn-ghost lg:hidden">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
                   </svg>
                 </label>
-
-                <div className="normal-case btn btn-ghost text-xl font-bold">
-                  caiJAVA
-                </div>
 
                 {/* Small Screen */}
                 <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 backdrop-blur-sm rounded-box w-52">
@@ -66,7 +63,7 @@ export default function StudentNavBar({ user }) {
                           modules.map((item, i) => (
                             ModuleController.isModuleUnlocked({
                               student: user,
-                              lastId: i > 0 ? modules[i-1].id : ''
+                              lastId: i > 0 ? modules[i - 1].id : ''
                             }) ? (
                               <li key={i.toString()}>
                                 <Link
@@ -90,14 +87,19 @@ export default function StudentNavBar({ user }) {
                           <li>No Module Available</li>
                         )
                       }
-                      
+
                     </ul>
                   </li>
                   <li><Link to="/student/playground">Playground</Link></li>
                   <li><Link to="/student/room">Room</Link></li>
                 </ul>
               </div>
-
+              <Link
+                className="normal-case btn btn-ghost text-xl font-bold"
+                to="/student/dashboard"
+              >
+                caiJAVA
+              </Link>
               {/* Wide Screen */}
               <div className="hidden lg:block">
                 <ul className="menu menu-horizontal p-0">
@@ -115,7 +117,7 @@ export default function StudentNavBar({ user }) {
                           modules.map((item, i) => (
                             ModuleController.isModuleUnlocked({
                               student: user,
-                              lastId: i > 0 ? modules[i-1].id : ''
+                              lastId: i > 0 ? modules[i - 1].id : ''
                             }) ? (
                               <li key={i.toString()}>
                                 <Link

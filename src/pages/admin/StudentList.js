@@ -3,86 +3,109 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Helper, StudentController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
+import { Dots } from "react-activity";
+import { CLR_PRIMARY } from "../../values/MyColor";
+import SearchField from "../../components/SearchField";
 
 
 export default function StudentList({ user }) {
 
-  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [students, setStudents] = useState([]);
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    async function fetchData() {
-      let students = await StudentController.getList();
-      setStudents(students);
-      setLoaded(true);
-    }
+    let unsubscribe = StudentController.subscribeActiveList(snapshot => {
+      setStudents(snapshot.docs);
+      setLoading(false);
+    })
 
-    if (!loaded) fetchData();
-  }, [loaded])
+    return () => unsubscribe();
+
+  }, [])
 
   function viewItem() {
 
   }
 
-  if (!loaded) return <Loading />
+  function checkFilter(item) {
+    if (filter) {
+      let value = filter.toLowerCase();
+      let name = item.data().name.toLowerCase();
+      let email = item.data().email.toLowerCase();
+      let studentNo = Helper.padIdNo(item.data().studentNo);
+
+      if (name.includes(value) || email.includes(value) || studentNo.includes(value)) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      return true;
+    }
+  }
 
   return (
     <>
       <div className="flex xl:flex-row flex-col justify-between">
         <div className="w-full lg:pr-8 p-0">
-          <div className="flex flex-col items-center justify-center mb-8">
+          
+        <div className="flex flex-col sm:flex-row justify-between mb-8">
+          <div>
             <div className="font-bold uppercase mb-4">Student List</div>
-            <div className="form-control">
-              <div className="input-group">
-                <input type="text" placeholder="Search…" className="input input-bordered" />
-                <button className="btn btn-square">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </div>
+            <div className="font-thin">Total Number of Students:
+              <span className="font-bold ml-2">
+                {students.length}
+              </span>
             </div>
           </div>
+          <div className="mt-4 flex flex-row justify-center">
+            <SearchField
+              setFilter={setFilter}
+              placeholder="Search student no, name or email"
+            />
+          </div>
+        </div>
+
           <div className="divider"></div>
           <div className="overflow-x-auto">
-            <div id="viewStudentInfo">
-              {
-                students.length > 0 ? (
-                  <>
-                    <table className="table table-compact w-full">
-                      <thead>
-                        <tr>
-                          <th>Student No</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          {/* <th>Current Module</th>
-                                <th>Progress</th> */}
-                          <th>Action</th>
+            <div>
+              <table className="table table-compact w-full">
+                <thead>
+                  <tr>
+                    <th>Student No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    students.map((item, i) => (
+                      checkFilter(item) && (
+                        <tr key={i.toString()}>
+                          <td>{Helper.padIdNo(item.data().studentNo)}</td>
+                          <td>{item.data().name}</td>
+                          <td>{item.data().email}</td>
+                          <td className="flex gap-2">
+                            <button className="btn btn-info btn-sm" onClick={() => viewItem(item)}>
+                              View
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          students.map((item, i) => (
-                            <tr key={i.toString()}>
-                              <td>{Helper.padIdNo(item.data().studentNo)}</td>
-                              <td>{item.data().name}</td>
-                              <td>{item.data().email}</td>
-                              {/* <td>{item.current_module}</td>
-                                    <td>{item.data().progress}</td> */}
-                              <td>
-                                <button className="btn btn-info" onClick={() => viewItem(item)}>
-                                  View
-                                </button>
-                              </td>
-                            </tr>
-                          ))
-                        }
-                      </tbody>
-                    </table>
-                  </>
-                ) : (
-                  <div className="flex justify-center items-center">No Data Available</div>
+                      )
+                    ))
+                  }
+                </tbody>
+              </table>
+              {
+                loading && (
+                  <div className="flex justify-center items-center mt-4">
+                    <Dots color={CLR_PRIMARY} />
+                  </div>
                 )
               }
             </div>

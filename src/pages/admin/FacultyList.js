@@ -4,15 +4,21 @@ import PasswordField from "../../components/PasswordField";
 import { FacultyController, Helper } from "../../controllers/_Controllers";
 import { getErrorMessage } from "../../controllers/_Helper";
 import { showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
+import SearchField from "../../components/SearchField";
+import { Dots } from "react-activity";
+import { CLR_PRIMARY } from "../../values/MyColor";
 
 export default function FacultyList({ user }) {
 
+  const [loading, setLoading] = useState(true);
   const [faculties, setFaculties] = useState([]);
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
 
     let unsubscribe = FacultyController.subscribeActiveList(res => {
       setFaculties(res.docs);
+      setLoading(false);
     })
 
     return () => unsubscribe();
@@ -69,11 +75,7 @@ export default function FacultyList({ user }) {
             title: "Success",
             message: "Success",
             type: "success",
-            onPress: () => {
-              // window.location.reload();
-            }
           })
-          // setLoaded(false);
         }
         else {
           showMessageBox({
@@ -87,7 +89,28 @@ export default function FacultyList({ user }) {
     })
   }
 
-  // if(!loaded) return <Loading />
+  function viewItem(item) {
+
+  }
+
+  function checkFilter(item) {
+    if (filter) {
+      let value = filter.toLowerCase();
+      let name = item.data().name.toLowerCase();
+      let email = item.data().email.toLowerCase();
+      let facultyNo = Helper.padIdNo(item.data().facultyNo);
+
+      if (name.includes(value) || email.includes(value) || facultyNo.includes(value)) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      return true;
+    }
+  }
 
   return (
     <>
@@ -138,68 +161,70 @@ export default function FacultyList({ user }) {
 
       <div className="flex xl:flex-row flex-col justify-between">
         <div className="w-full lg:pr-8 p-0">
-          <div className="flex flex-col items-center justify-center mb-8">
-            <div className="font-bold uppercase mb-4">Faculty List</div>
-            <div className="flex flex-row">
-              <div>
-                <label htmlFor="addFaculty" className="btn btn-primary">Add Faculty</label>
+
+          <div className="flex flex-col sm:flex-row justify-between mb-8">
+            <div>
+              <div className="font-bold uppercase mb-4">Faculty List</div>
+              <div className="font-thin">Total Number of Available Faculties:
+                <span className="font-bold ml-2">
+                  {faculties.length}
+                </span>
               </div>
-              <div className="divider divider-horizontal"></div>
-              <form className="form-control" id="searchForm">
-                <div className="input-group">
-                  <input type="text" name="faculty" placeholder="Search…" className="input input-bordered" />
-                  <button className="btn btn-square" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
+            </div>
+            <div className="mt-4 flex flex-row justify-center">
+              <SearchField
+                setFilter={setFilter}
+                placeholder="Search faculty no, name or email"
+              />
+              <label htmlFor="addFaculty" className="btn btn-primary">Add Faculty</label>
             </div>
           </div>
+
           <div className="divider"></div>
           <div className="overflow-x-auto" id="tableDisplay">
             <div>
-              {
-                faculties.length > 0 ? (
-                  <>
-                    <table className="table table-compact w-full">
-                      <thead>
-                        <tr>
-                          <th>Faculty No</th>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Action</th>
+              <table className="table table-compact w-full">
+                <thead>
+                  <tr>
+                    <th>Faculty No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    faculties.map((item, i) => (
+                      checkFilter(item) && (
+                        <tr key={i.toString()}>
+                          <td>{Helper.padIdNo(item.data().facultyNo)}</td>
+                          <td>{item.data().name}</td>
+                          <td>{item.data().email}</td>
+                          <td className="flex gap-2">
+                            <button className="btn btn-sm btn-info" onClick={() => viewItem(item)}>
+                              View
+                            </button>
+                            <button className="btn btn-sm btn-error" onClick={() => deleteItem(item)}>
+                              Delete
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          faculties.map((item, i) => (
-                            <tr key={i.toString()}>
-                              <td>{Helper.padIdNo(item.data().facultyNo)}</td>
-                              <td>{item.data().name}</td>
-                              <td>{item.data().email}</td>
-                              <td>
-                                <button className="btn btn-error" onClick={() => deleteItem(item)}>
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          ))
-                        }
-                      </tbody>
-                    </table>
-                  </>
-                ) : (
-                  <div className="flex justify-center items-center">No Data Available</div>
+                      )
+                    ))
+                  }
+                </tbody>
+              </table>
+              {
+                loading && (
+                  <div className="flex justify-center items-center mt-4">
+                    <Dots color={CLR_PRIMARY} />
+                  </div>
                 )
               }
             </div>
           </div>
         </div>
-        {/* <AdminStatBar /> */}
       </div>
     </>
-    // TODO: SCRIPT
   )
 }

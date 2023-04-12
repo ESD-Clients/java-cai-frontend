@@ -7,10 +7,11 @@ import Select from "../../components/Select";
 import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
 import { ModuleController } from "../../controllers/_Controllers";
-import { getErrorMessage, getEventFormData } from "../../controllers/_Helper";
+import { getErrorMessage } from "../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 
 export default function ViewQuestions () {
+  
   const location = useLocation();
   const navigate = useNavigate();
 

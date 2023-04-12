@@ -56,11 +56,10 @@ export default function PlayGround() {
     <>
       <div className="w-full flex flex-row">
         <div className="w-full lg:px-8 p-0">
-          <div className="h-[70vh] z-0">
-            {/* <textarea className="textarea textarea-bordered resize-none focus:outline-none leading-snug w-full h-full text-current text-lg" wrap="logical" id="textareaInput"></textarea> */}
+          <div className="z-0">
             <Editor
               defaultLanguage="java"
-              className="z-0 border"
+              className="z-0 border min-h-[32rem]"
               theme="vs-light"
               value={codes}
               onChange={(value) => {
@@ -119,7 +118,5 @@ export default function PlayGround() {
         </div>
       </div>
     </>
-
-    //TODO: Scripts
   )
 }

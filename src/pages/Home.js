@@ -171,7 +171,8 @@ export default function Home () {
                   How do I sign up?
                 </div>
                 <div className="collapse-content">
-                  <p>Enroll using this link! <span className="link link-info">Enroll Here!</span></p>
+                  <span>Enroll using this link! </span>
+                  <span className="link link-info" onClick={() => navigate("/enroll")}>Enroll Here!</span>
                 </div>
               </div>
               <div tabIndex="0" className="collapse collapse-arrow border border-base-300 bg-base-100 w-full">

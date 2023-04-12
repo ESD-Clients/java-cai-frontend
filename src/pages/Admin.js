@@ -12,6 +12,7 @@ import StudentList from "./admin/StudentList";
 import ViewModule from "./admin/ViewModule";
 import AdminSettings from "./admin/AdminSettings";
 import Footer from "../blocks/Footer";
+import RoomList from "./admin/RoomList";
 
 export default function Admin() {
 
@@ -52,13 +53,15 @@ export default function Admin() {
           <div className="flex-1 pt-4 p-4 bg-base-100">
             <Routes>
               <Route path="/dashboard" element={<Dashboard user={user} />} />
+              
+
+              <Route path="/faculties" element={<FacultyList user={user} />} />
+              <Route path="/students" element={<StudentList user={user} />} />
 
               <Route path="/modules" element={<Modules user={user} />} />
               <Route path="/module" element={<ViewModule user={user} />} />
 
-              <Route path="/faculties" element={<FacultyList user={user} />} />
-
-              <Route path="/students" element={<StudentList user={user} />} />
+              <Route path="/rooms" element={<RoomList user={user} />} />
               
               <Route path="/settings" element={<AdminSettings />} />
               <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />

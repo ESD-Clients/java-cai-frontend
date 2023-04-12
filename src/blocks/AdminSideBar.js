@@ -9,10 +9,10 @@ export default function AdminSideBar () {
         <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
         <ul className="menu overflow-y-auto w-[19rem] bg-base-200 px-3">
           <div className="flex justify-center ">
-            <div className="btn btn-ghost mb-10 text-2xl font-bold mt-6">
+            <Link className="btn btn-ghost mb-10 text-2xl font-bold mt-6" to="/admin/dashboard">
               <span className="lowercase font-thin">cai</span>
               <span className="uppercase">JAVA</span>
-            </div>
+            </Link>
           </div>
 
           <li>
@@ -22,13 +22,7 @@ export default function AdminSideBar () {
               </svg>Dashboard
             </Link>
           </li>
-          <li>
-            <Link className="rounded-md" to="/admin/modules">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
-              </svg> Modules
-            </Link>
-          </li>
+
           <li>
             <Link className="rounded-md" to="/admin/faculties">
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
@@ -43,16 +37,24 @@ export default function AdminSideBar () {
               </svg>Student List
             </Link>
           </li>
-          {/* <li>
-            <Link className="rounded-md" to="/admin/settings">
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
-                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-                  <path d="M13 2v4l-2 1l-3-3l-4 4l3 3l-1 2H2v6h4l1 2l-3 3l4 4l3-3l2 1v4h6v-4l2-1l3 3l4-4l-3-3l1-2h4v-6h-4l-1-2l3-3l-4-4l-3 3l-2-1V2Z" />
-                  <circle cx="16" cy="16" r="4" />
-                </g>
-              </svg>Admin Settings
+          <li>
+            <Link className="rounded-md" to="/admin/modules">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+              </svg> Modules
             </Link>
-          </li> */}
+          </li>
+          <li>
+            <Link className="rounded-md" to="/admin/rooms">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+                  <path d="M5 2h11a3 3 0 0 1 3 3v14a1 1 0 0 1-1 1h-3" />
+                  <path d="m5 2l7.588 1.518A3 3 0 0 1 15 6.459V20.78a1 1 0 0 1-1.196.98l-7.196-1.438A2 2 0 0 1 5 18.36V2Zm7 10v2" />
+                </g>
+              </svg>
+              Rooms
+            </Link>
+          </li>
         </ul>
       </div>
     </>
