@@ -1,19 +1,16 @@
 import Editor from "@monaco-editor/react";
 import { useEffect } from "react";
 import { useState } from "react";
-import ReactModal from "react-modal";
 import ReactPlayer from "react-player";
 import { useLocation, useNavigate } from "react-router-dom"
 import Header2 from "../../components/FormTitle";
 import HDivider from "../../components/HDivider";
-import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
 import TextInfo from "../../components/TextInfo";
 import { ModuleController } from "../../controllers/_Controllers";
 import { getErrorMessage, getFileType } from "../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import RichTextEditor from "../../components/RichTextEditor";
 import RichText from "../../components/RichText";

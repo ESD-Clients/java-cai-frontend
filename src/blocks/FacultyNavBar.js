@@ -5,9 +5,9 @@ import { clearModal, showConfirmationBox } from "../modals/Modal";
 export default function FacultyNavBar({ user }) {
 
   const navigate = useNavigate();
-  
+
   function logout() {
-    
+
     showConfirmationBox({
       title: "Confirmation",
       message: "Are you sure you want to logout?",
@@ -21,7 +21,7 @@ export default function FacultyNavBar({ user }) {
 
   return (
     <>
-      <div className="sticky top-0 backdrop-blur-sm">
+      <div className="sticky top-0 bg-base-100 shadow-lg py-2">
         <div className="navbar w-full bg-base-100 px-6">
 
           <div className="navbar-center px-2 mx-2 uppercase ml-16 lg:ml-2">Faculty</div>
@@ -29,15 +29,15 @@ export default function FacultyNavBar({ user }) {
             <div className="flex items-stretch">
               <div className="dropdown dropdown-end">
                 <label tabIndex="0" className="btn btn-ghost rounded-btn lg:gap-4 p-0 lg:px-4">
-                  <div className="avatar">
+                  <div className="avatar-group">
                     {
-                      user && user.image ? (
-                        <div className=" h-10 rounded-full">
-                          <img src="" alt="" />
-
-                        </div>
+                      user.imageUri ? (
+                        <img
+                          src={user.imageUri}
+                          className="avatar h-12 w-12 object-cover"
+                        />
                       ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
                           <path fill="currentColor" d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5Z" />
                           <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2Zm7.992 22.926A5.002 5.002 0 0 0 19 20h-6a5.002 5.002 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0Z" />
                         </svg>
@@ -57,7 +57,7 @@ export default function FacultyNavBar({ user }) {
                   </div>
                 </label>
                 <ul tabIndex="0" className="menu menu-compact dropdown-content p-2 shadow bg-base-200 rounded-box w-52 mt-4 sticky">
-                  <li><Link to="/faculty/settings">Faculty Settings</Link></li>
+                  <li><Link to="/faculty/settings">Account Settings</Link></li>
                   <li><span onClick={logout}>Logout</span></li>
                 </ul>
               </div>

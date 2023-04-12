@@ -6,7 +6,6 @@ import Header2 from "../../components/FormTitle";
 import Select from "../../components/Select";
 import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
-import TextInfo from "../../components/TextInfo";
 import { ModuleController } from "../../controllers/_Controllers";
 import { getErrorMessage, getEventFormData } from "../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";

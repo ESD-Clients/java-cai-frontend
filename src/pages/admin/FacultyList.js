@@ -116,7 +116,6 @@ export default function FacultyList({ user }) {
                   name="password"
                   required
                 />
-                {/* <input type="password" name="password" className="input input-bordered w-full" required /> */}
               </label>
             </div>
             <div className="modal-action">
@@ -171,6 +170,7 @@ export default function FacultyList({ user }) {
                           <table className="table table-compact w-full">
                             <thead>
                               <tr>
+                                <th>Faculty No</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Action</th>
@@ -180,6 +180,7 @@ export default function FacultyList({ user }) {
                               {
                                 faculties.map((item, i) => (
                                   <tr key={i.toString()}>
+                                    <td>{Helper.padIdNo(item.data().facultyNo)}</td>
                                     <td>{item.data().name}</td>
                                     <td>{item.data().email}</td>
                                     <td>

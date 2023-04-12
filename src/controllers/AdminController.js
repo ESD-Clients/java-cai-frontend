@@ -34,6 +34,25 @@ class AdminController extends BaseController {
 
         return result;
     }
+
+    
+    updatePassword = async (email, current, newPassword) => {
+        var result = false;
+        try {
+            await auth
+            .signInWithEmailAndPassword(email, current)
+            .then( async authRes => {
+                await authRes.user.updatePassword(newPassword).then(() => {
+                    result = true;
+                })
+            })
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
 }
 
 export default AdminController;

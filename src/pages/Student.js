@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import StudentNavBar from "../components/StudentNavBar";
+import StudentNavBar from "../blocks/StudentNavBar";
 import { Helper, StudentController } from "../controllers/_Controllers";
 import Dashboard from "./student/Dashboard";
 import Module from "./student/Module";
@@ -9,6 +9,8 @@ import PlayGround from "./student/PlayGround";
 import Quiz from "./student/quiz/Quiz";
 import Room from "./student/room/Room";
 import Activity from "./student/room/Activity";
+import Settings from "./student/Settings";
+import Footer from "../blocks/Footer";
 
 export default function Student () {
 
@@ -39,9 +41,9 @@ export default function Student () {
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex min-h-[100vh] flex-1 flex-col">
         
-        <div className="flex flex-1 flex-col items-center pt-24">
+        <div className="flex flex-1 flex-col items-center py-24">
           <div className="lg:max-w-[100rem] w-full flex flex-col flex-1 lg:mt-4 m-0 lg:px-8 px-4 pb-8">
             <Routes>
               <Route path="/dashboard" element={<Dashboard user={user} />} />
@@ -50,6 +52,7 @@ export default function Student () {
               <Route path="/room" element={<Room user={user} />} />
               <Route path="/activity" element={<Activity user={user} />} />
               <Route path="/quiz" element={<Quiz user={user} />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/" element={<Navigate to="/student/dashboard" replace />} />
             </Routes>
           </div>
@@ -61,8 +64,9 @@ export default function Student () {
             </div>
           )
         }
+        
+      <Footer />
       </div>
-
     </>
   )
 }

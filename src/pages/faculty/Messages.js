@@ -1,8 +1,5 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import AdminStatBar from "../../components/AdminStatBar";
-import FacultyNavBar from "../../components/FacultyNavBar";
-import FacultySideBar from "../../components/FacultySideBar";
 import { MessageController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 

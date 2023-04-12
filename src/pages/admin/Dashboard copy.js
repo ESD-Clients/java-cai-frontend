@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AdminNavBar from "../../components/AdminNavBar";
-import AdminSideBar from "../../components/AdminSideBar";
-import AdminStatBar from "../../components/AdminStatBar";
-import { FacultyController, Helper, ModuleController, StudentController } from "../../controllers/_Controllers";
+import { FacultyController, ModuleController, StudentController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 
 export default function Dashboard({ user }) {
-
-  const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
 

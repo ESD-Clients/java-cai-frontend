@@ -1,8 +1,8 @@
 
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import FacultyNavBar from "../components/FacultyNavBar";
-import FacultySideBar from "../components/FacultySideBar";
+import FacultyNavBar from "../blocks/FacultyNavBar";
+import FacultySideBar from "../blocks/FacultySideBar";
 import { FacultyController, Helper } from "../controllers/_Controllers";
 import AddModule from "./faculty/AddModule";
 import Dashboard from "./faculty/Dashboard";
@@ -15,6 +15,8 @@ import ViewModule from "./faculty/ViewModule";
 import ViewQuestions from "./faculty/ViewQuestions";
 import ActivityView from "./faculty/room/ActivityView";
 import ActivityWork from "./faculty/room/ActivityWork";
+import FacultySettings from "./faculty/FacultySettings";
+import Footer from "../blocks/Footer";
 
 export default function Faculty() {
 
@@ -72,12 +74,16 @@ export default function Faculty() {
                 <Route path="/questions" element={<ViewQuestions user={user} />} />
                 <Route path="/module" element={<ViewModule user={user} />} />
 
+                <Route path="/settings" element={<FacultySettings />} />
+
                 {/* <Route path="/edit-module" element={<EditModules user={user} />} /> */}
                 {/* <Route path="/faculty-list" element={<FacultyList user={user} />} /> */}
                 <Route path="/" element={<Navigate to="/faculty/dashboard" replace />} />
               </Routes>
             </div>
 
+          
+            <Footer />
           </div>
           {/* <div className="fixed h-full bg-base-200 right-0 top-0">
             <AdminStatBar />

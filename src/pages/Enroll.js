@@ -100,6 +100,7 @@ export default function Enroll () {
 
 
     let data = Helper.getEventFormData(e);
+    delete data.retype;
     data.finishedModules = [];
 
     if(imgFile) {
@@ -236,7 +237,7 @@ export default function Enroll () {
           </div>
           <div className="input-group items-center my-4 w-[40rem]">
             <label className="text-right w-32 mr-8">Date of Birth:</label>
-            <input className="input flex-1" name="date_of_birth" type="date" max="2020-12-31" required />
+            <input className="input flex-1" name="dateOfBirth" type="date" max="2020-12-31" required />
             <label className="ml-2 text-red-500">*</label>
           </div>
 

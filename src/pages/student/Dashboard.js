@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import RichText from "../../components/RichText";
-import StudentNavBar from "../../components/StudentNavBar";
+import StudentNavBar from "../../blocks/StudentNavBar";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 
@@ -46,15 +46,10 @@ export default function Dashboard() {
   }
 
   function computeProgress(modules) {
-    let doneModules = 0;
+    let finishedModules = user.finishedModules;
 
-    for (let module of modules) {
-      if (user.current_module > module.number) {
-        doneModules++;
-      }
-    }
+    let progress = (100 / modules.length) * finishedModules.length;
 
-    let progress = (100 / modules.length) * doneModules;
     setProgress(progress);
   }
 
@@ -69,15 +64,16 @@ export default function Dashboard() {
             <div className="stats shadow bg-base-100 border border-slate-600 w-full">
               <div className="stat">
                 <div className="flex flex-row items-center">
-                  <div className="stat-title">
-                    Good Morning, <span className="ml-2">{user.name}</span>
+                  <div className="">
+                    <span className="stat-title">Good Morning,</span>
+                    <span className="font-bold text-xl ml-2">{user.name}</span>
                   </div>
                 </div>
               </div>
               <div className="stat">
                 <div className="stat-title">Progress</div>
                 <div className="stat-desc">
-                  {/* <progress className="progress progress-primary w-full lg:w-56" value={progress} max="100"></progress> */}
+                  <progress className="progress progress-primary w-full lg:w-56" value={progress} max="100"></progress>
                 </div>
               </div>
             </div>

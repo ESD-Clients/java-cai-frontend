@@ -61,10 +61,28 @@ class StudentController extends BaseController {
             await auth.createUserWithEmailAndPassword(item.email, item.password)
                 .then(async res => {
                     item.studentNo = await this.getIncrementId();
-                    item.password = hashData(item.password);
+                    // item.password = hashData(item.password);
                     item.docStatus = 1;
                     result = await this.storeOnId(res.user.uid, item);
                 })
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
+
+    updatePassword = async (email, current, newPassword) => {
+        var result = false;
+        try {
+            await auth
+            .signInWithEmailAndPassword(email, current)
+            .then( async authRes => {
+                await authRes.user.updatePassword(newPassword).then(() => {
+                    result = true;
+                })
+            })
         } catch (err) {
             console.error(err);
             result = err;

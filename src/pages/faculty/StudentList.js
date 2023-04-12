@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import AdminStatBar from "../../components/AdminStatBar";
-import FacultySideBar from "../../components/FacultySideBar";
 import { StudentController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 

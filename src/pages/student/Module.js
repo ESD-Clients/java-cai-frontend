@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import StudentNavBar from "../../components/StudentNavBar";
+import StudentNavBar from "../../blocks/StudentNavBar";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 import config from "../../config.json";

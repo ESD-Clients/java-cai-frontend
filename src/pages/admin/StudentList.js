@@ -1,10 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import AdminNavBar from "../../components/AdminNavBar";
-import AdminSideBar from "../../components/AdminSideBar";
-import AdminStatBar from "../../components/AdminStatBar";
-import { StudentController } from "../../controllers/_Controllers";
+import { Helper, StudentController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 
 
@@ -64,11 +61,11 @@ export default function StudentList({ user }) {
                           <table className="table table-compact w-full">
                             <thead>
                               <tr>
-                                <th></th>
+                                <th>Student No</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Current Module</th>
-                                <th>Progress</th>
+                                {/* <th>Current Module</th>
+                                <th>Progress</th> */}
                                 <th>Action</th>
                               </tr>
                             </thead>
@@ -76,11 +73,11 @@ export default function StudentList({ user }) {
                               {
                                 students.map((item, i) => (
                                   <tr key={i.toString()}>
-                                    <td>{item.data().student_no}</td>
+                                    <td>{Helper.padIdNo(item.data().studentNo)}</td>
                                     <td>{item.data().name}</td>
                                     <td>{item.data().email}</td>
-                                    <td>{item.current_module}</td>
-                                    <td>{item.data().progress}</td>
+                                    {/* <td>{item.current_module}</td>
+                                    <td>{item.data().progress}</td> */}
                                     <td>
                                       <button className="btn btn-info" onClick={() => viewItem(item)}>
                                         View

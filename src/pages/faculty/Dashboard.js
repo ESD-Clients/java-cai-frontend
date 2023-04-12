@@ -1,8 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import AdminStatBar from "../../components/AdminStatBar";
-import FacultyNavBar from "../../components/FacultyNavBar";
-import FacultySideBar from "../../components/FacultySideBar";
 import { FacultyController, ModuleController, StudentController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 

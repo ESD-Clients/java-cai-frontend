@@ -1,4 +1,4 @@
-import StudentNavBar from "../../components/StudentNavBar";
+import StudentNavBar from "../../blocks/StudentNavBar";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import axios from "axios";

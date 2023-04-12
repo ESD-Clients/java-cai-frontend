@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import HDivider from "../../components/HDivider";
 import RichText from "../../components/RichText";
 import RichTextEditor from "../../components/RichTextEditor";
-import TextArea from "../../components/TextArea";
 import TextField from "../../components/TextField";
 import { ModuleController } from "../../controllers/_Controllers";
 import { getFileType } from "../../controllers/_Helper";
