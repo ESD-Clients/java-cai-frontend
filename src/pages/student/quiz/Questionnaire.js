@@ -67,12 +67,19 @@ export default function Questionnaire({ user, module, setResult }) {
       delete studentAnswer.createdAt;
 
       studentAnswer.studentAnswer = entries[question.id];
-      studentAnswer.remarks = 0;
 
       //Check answer
-      if (question.data().answer === entries[question.id]) {
-        studentScore += studentAnswer.points;
-        studentAnswer.remarks = 1;
+      if( question.data().type !== "coding") {
+        studentAnswer.remarks = -1;
+      }
+      else {
+        if (question.data().answer === entries[question.id]) {
+          studentScore += studentAnswer.points;
+          studentAnswer.remarks = 1;
+        }
+        else {
+          studentAnswer.remarks = 0;
+        }
       }
 
       totalScore += studentAnswer.points;
@@ -124,7 +131,7 @@ export default function Questionnaire({ user, module, setResult }) {
       showLoading({
         message: "Updating progress..."
       });
-      
+
       let finishedModules = user.finishedModules;
       finishedModules.push(module.id);
 

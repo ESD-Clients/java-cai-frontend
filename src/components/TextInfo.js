@@ -8,7 +8,7 @@ export default function TextInfo ({width, label, value}) {
       <label className="label justify-start">
         <span className="label-text">{label}</span>
       </label>
-      <p className="textarea whitespace-pre-wrap">{value}</p>
+      <p className="textarea textarea-disabled whitespace-pre-wrap">{value}</p>
     </div>
   )
 }

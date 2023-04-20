@@ -16,7 +16,7 @@ import RichTextEditor from "../../components/RichTextEditor";
 import RichText from "../../components/RichText";
 
 
-export default function ViewModule() {
+export default function ModuleView() {
 
 
   const location = useLocation();
@@ -28,7 +28,8 @@ export default function ViewModule() {
   const [topics, setTopics] = useState([]);
 
   /** EDIT DETAILS */
-  const [detailsModal, setDetailsModal] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [moduleNo, setModuleNo] = useState('');
   const [title, setTitle] = useState('');
   const [sypnosis, setSypnosis] = useState('');
 
@@ -47,6 +48,7 @@ export default function ViewModule() {
       let item = snapshot.data();
       item.id = moduleId;
       setModule(item);
+      setModuleNo(item.moduleNo);
       setTitle(item.title);
       setSypnosis(item.sypnosis);
     })
@@ -62,6 +64,14 @@ export default function ViewModule() {
 
   }, [])
 
+  useEffect(() => {
+    if(editing) {
+      setModuleNo(module.moduleNo);
+      setTitle(module.title);
+      setSypnosis(module.sypnosis);
+    }
+  }, [editing])
+
   async function saveDetails(e) {
 
     e.preventDefault();
@@ -71,13 +81,14 @@ export default function ViewModule() {
     })
 
     let result = await ModuleController.update(moduleId, {
+      moduleNo: parseInt(moduleNo),
       title: title,
       sypnosis: sypnosis
     });
 
     clearModal();
 
-    setDetailsModal(false);
+    setEditing(false);
 
     if (result && result.id) {
       showMessageBox({
@@ -301,7 +312,7 @@ export default function ViewModule() {
     </form>
   )
 
-  if (detailsModal) return (
+  if (editing) return (
     <form
       className="bg-base-200 p-4 rounded relative"
       onSubmit={saveDetails}
@@ -309,6 +320,13 @@ export default function ViewModule() {
       <div className="my-4">
         <h1 className="text-lg font-semibold">Edit Details</h1>
       </div>
+
+      <TextField
+        label="Title"
+        type="number"
+        value={moduleNo}
+        onChange={setModuleNo}
+        required />
 
       <TextField
         label="Title"
@@ -330,7 +348,7 @@ export default function ViewModule() {
       <div className="flex justify-end my-4 space-x-2">
         <button
           className="btn btn-ghost"
-          onClick={() => setDetailsModal(false)}
+          onClick={() => setEditing(false)}
         >CANCEL</button>
         <button className="btn btn-success">SAVE DETAILS</button>
       </div>
@@ -342,31 +360,35 @@ export default function ViewModule() {
       {/* Content */}
       <div>
         <div className="flex justify-between">
-          <button className="btn btn-ghost" onClick={() => navigate(-1)}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-              <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
-            </svg>
-            <p>Back</p>
-          </button>
+          <div className="flex gap-4 items-center">
+            <button className="btn btn-ghost" onClick={() => navigate(-1)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
+              </svg>
+              <p>Back</p>
+            </button>
+            
+            <Header2 value="Module Details" />
+          </div>
 
           <button className="btn btn-primary" onClick={() => navigate('/faculty/questions?' + moduleId)}>
             <p>VIEW QUESTIONS</p>
           </button>
         </div>
-        <div className="flex justify-between mt-4">
-
-          <Header2 value="Module Details" />
+        <HDivider />
+        <div className="flex justify-end mt-4">
           <div>
             <button
               className="btn btn-ghost"
               name="Edit"
-              onClick={() => setDetailsModal(true)}
+              onClick={() => setEditing(true)}
             >
               <span className="mr-2">Edit</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#757c8a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="14 2 18 6 7 17 3 17 3 13 14 2"></polygon><line x1="3" y1="22" x2="21" y2="22"></line></svg>
             </button>
           </div>
         </div>
+        <TextInfo label="Module No" value={module.moduleNo} />
         <TextInfo label="Title" value={module.title} />
         <RichText label="Sypnosis" value={module.sypnosis} />
 

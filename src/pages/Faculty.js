@@ -4,16 +4,23 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import FacultyNavBar from "../blocks/FacultyNavBar";
 import FacultySideBar from "../blocks/FacultySideBar";
 import { FacultyController, Helper } from "../controllers/_Controllers";
-import AddModule from "./faculty/AddModule";
+
 import Dashboard from "./faculty/Dashboard";
-import Modules from "./faculty/Modules";
+
+import StudentList from "./faculty/student/StudentList";
+import StudentView from "./faculty/student/StudentView";
+
+import ModuleList from "./faculty/ModuleList";
+import ModuleAdd from "./faculty/ModuleAdd";
+import ModuleView from "./faculty/ModuleView";
+import ModuleQuestions from "./faculty/ModuleQuestions";
+
 import RoomView from "./faculty/room/RoomView";
 import RoomList from "./faculty/room/RoomList";
-import StudentList from "./faculty/StudentList";
-import ViewModule from "./faculty/ViewModule";
-import ViewQuestions from "./faculty/ViewQuestions";
+
 import ActivityView from "./faculty/room/ActivityView";
 import ActivityWork from "./faculty/room/ActivityWork";
+
 import FacultySettings from "./faculty/FacultySettings";
 import Footer from "../blocks/Footer";
 
@@ -61,21 +68,20 @@ export default function Faculty() {
                 <Route path="/dashboard" element={<Dashboard user={user} />} />
 
                 <Route path="/students" element={<StudentList user={user} />} />
+                <Route path="/student" element={<StudentView user={user} />} />
 
                 <Route path="/rooms" element={<RoomList user={user} />} />
                 <Route path="/room" element={<RoomView user={user} />} />
                 <Route path="/activity" element={<ActivityView user={user} />} />
                 <Route path="/activity/work" element={<ActivityWork user={user} />} />
 
-                <Route path="/modules" element={<Modules user={user} />} />
-                <Route path="/modules/add" element={<AddModule user={user} />} />
-                <Route path="/questions" element={<ViewQuestions user={user} />} />
-                <Route path="/module" element={<ViewModule user={user} />} />
+                <Route path="/modules" element={<ModuleList user={user} />} />
+                <Route path="/module" element={<ModuleView user={user} />} />
+                <Route path="/modules/add" element={<ModuleAdd user={user} />} />
+                <Route path="/questions" element={<ModuleQuestions user={user} />} />
 
                 <Route path="/settings" element={<FacultySettings />} />
 
-                {/* <Route path="/edit-module" element={<EditModules user={user} />} /> */}
-                {/* <Route path="/faculty-list" element={<FacultyList user={user} />} /> */}
                 <Route path="/" element={<Navigate to="/faculty/dashboard" replace />} />
               </Routes>
             </div>
@@ -83,9 +89,6 @@ export default function Faculty() {
           
             <Footer />
           </div>
-          {/* <div className="fixed h-full bg-base-200 right-0 top-0">
-            <AdminStatBar />
-          </div> */}
         </div>
       </>
     )

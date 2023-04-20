@@ -12,11 +12,12 @@ import { ModuleController } from "../../controllers/_Controllers";
 import { getFileType } from "../../controllers/_Helper";
 import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 
-export default function AddModule({ user }) {
+export default function ModuleAdd({ user }) {
 
   const navigate = useNavigate();
 
   /** MODULE */
+  const [moduleNo, setModuleNo] = useState('');
   const [title, setTitle] = useState('');
   const [sypnosis, setSypnosis] = useState('');
   const [topics, setTopics] = useState([]);
@@ -56,10 +57,6 @@ export default function AddModule({ user }) {
     setAdd(false);
   }
 
-  function updateTopic () {
-    
-  }
-
   function removeTopic (index) {
     let newList = [...topics];
     newList.splice(index, 1);
@@ -83,6 +80,7 @@ export default function AddModule({ user }) {
     })
 
     let module = {
+      moduleNo: parseInt(moduleNo),
       title: title,
       sypnosis: sypnosis,
       remarks: "unapproved"
@@ -143,7 +141,7 @@ export default function AddModule({ user }) {
         className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "
       >
         <form 
-          className="bg-base-200 p-4 sm:w-2/3 rounded relative"
+          className="h-[90vh] overflow-y-auto bg-base-200 p-4 sm:w-2/3 rounded relative"
           onSubmit={addTopic}
         >
           <div className="my-4">
@@ -225,7 +223,15 @@ export default function AddModule({ user }) {
           </div>
 
           <div className="flex space-x-2">
-            {/* <TextField label="Module No" type="number" width="xs"/> */}
+            <TextField 
+              label="Module No" 
+              type="number" 
+              width="xs"
+              required
+              value={moduleNo}
+              onChange={setModuleNo}
+              min={1}
+            />
             <TextField 
               label="Module Title" 
               value={title}

@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ModuleController } from "../../controllers/_Controllers";
+import { Helper, ModuleController } from "../../controllers/_Controllers";
 import SearchField from "../../components/SearchField";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../values/MyColor";
 
-export default function Modules({ user }) {
+export default function ModuleList({ user }) {
 
   const navigate = useNavigate();
 
@@ -88,6 +88,7 @@ export default function Modules({ user }) {
               <table className="table table-compact w-full">
                 <thead>
                   <tr>
+                    <th>Module No</th>
                     <th>Title</th>
                     <th>Remarks</th>
                     <th>Topics</th>
@@ -99,6 +100,7 @@ export default function Modules({ user }) {
                     modules.map((item, i) => (
                       checkFilter(item) && (
                         <tr key={i.toString()}>
+                          <td>{item.data().moduleNo}</td>
                           <td>{item.data().title}</td>
                           <td>{item.data().remarks}</td>
                           <td>{item.topics.length}</td>

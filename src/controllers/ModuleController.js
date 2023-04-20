@@ -9,7 +9,7 @@ class ModuleController extends BaseController {
 
   subscribeList = (onSnapshot) => {
     return this.collectionRef
-      .orderBy('createdAt', 'asc')
+      .orderBy('moduleNo', 'asc')
       .onSnapshot(onSnapshot);
   }
 

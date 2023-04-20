@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Helper, ModuleController, StudentController } from "../../controllers/_Controllers";
-import Loading from "../../modals/Loading";
-import SearchField from "../../components/SearchField";
+import { Helper, ModuleController, StudentController } from "../../../controllers/_Controllers";
+import SearchField from "../../../components/SearchField";
 import { Dots } from "react-activity";
-import { CLR_PRIMARY } from "../../values/MyColor";
+import { CLR_PRIMARY } from "../../../values/MyColor";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentList() {
 
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
 
@@ -31,8 +32,8 @@ export default function StudentList() {
     };
   }, [])
 
-  function viewItem() {
-
+  function viewItem(id) {
+    navigate('/faculty/student?'+id)
   }
 
   function checkFilter (item) {
@@ -109,7 +110,7 @@ export default function StudentList() {
                           <progress className="progress progress-primary w-full lg:w-56" value={getProgress(item)} max="100" />
                           </td>
                           <td className="flex gap-2">
-                            <button className="btn btn-info btn-sm" onClick={() => viewItem(item)}>
+                            <button className="btn btn-info btn-sm" onClick={() => viewItem(item.id)}>
                               View
                             </button>
                           </td>

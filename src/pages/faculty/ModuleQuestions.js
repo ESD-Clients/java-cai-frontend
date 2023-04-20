@@ -10,7 +10,7 @@ import { ModuleController } from "../../controllers/_Controllers";
 import { getErrorMessage } from "../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 
-export default function ViewQuestions () {
+export default function ModuleQuestions () {
 
   const location = useLocation();
   const navigate = useNavigate();
