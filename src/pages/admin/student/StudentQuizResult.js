@@ -1,64 +1,14 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Coding from '../../student/quiz/Coding';
 import FillBlank from '../../student/quiz/FillBlank';
 import MutlipleChoice from '../../student/quiz/MutlipleChoice';
 import TextField from '../../../components/TextField';
 import HDivider from '../../../components/HDivider';
-import { Helper, ModuleController } from '../../../controllers/_Controllers';
-import { clearModal, showLoading, showMessageBox } from '../../../modals/Modal';
 
 export default function StudentQuizResult({ student, module, result, setSelected }) {
 
   const [tab, setTab] = useState('choices');
-  const [quizResult, setQuizResult] = useState(result);
-
-  async function checkCoding (e) {
-    e.preventDefault();
-
-    showLoading({
-      message: "Submitting..."
-    })
-    let newResult = {
-      ...quizResult
-    }
-
-    let data = Helper.getEventFormData(e);
-    let answers = newResult.coding.answers;
-
-    let studentScore = 0;
-
-    for(let i = 0; i < answers.length; i++) {
-      let score = parseInt(data[i]);
-      answers[i].remarks = score;
-      studentScore += score;
-    }
-
-    newResult.coding.studentScore = studentScore;
-    newResult.coding.status = 1;
-    newResult.studentScore = newResult.studentScore + studentScore;
-
-    let resultId = newResult.id;
-    let newData = {...newResult};
-    delete newData.id;
-
-    console.log(newResult);
-
-    let res = await ModuleController.updateQuizResult(module.id, resultId, newData);
-    clearModal();
-    if(res === true) {
-      setQuizResult(newResult);
-    }
-    else {
-      showMessageBox({
-        type: "danger",
-        title: "Error",
-        message: res.message
-      })
-    }
-    
-  }
 
   return (
     <>
@@ -79,7 +29,7 @@ export default function StudentQuizResult({ student, module, result, setSelected
 
           <div className='ml-8'>
             <div className='text-xs'>Score:</div>
-            <div className='font-bold text-2xl'>{quizResult.studentScore} / {quizResult.totalScore}</div>
+            <div className='font-bold text-2xl'>{result.studentScore} / {result.totalScore}</div>
           </div>
         </div>
         <TabList className="flex border-y-2 bg-base-100">
@@ -114,7 +64,7 @@ export default function StudentQuizResult({ student, module, result, setSelected
           >
             Coding
             {
-              !quizResult.coding.status && (
+              !result.coding.status && (
                 " (Unchecked)"
               )
             }
@@ -126,43 +76,24 @@ export default function StudentQuizResult({ student, module, result, setSelected
           <div className="w-full max-w-[48rem] lg:px-8 p-0 lg:mr-8 m-0">
             <TabPanel>
               {
-                quizResult.multipleChoice.answers.map((item, index) => (
+                result.multipleChoice.answers.map((item, index) => (
                   <MutlipleChoice key={index.toString()} item={item} questionNo={index + 1} />
                 ))
               }
             </TabPanel>
             <TabPanel>
               {
-                quizResult.fillBlank.answers.map((item, index) => (
+                result.fillBlank.answers.map((item, index) => (
                   <FillBlank key={index.toString()} item={item} questionNo={index + 1} />
                 ))
               }
             </TabPanel>
             <TabPanel>
-              <form onSubmit={checkCoding}>
               {
-                quizResult.coding.answers.map((item, index) => (
-                  <div key={index.toString()}>
-                    <Coding item={item} questionNo={index + 1} />
-                    {
-                      quizResult.coding.status === 0 && (
-                        <>
-                          <TextField name={index} label="Points" type="number" min={0} max={item.points} required/>
-                          <HDivider />
-                        </>
-                      )
-                    }
-                  </div>
+                result.coding.answers.map((item, index) => (
+                  <Coding item={item} questionNo={index + 1} />
                 ))
               }
-              {
-                quizResult.coding.status === 0 && (
-                  <button className='btn btn-success'>
-                    SUBMIT SCORE
-                  </button>
-                )
-              }
-              </form>
             </TabPanel>
           </div>
         </div>

@@ -223,25 +223,19 @@ export default function ModuleQuestions () {
             ]}
           />
 
-          <TextField
-            label="Question"
+          <TextArea
+            label="Question / Problem"
             name="question"
             value={question}
             onChange={setQuestion}
             required
           />
+
+          
           {
-            type === "coding" ? (
+            type !== "coding" && (
               <TextArea
                 className="font-mono whitespace-pre-wrap"
-                label="Answer"
-                name="answer"
-                value={answer}
-                onChange={setAnswer}
-                required
-              />
-            ) : (
-              <TextField
                 label="Answer"
                 name="answer"
                 value={answer}
@@ -318,7 +312,7 @@ export default function ModuleQuestions () {
             setQuestionId('');
             setModal(true)
           }}>
-            <span>ADD QUESTION</span>
+            <span>ADD QUESTION / PROBLEM</span>
           </button>
         </div>
 
@@ -433,14 +427,14 @@ export default function ModuleQuestions () {
                       className="flex-1 px-2 py-4"
                     >
                       <div className="flex flex-col items-start md:flex-row">
-                        <span className="w-20">Question: </span>
+                        <span className="w-20">Problem: </span>
                         <span className="font-semibold ml-4">{item.data().question}</span>
                       </div>
 
-                      <div className="flex flex-col items-start md:flex-row mt-2">
+                      {/* <div className="flex flex-col items-start md:flex-row mt-2">
                         <span className="w-20">Answer: </span>
                         <p className="textarea font-mono ml-4 whitespace-pre-wrap">{item.data().answer}</p>
-                      </div>
+                      </div> */}
 
                       <div className="flex flex-col items-start md:flex-row mt-2">
                         <span className="w-20">Points: </span>

@@ -23,14 +23,8 @@ export default function AdminNavBar({ user }) {
     <>
       <div className="sticky top-0 bg-base-100 shadow-lg py-2">
         <div className="navbar w-full bg-base-100 px-6">
-          <div className="flex-1 lg:hidden">
-            <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </label>
-          </div>
-          <div className="navbar-center px-2 mx-2 uppercase">Admin Dashboard</div>
+
+          <div className="navbar-center px-2 mx-2 uppercase ml-16 lg:ml-2">Admin</div>
           <div className="flex justify-end flex-1">
             <div className="flex items-stretch">
               <div className="dropdown dropdown-end">
@@ -41,6 +35,7 @@ export default function AdminNavBar({ user }) {
                         <img
                           src={user.imageUri}
                           className="avatar h-12 w-12 object-cover"
+                          alt="Admin Profile"
                         />
                       ) : (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-12" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">

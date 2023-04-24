@@ -1,14 +1,17 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Helper, StudentController } from "../../controllers/_Controllers";
-import Loading from "../../modals/Loading";
+import { Helper, StudentController } from "../../../controllers/_Controllers";
+import Loading from "../../../modals/Loading";
 import { Dots } from "react-activity";
-import { CLR_PRIMARY } from "../../values/MyColor";
-import SearchField from "../../components/SearchField";
+import { CLR_PRIMARY } from "../../../values/MyColor";
+import SearchField from "../../../components/SearchField";
+import { useNavigate } from "react-router-dom";
 
 
 export default function StudentList({ user }) {
+
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
 
@@ -25,8 +28,8 @@ export default function StudentList({ user }) {
 
   }, [])
 
-  function viewItem() {
-
+  function viewItem(item) {
+    navigate('/admin/student?'+item.id)
   }
 
   function checkFilter(item) {

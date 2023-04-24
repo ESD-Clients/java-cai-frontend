@@ -65,7 +65,13 @@ export default function Result({ user, module, result }) {
                   setTab('coding')
                 }}
               >
-                Coding</Tab>
+                Coding
+                {
+                  !result.coding.status && (
+                    " (Unchecked)"
+                  )
+                }
+              </Tab>
             </TabList>
           </div>
         </div>

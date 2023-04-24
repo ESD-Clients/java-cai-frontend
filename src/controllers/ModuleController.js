@@ -283,6 +283,28 @@ class ModuleController extends BaseController {
     return result;
   }
 
+  updateQuizResult = async (moduleId, resultId, data) => {
+    var result = false;
+
+    try {
+
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('studentAnswers')
+        .doc(resultId)
+        .update(data)
+        .then(() => {
+          result = true;
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
+    }
+
+    return result;
+  }
+
   /** HELPER */
   isModuleUnlocked = ({ student, lastId }) => {
 

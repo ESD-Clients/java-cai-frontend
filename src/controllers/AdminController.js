@@ -34,7 +34,23 @@ class AdminController extends BaseController {
 
         return result;
     }
+    
+    resetPassword = async (email) => {
+        var result = false;
 
+        try {
+            await auth
+                .sendPasswordResetEmail(email)
+                .then(() => {
+                    result = true;
+                })
+
+        } catch (err) {
+            result = err;
+        }
+
+        return result;
+    }
     
     updatePassword = async (email, current, newPassword) => {
         var result = false;

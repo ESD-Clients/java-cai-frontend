@@ -50,7 +50,7 @@ export default function Questionnaire({ user, module, setResult }) {
     setTabIndex(i);
   }
 
-  function getQuestionData(entries, questions) {
+  function checkAnswer(entries, questions) {
 
     let answers = [];
     let studentScore = 0;
@@ -69,7 +69,7 @@ export default function Questionnaire({ user, module, setResult }) {
       studentAnswer.studentAnswer = entries[question.id];
 
       //Check answer
-      if( question.data().type !== "coding") {
+      if( question.data().type === "coding") {
         studentAnswer.remarks = -1;
       }
       else {
@@ -106,9 +106,9 @@ export default function Questionnaire({ user, module, setResult }) {
     let entries_blank = getFormEntries(formBlank);
     let entries_coding = getFormEntries(formCoding);
 
-    let data_choices = getQuestionData(entries_choices, multiChoices);
-    let data_blanks = getQuestionData(entries_blank, fillBlanks);
-    let data_coding = getQuestionData(entries_coding, codings);
+    let data_choices = checkAnswer(entries_choices, multiChoices);
+    let data_blanks = checkAnswer(entries_blank, fillBlanks);
+    let data_coding = checkAnswer(entries_coding, codings);
 
     let studentScore = data_choices.studentScore + data_blanks.studentScore + data_coding.studentScore;
     let totalScore = data_choices.totalScore + data_blanks.totalScore + data_coding.totalScore;
@@ -117,9 +117,12 @@ export default function Questionnaire({ user, module, setResult }) {
       studentId: user.id,
       multipleChoice: data_choices,
       fillBlank: data_blanks,
-      coding: data_coding,
+      coding: {
+        ...data_coding,
+        status: 0,
+      },
       studentScore: studentScore,
-      totalScore: totalScore
+      totalScore: totalScore,
     }
 
     let result = await ModuleController.submitQuizAnswer(module.id, answers);
@@ -220,12 +223,12 @@ export default function Questionnaire({ user, module, setResult }) {
                   />
                 ))}
                 <div className="flex justify-between">
-                  <a
+                  <div
                     className="btn btn-primary"
                     onClick={(e) => selectTab(e, 0)}
                   >
                     PREVIOUS PAGE
-                  </a>
+                  </div>
                   <button className="btn btn-primary" type="submit">
                     NEXT PAGE
                   </button>
@@ -247,12 +250,12 @@ export default function Questionnaire({ user, module, setResult }) {
                   />
                 ))}
                 <div className="flex justify-between">
-                  <a
+                  <div
                     className="btn btn-primary"
                     onClick={(e) => selectTab(e, 1)}
                   >
                     PREVIOUS PAGE
-                  </a>
+                  </div>
                   <button className="btn btn-success" type="submit">
                     SUBMIT
                   </button>

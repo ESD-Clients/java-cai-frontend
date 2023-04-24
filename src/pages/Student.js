@@ -66,7 +66,6 @@ export default function Student () {
             </div>
           )
         }
-        
       <Footer />
       </div>
     </>

@@ -1,19 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function AdminSideBar () {
 
+  const [open, setOpen] = useState(false);
+
+  function toggleDrawer () {
+    let element = document.getElementById('drawer');
+    if(open) {
+      element.style.left = 0;
+      setOpen(false);
+    }
+    else {
+      element.style.left = 'auto';
+      setOpen(true);
+    }
+  }
+
   return (
     <>
-      <div className="drawer-side">
+      <div className="fixed left-2 top-5 z-20 lg:hidden">
+        <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost" onClick={toggleDrawer}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </label>
+      </div>
+
+      <div id="drawer" className="fixed drawer-side z-30 transition-all bg-base-200 min-h-screen overflow-y-auto">
         <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-        <ul className="menu overflow-y-auto w-[19rem] bg-base-200 px-3">
-          <div className="flex justify-center ">
-            <Link className="btn btn-ghost mb-10 text-2xl font-bold mt-6" to="/admin/dashboard">
-              <span className="lowercase font-thin">cai</span>
-              <span className="uppercase">JAVA</span>
-            </Link>
+
+        <div className="relative lg:hidden">
+          <div className="absolute right-2 top-2">
+            <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost" onClick={toggleDrawer}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current">
+              <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </label>
           </div>
+        </div>
+
+        <div className="flex justify-center ">
+          <Link 
+            className="btn btn-ghost mb-10 text-2xl font-bold mt-6" 
+            to="/faculty/dashboard" 
+            onClick={toggleDrawer}
+          >
+            <span className="lowercase font-thin">cai</span>
+            <span className="uppercase">JAVA</span>
+          </Link>
+        </div>
+        
+        <ul className="menu menu-compact overflow-y-auto w-[19rem] bg-base-200 px-3">
 
           <li>
             <Link className="rounded-md" to="/admin/dashboard">

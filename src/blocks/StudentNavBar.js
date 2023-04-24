@@ -14,6 +14,7 @@ export default function StudentNavBar({ user }) {
     async function fetchData() {
       let modules = await ModuleController.getApprovedModules();
       setModules(modules);
+      setLoaded(true);
     }
 
     if (!loaded) fetchData();
@@ -49,14 +50,14 @@ export default function StudentNavBar({ user }) {
 
                 {/* Small Screen */}
                 <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 backdrop-blur-sm rounded-box w-52">
-                  <li><a>Dashboard</a></li>
-                  <li tabIndex="0">
-                    <a>
+                  <li><div>Dashboard</div></li>
+                  <li tabIndex="0" className="">
+                    <div>
                       Modules
                       <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
                       </svg>
-                    </a>
+                    </div>
                     <ul className="p-2 bg-base-200 z-50">
                       {
                         modules.length > 0 ? (
@@ -105,12 +106,12 @@ export default function StudentNavBar({ user }) {
                 <ul className="menu menu-horizontal p-0">
                   <li><Link to="/student/dashboard">Dashboard</Link></li>
                   <li tabIndex="0">
-                    <a>
+                    <div>
                       Modules
                       <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
                       </svg>
-                    </a>
+                    </div>
                     <ul className="p-2 bg-base-200 z-50 max-w-[24rem]">
                       {
                         modules.length > 0 ? (
@@ -161,6 +162,7 @@ export default function StudentNavBar({ user }) {
                             <img
                               src={user.imageUri}
                               className="avatar h-12 w-12 object-cover"
+                              alt="Student Profile"
                             />
                           ) : (
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-12" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">

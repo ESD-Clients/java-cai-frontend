@@ -1,11 +1,49 @@
 import { useState } from "react";
 import PasswordField from "../components/PasswordField";
 import TextField from "../components/TextField";
+import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
+import { AdminController } from "../controllers/_Controllers";
 
 export default function LoginModal({onSubmit}) {
 
   const [tab, setTab] = useState('student');
 
+  function toggleForgotPassword () {
+
+    document.getElementById("login").click();
+    
+    document.getElementById("forgot-password").click();
+  }
+
+  async function forgotPassword (e) {
+    e.preventDefault();
+    document.getElementById("forgot-password").click();
+
+    showLoading({
+      message: "Submitting..."
+    })
+    let email = e.target.email.value;
+    let res = await AdminController.resetPassword(email);
+    clearModal();
+    console.log("RESULT", res);
+    
+    if(res === true) {
+      showMessageBox({
+        title: "Message",
+        type: "success",
+        message: "A reset link has been sent to your email."
+      })
+    }
+    else {
+      showMessageBox({
+        title: "Error",
+        type: "danger",
+        message: res.message
+      })
+    }
+
+    e.target.reset();
+  }
   return (
     <>
       <input type="checkbox" id="login" className="modal-toggle" />
@@ -76,7 +114,7 @@ export default function LoginModal({onSubmit}) {
                   <span>Email</span>
                   <TextField
                     className="rounded-l-none"
-                    type="text"
+                    type="email"
                     name="email"
                   />
                 </label>
@@ -91,8 +129,45 @@ export default function LoginModal({onSubmit}) {
               </div>
               <div id="errorPlaceholder"></div>
               <div className="mt-6 flex flex-row items-center justify-end">
+                <div 
+                  className="link link-primary"
+                  onClick={toggleForgotPassword}
+                >
+                  Forgot Password?
+                </div>
+              </div>
+              <div className="mt-6 flex flex-row items-center justify-end">
                 <button type="submit" className="btn btn-primary">
                   Login
+                </button>
+              </div>
+            </form>
+          </label>
+        </div>
+      </label>
+
+
+      <input type="checkbox" id="forgot-password" className="modal-toggle" />
+      <label className="modal modal-bottom sm:modal-middle" htmlFor="forgot-password">
+        <div className="flex flex-col items-center w-full">
+          <label className="modal-box" htmlFor="">
+            <h3 className="font-bold text-lg my-4" id="modalTitle">
+              Forgot Password
+            </h3>
+            <form onSubmit={forgotPassword}>
+              <div className="form-control">
+                <label className="input-group">
+                  <span>Email</span>
+                  <TextField
+                    className="rounded-l-none"
+                    type="email"
+                    name="email"
+                  />
+                </label>
+              </div>
+              <div className="mt-6 flex flex-row items-center justify-end">
+                <button type="submit" className="btn btn-primary">
+                  Submit
                 </button>
               </div>
             </form>

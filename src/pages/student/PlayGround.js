@@ -41,10 +41,13 @@ export default function PlayGround() {
 
     await axios(config)
       .then(function (response) {
-        setOutput(response.data.output);
+        setOutput(response.data);
       })
       .catch(function (error) {
-        setCompileError(true);
+        console.log(error);
+        setOutput({
+          error: error
+        })
       });
 
     setLoading(false);
@@ -102,14 +105,17 @@ export default function PlayGround() {
             </div>
             <div id="output-container" className="h-full p-4">
               {
-                compileError ? (
-                  <p className="textarea textarea-bordered w-full h-full font-mono text-red-500 whitespace-pre-wrap">
-                    Compiled Error!
-                  </p>
+                output.error ? (
+                  <div className="textarea textarea-bordered w-full h-full font-mono text-red-500 whitespace-pre-wrap">
+                    <p>Compiled Error!</p>
+                    <p>
+                      {output.error}
+                    </p>
+                  </div>
 
                 ) : (
                   <p className="textarea textarea-bordered w-full h-full font-mono whitespace-pre-wrap">
-                    {output}
+                    {output.output}
                   </p>
                 )
               }

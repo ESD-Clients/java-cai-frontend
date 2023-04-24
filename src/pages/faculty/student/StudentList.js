@@ -105,9 +105,8 @@ export default function StudentList() {
                           <td>{Helper.padIdNo(item.data().studentNo)}</td>
                           <td>{item.data().name}</td>
                           <td>{item.data().email}</td>
-                          {/* <td>{item.data().current_module}</td> */}
                           <td>
-                          <progress className="progress progress-primary w-full lg:w-56" value={getProgress(item)} max="100" />
+                            <progress className="progress progress-primary w-full lg:w-56" value={getProgress(item)} max="100" />
                           </td>
                           <td className="flex gap-2">
                             <button className="btn btn-info btn-sm" onClick={() => viewItem(item.id)}>

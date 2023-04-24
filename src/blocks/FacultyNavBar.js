@@ -35,6 +35,7 @@ export default function FacultyNavBar({ user }) {
                         <img
                           src={user.imageUri}
                           className="avatar h-12 w-12 object-cover"
+                          alt="Faculty Profile"
                         />
                       ) : (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-12" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
