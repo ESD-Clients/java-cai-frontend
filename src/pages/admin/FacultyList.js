@@ -89,10 +89,6 @@ export default function FacultyList({ user }) {
     })
   }
 
-  function viewItem(item) {
-
-  }
-
   function checkFilter(item) {
     if (filter) {
       let value = filter.toLowerCase();
@@ -201,9 +197,6 @@ export default function FacultyList({ user }) {
                           <td>{item.data().name}</td>
                           <td>{item.data().email}</td>
                           <td className="flex gap-2">
-                            <button className="btn btn-sm btn-info" onClick={() => viewItem(item)}>
-                              View
-                            </button>
                             <button className="btn btn-sm btn-error" onClick={() => deleteItem(item)}>
                               Delete
                             </button>
