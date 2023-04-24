@@ -19,6 +19,7 @@ export default function Enroll () {
     if(user) {
       navigate(`/${user.type}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   async function login (e) {
@@ -186,6 +187,7 @@ export default function Enroll () {
                     <img
                       src={imgSource}
                       className="h-64 w-64 rounded-full p-[1px] object-cover"
+                      alt="Student Profile"
                     />
                   ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-image" viewBox="0 0 16 16"> 

@@ -5,7 +5,6 @@ import { getDocData } from "../../../controllers/_Helper";
 import HDivider from "../../../components/HDivider";
 import Header2 from "../../../components/Header2";
 import moment from "moment";
-import ReactModal from "react-modal";
 import StudentQuizResult from "./StudentQuizResult";
 
 export default function StudentView() {
@@ -17,7 +16,6 @@ export default function StudentView() {
 
   const [modules, setModules] = useState([]);
   const [student, setStudent] = useState(null);
-  const [room, setRoom] = useState(null);
 
   const [selectedModule, setSelectedModule] = useState(null);
 
@@ -53,7 +51,7 @@ export default function StudentView() {
       setStudent(student);
     });
     return () => unsubscribe();
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function computeProgress() {

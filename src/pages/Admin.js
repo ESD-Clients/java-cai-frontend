@@ -1,9 +1,8 @@
 
 import { useEffect } from "react";
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import AdminNavBar from "../blocks/AdminNavBar";
 import AdminSideBar from "../blocks/AdminSideBar";
-import AdminStatBar from "../blocks/AdminStatBar";
 import { AdminController, Helper } from "../controllers/_Controllers";
 import Dashboard from "./admin/Dashboard";
 import FacultyList from "./admin/FacultyList";
@@ -39,6 +38,8 @@ export default function Admin() {
 
       updateUser();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   return (

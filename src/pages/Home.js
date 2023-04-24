@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
 import { AdminController, FacultyController, Helper, StudentController } from "../controllers/_Controllers";
 import { Link, useNavigate } from "react-router-dom";
-import TextField from "../components/TextField";
-import PasswordField from "../components/PasswordField";
 import LoginModal from "../blocks/LoginModal";
 import Footer from "../blocks/Footer";
 
@@ -16,6 +14,7 @@ export default function Home () {
     if(user) {
       navigate(`/${user.type}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   async function login (e) {

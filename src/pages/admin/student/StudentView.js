@@ -53,6 +53,7 @@ export default function StudentView() {
     
     return () => unsubscribe();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function computeProgress() {

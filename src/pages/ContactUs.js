@@ -15,6 +15,7 @@ export default function ContactUs() {
     if (user) {
       navigate(`/${user.type}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   async function login(e) {

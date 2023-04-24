@@ -3,8 +3,6 @@ import { useState } from 'react';
 import Coding from '../../student/quiz/Coding';
 import FillBlank from '../../student/quiz/FillBlank';
 import MutlipleChoice from '../../student/quiz/MutlipleChoice';
-import TextField from '../../../components/TextField';
-import HDivider from '../../../components/HDivider';
 
 export default function StudentQuizResult({ student, module, result, setSelected }) {
 

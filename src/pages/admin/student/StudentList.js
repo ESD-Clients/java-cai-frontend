@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Helper, StudentController } from "../../../controllers/_Controllers";
-import Loading from "../../../modals/Loading";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../../values/MyColor";
 import SearchField from "../../../components/SearchField";

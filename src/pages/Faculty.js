@@ -49,6 +49,7 @@ export default function Faculty() {
 
       updateUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (user) {

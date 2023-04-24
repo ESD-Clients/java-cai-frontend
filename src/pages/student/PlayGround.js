@@ -1,4 +1,3 @@
-import StudentNavBar from "../../blocks/StudentNavBar";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import axios from "axios";
@@ -7,8 +6,6 @@ import { Helper } from "../../controllers/_Controllers";
 
 export default function PlayGround() {
 
-  const user = Helper.getCurrentUser();
-
   const initialCode = Helper.getPlaygroundCode();
 
   const [loading, setLoading] = useState(false);
@@ -16,13 +13,10 @@ export default function PlayGround() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
 
-  const [compileError, setCompileError] = useState(false);
-
   async function compile() {
 
     setOutput("");
     setLoading(true);
-    setCompileError(false);
 
     let data = QueryString.stringify({
       'code': codes,
