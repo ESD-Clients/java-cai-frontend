@@ -6,6 +6,7 @@ import HDivider from "../../../components/HDivider";
 import Header2 from "../../../components/Header2";
 import moment from "moment";
 import StudentQuizResult from "./StudentQuizResult";
+import Loading from "../../../modals/Loading";
 
 export default function StudentView() {
 
@@ -76,7 +77,7 @@ export default function StudentView() {
       </div>
     )
   }
-
+  
   return (
     <>
       <div>

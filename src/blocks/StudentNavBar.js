@@ -35,7 +35,7 @@ export default function StudentNavBar({ user }) {
 
   return (
     <>
-      <div className="flex flex-row justify-center shadow-lg py-2 ">
+      <div className="flex flex-row justify-center shadow-lg py-2 bg-base-100 ">
         <div className="lg:max-w-[100rem] w-full m-0">
 
           <div className="navbar bg-base-100">

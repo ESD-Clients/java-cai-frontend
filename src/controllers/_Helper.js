@@ -89,3 +89,15 @@ export function getFileType(file) {
     return fileType;
   }
 }
+
+export function getDifficulty (difficulty) {
+  if(difficulty === 1) {
+    return "Easy"
+  }
+  else if (difficulty === 2) {
+    return "Medium"
+  }
+  else {
+    return "Hard"
+  }
+}

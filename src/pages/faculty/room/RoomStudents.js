@@ -5,6 +5,7 @@ import { RoomController, StudentController } from "../../../controllers/_Control
 import { padIdNo } from "../../../controllers/_Helper";
 import { showConfirmationBox, clearModal, showMessageBox } from "../../../modals/Modal";
 import { ROOM_MAX_STUDENT_COUNT } from "../../../values/Constants";
+import { useNavigate } from "react-router-dom";
 
 export default function RoomStudents({
   room,
@@ -214,6 +215,7 @@ export default function RoomStudents({
 
 function StudentItem({student, room}) {
 
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   function removeStudent () {
@@ -247,7 +249,7 @@ function StudentItem({student, room}) {
   }
 
   function viewStudent (student) {
-
+    navigate("/faculty/student?"+student.id);
   }
 
   return (

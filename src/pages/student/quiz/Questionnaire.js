@@ -6,44 +6,66 @@ import { clearModal, showLoading, showMessageBox } from "../../../modals/Modal";
 import MutlipleChoice from "./MutlipleChoice";
 import FillBlank from "./FillBlank";
 import Coding from "./Coding";
+import Tracing from "./Tracing";
+import Timer from "../../../components/Timer";
 
 export default function Questionnaire({ user, module, setResult }) {
 
   const [tabIndex, setTabIndex] = useState(0);
+  const [codingIndex, setCodingIndex] = useState(0);
 
-  const [multiChoices, setMultiChoices] = useState([]);
-  const [fillBlanks, setFillBlanks] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  // const [multiChoices, setMultiChoices] = useState([]);
+  // const [fillBlanks, setFillBlanks] = useState([]);
   const [codings, setCodings] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
 
-      let questions = await ModuleController.getQuestions(module.id);
+      let results = await ModuleController.getQuestionsSortedByDifficulties(module.id);
 
-      let multi = [];
-      let blank = [];
+      // let multi = [];
+      // let blank = [];
+      let question = [];
       let coding = [];
 
-      for (let doc of questions) {
-        if (doc.data().type === "choices") {
-          multi.push(doc);
-        }
-        else if (doc.data().type === "blank") {
-          blank.push(doc);
+      for (let doc of results) {
+        
+        let data = getDocData(doc);
+        if (data.type === "coding") {
+          coding.push(data);
         }
         else {
-          coding.push(doc);
+          if(data.type === "choices") {
+            let choices = data.choices;
+            let shuffled = shuffleChoices(choices);
+            data.choices = shuffled;
+            
+          }
+          question.push(data);
         }
       }
 
-      setMultiChoices(multi);
-      setFillBlanks(blank);
+      // setMultiChoices(multi);
+      // setFillBlanks(blank);
+      setQuestions(question);
       setCodings(coding);
     }
 
     fetchData();
 
   }, [module]);
+
+  function shuffleChoices(array) {
+    const now = new Date();
+    const seed = now.getTime();
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random(seed) * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    return array;
+  }  
 
   function selectTab(e, i) {
     e.preventDefault();
@@ -69,7 +91,7 @@ export default function Questionnaire({ user, module, setResult }) {
       studentAnswer.studentAnswer = entries[question.id];
 
       //Check answer
-      if( question.data().type === "coding") {
+      if (question.data().type === "coding") {
         studentAnswer.remarks = -1;
       }
       else {
@@ -91,32 +113,71 @@ export default function Questionnaire({ user, module, setResult }) {
 
   async function checkAnswers(e) {
 
-    e.preventDefault();
+    e && e.preventDefault && e.preventDefault();
 
     showLoading({
       message: "Submitting..."
     });
 
-    let formChoices = document.getElementById('form_choices');
-    let formBlank = document.getElementById('form_blank');
+    let formMix = document.getElementById('form_mix');
     let formCoding = document.getElementById('form_coding');
 
 
-    let entries_choices = getFormEntries(formChoices);
-    let entries_blank = getFormEntries(formBlank);
+    let entries_mix = getFormEntries(formMix);
     let entries_coding = getFormEntries(formCoding);
 
-    let data_choices = checkAnswer(entries_choices, multiChoices);
-    let data_blanks = checkAnswer(entries_blank, fillBlanks);
+    let data_choices = {
+      answers: [],
+      studentScore: 0,
+      totalScore: 0
+    };
+    let data_blanks = {
+      answers: [],
+      studentScore: 0,
+      totalScore: 0
+    };
+    let data_tracing = {
+      answers: [],
+      studentScore: 0,
+      totalScore: 0
+    };
+    
+
+    let data_mix = checkAnswer(entries_mix, questions);
     let data_coding = checkAnswer(entries_coding, codings);
 
-    let studentScore = data_choices.studentScore + data_blanks.studentScore + data_coding.studentScore;
-    let totalScore = data_choices.totalScore + data_blanks.totalScore + data_coding.totalScore;
+    for(let item of data_mix.answers) {
+      if(item.type === "choices") {
+        data_choices.answers.push(item);
+        data_choices.totalScore += item.points;
+        if(item.remarks === 0) {
+          data_choices.studentScore += item.points;
+        }
+      }
+      else if(item.type === "blank") {
+        data_blanks.answers.push(item);
+        data_blanks.totalScore += item.points;
+        if(item.remarks === 0) {
+          data_blanks.studentScore += item.points;
+        }
+      }
+      else if(item.type === "tracing") {
+        data_tracing.answers.push(item);
+        data_tracing.totalScore += item.points;
+        if(item.remarks === 0) {
+          data_tracing.studentScore += item.points;
+        }
+      }
+    }
+
+    let studentScore = data_mix.studentScore + data_coding.studentScore;
+    let totalScore = data_mix.totalScore + data_coding.totalScore;
 
     let answers = {
       studentId: user.id,
       multipleChoice: data_choices,
       fillBlank: data_blanks,
+      outputTracing: data_tracing,
       coding: {
         ...data_coding,
         status: 0,
@@ -125,11 +186,14 @@ export default function Questionnaire({ user, module, setResult }) {
       totalScore: totalScore,
     }
 
+    // console.log(answers);
+    clearModal();
+
     let result = await ModuleController.submitQuizAnswer(module.id, answers);
 
     clearModal();
 
-    if(result && result.id) {
+    if (result && result.id) {
 
       showLoading({
         message: "Updating progress..."
@@ -173,93 +237,119 @@ export default function Questionnaire({ user, module, setResult }) {
     return formEntries;
   }
 
+  function timerTimeout () {
+    showMessageBox({
+      title: "Time's up",
+      message: "Sorry your out of time.",
+      type: "warning",
+      onPress: checkAnswers
+    });
+  }
+
   return (
     <>
       <div className="fixed drop-shadow top-0 left-0 bg-base-100 w-full h-20 flex items-center justify-center z-50">
-        Timer Goes Here
+        <div>
+          <h1 className="text-center">Quiz Timer:</h1>
+          <Timer
+            className="text-4xl font-bold text-primary"
+            minutes={module ? module.examTime : 90}
+            onTimeout={timerTimeout}
+          />
+        </div>
       </div>
       <div className="flex flex-row justify-center">
         <div className="w-full max-w-[48rem] lg:px-8 p-0 lg:mr-8 m-0">
           <div>
             <div className="flex flex-col gap-2 mb-4">
-
-              {/* Multiple Choice */}
               <form
-                id="form_choices"
+                id="form_mix"
                 className={tabIndex === 0 ? "" : "hidden"}
                 onSubmit={(e) => selectTab(e, 1)}
               >
                 <div className="font-bold text-xl mb-4">
-                  I. Multiple Choice
+                  I. Questionnaires
                 </div>
-                {multiChoices.map((item, i) => (
-                  <MutlipleChoice
-                    key={i.toString()}
-                    item={getDocData(item)}
-                    questionNo={i + 1}
-                  />
-                ))}
+                {questions.map((item, i) =>
+                  item.type === "choices" ? (
+                    <MutlipleChoice
+                      key={i.toString()}
+                      item={item}
+                      questionNo={i + 1}
+                    />
+                  ) :
+                  item.type === "blank" ? (
+                    <FillBlank
+                      key={i.toString()}
+                      item={item}
+                      questionNo={i + 1}
+                    />
+                  ) :
+                  item.type === "tracing" ? (
+                    <Tracing
+                      key={i.toString()}
+                      item={item}
+                      questionNo={i + 1}
+                    />
+                  ) : null
+                )}
                 <div className="flex justify-end">
                   <button className="btn btn-primary" type="submit">
                     NEXT PAGE
                   </button>
                 </div>
               </form>
-              
-              {/* Fill in the blank */}
-              <form
-                id="form_blank"
-                className={tabIndex === 1 ? "" : "hidden"}
-                onSubmit={(e) => selectTab(e, 2)}
-              >
-                <div className="font-bold mb-4 text-xl">
-                  II. Fill in the Blank
-                </div>
-                {fillBlanks.map((item, i) => (
-                  <FillBlank
-                    key={i.toString()}
-                    item={getDocData(item)}
-                    questionNo={i + 1}
-                  />
-                ))}
-                <div className="flex justify-between">
-                  <div
-                    className="btn btn-primary"
-                    onClick={(e) => selectTab(e, 0)}
-                  >
-                    PREVIOUS PAGE
-                  </div>
-                  <button className="btn btn-primary" type="submit">
-                    NEXT PAGE
-                  </button>
-                </div>
-              </form>
-              
+
               {/* Coding */}
               <form
                 id="form_coding"
-                className={tabIndex === 2 ? "" : "hidden"}
+                className={tabIndex === 1 ? "" : "hidden"}
                 onSubmit={checkAnswers}
               >
-                <div className="font-bold mb-4 text-xl">III. Coding</div>
+                <div className="font-bold mb-4 text-xl">II. Coding</div>
                 {codings.map((item, i) => (
-                  <Coding
-                    key={i.toString()}
-                    item={getDocData(item)}
-                    questionNo={i + 1}
-                  />
-                ))}
-                <div className="flex justify-between">
-                  <div
-                    className="btn btn-primary"
-                    onClick={(e) => selectTab(e, 1)}
-                  >
-                    PREVIOUS PAGE
+                  <div key={i.toString()} className={i !== codingIndex ? "hidden" : ""}>
+                    <Coding
+                      item={item}
+                      questionNo={i + 1}
+                    />
+                    <div className="flex justify-between">
+                      {
+                        codingIndex === 0 ? (
+                          <div
+                            className="btn btn-primary"
+                            onClick={(e) => selectTab(e, 0)}
+                          >
+                            PREVIOUS PAGE
+                          </div>
+                        ) : (
+                          <div
+                            className="btn btn-primary"
+                            onClick={(e) => setCodingIndex(i - 1)}
+                          >
+                            PREVIOUS
+                          </div>
+                        )
+                      }
+                      {
+                        codingIndex === codings.length - 1 ? (
+                          <button className="btn btn-success" type="submit">
+                            SUBMIT
+                          </button>
+                        ) : (
+                          <div
+                            className="btn btn-success"
+                            onClick={() => setCodingIndex(i + 1)}
+                          >
+                            NEXT
+                          </div>
+                        )
+                      }
+                    </div>
                   </div>
-                  <button className="btn btn-success" type="submit">
-                    SUBMIT
-                  </button>
-                </div>
+
+                ))}
+
               </form>
 
             </div>

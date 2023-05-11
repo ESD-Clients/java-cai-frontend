@@ -2,7 +2,7 @@ import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import axios from "axios";
 import QueryString from "qs";
-import { Helper } from "../../controllers/_Controllers";
+import { Helper, PlaygroundController } from "../../controllers/_Controllers";
 
 export default function PlayGround() {
 
@@ -18,31 +18,34 @@ export default function PlayGround() {
     setOutput("");
     setLoading(true);
 
-    let data = QueryString.stringify({
-      'code': codes,
-      'language': 'java',
-      'input': input
-    });
+    let result = await PlaygroundController.execute(codes, input);
+    setOutput(result);
 
-    let config = {
-      method: 'post',
-      url: 'https://api.codex.jaagrav.in',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
+    // let data = QueryString.stringify({
+    //   'code': codes,
+    //   'language': 'java',
+    //   'input': input
+    // });
 
-    await axios(config)
-      .then(function (response) {
-        setOutput(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setOutput({
-          error: error
-        })
-      });
+    // let config = {
+    //   method: 'post',
+    //   url: 'https://api.codex.jaagrav.in',
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   data: data
+    // };
+
+    // await axios(config)
+    //   .then(function (response) {
+    //     setOutput(response.data);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //     setOutput({
+    //       error: error
+    //     })
+    //   });
 
     setLoading(false);
   }

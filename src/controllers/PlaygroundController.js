@@ -1,24 +1,43 @@
 import axios from "axios";
 import BaseController from "./_BaseController";
+import QueryString from "qs";
 
 class PlaygroundController extends BaseController {
     constructor() {
         super('playground');
     }
 
-    execute = async (data) => {
+    execute = async (codes, input) => {
         var result = null;
 
         try {
-            await axios.post(`${this.baseUrl}/execute`, data)
-            .then((res) => {
-                result = res.data;
-            })
-            
-            return result;
+            let data = QueryString.stringify({
+                'code': codes,
+                'language': 'java',
+                'input': input
+              });
+          
+              let config = {
+                method: 'post',
+                url: 'https://api.codex.jaagrav.in',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: data
+              };
+          
+              await axios(config)
+                .then(function (response) {
+                  result = response.data;
+                })
+          
         } catch (error) {
-            return error
+            result = {
+                error
+            }
         }
+
+        return result;
     }
 }
 

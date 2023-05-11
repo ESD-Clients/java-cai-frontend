@@ -1,3 +1,5 @@
+import { getDifficulty } from "../../../controllers/_Helper";
+
 export default function MutlipleChoice({item, questionNo}) {
 
   const choices = item.choices;
@@ -14,10 +16,24 @@ export default function MutlipleChoice({item, questionNo}) {
           ) : "bg-primary"
         )
       }>
-        <div className="mt-1 text-xs">{questionNo}.&#41;</div>
+        {
+          item.remarks === undefined && <div className="mt-1 text-xs">{questionNo}.&#41;</div>
+        }
         <div className="flex-1 font-semibold">{item.question}</div>
-        <div className="text-right text-xs">
-          {item.points} Point/s
+        <div>
+          <div className="text-right text-xs">Difficulty: {getDifficulty(item.difficulty)}</div>
+          <div className="text-right text-xs">
+            <div>
+              {item.points} Point/s
+            </div>
+            {
+              item.remarks !== undefined && item.remarks > -1 && (
+                <div className="text-sm font-bold">
+                  Score: {item.remarks}
+                </div>
+              )
+            }
+          </div>
         </div>
       </div>
       

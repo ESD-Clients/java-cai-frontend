@@ -153,6 +153,26 @@ class ModuleController extends BaseController {
     return result;
   }
 
+  getQuestionsSortedByDifficulties = async (moduleId) => {
+    var result = [];
+
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('questions')
+        .orderBy('difficulty', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+
+    } catch (err) {
+      console.error(err)
+    }
+
+    return result;
+  }
+
   subscribeQuestions = (moduleId, onSnapshot) => {
     return this.collectionRef
       .doc(moduleId)

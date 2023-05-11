@@ -4,6 +4,7 @@ import FillBlank from './FillBlank';
 import Coding from './Coding';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Tracing from './Tracing';
 
 export default function Result({ user, module, result }) {
 
@@ -12,8 +13,6 @@ export default function Result({ user, module, result }) {
 
   return (
     <>
-
-
       <Tabs>
         <div className="fixed flex justify-center drop-shadow top-0 left-0 bg-base-100 w-full pt-4 z-50">
           <div className="lg:max-w-[100rem] w-full flex flex-col flex-1 lg:mt-4 m-0 lg:px-8 px-4">
@@ -59,6 +58,16 @@ export default function Result({ user, module, result }) {
               <Tab
                 className={
                   "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                  (tab === "tracing" && "bg-primary text-white")
+                }
+                onClick={() => {
+                  setTab('tracing')
+                }}
+              >
+                Output Tracing</Tab>
+              <Tab
+                className={
+                  "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
                   (tab === "coding" && "bg-primary text-white")
                 }
                 onClick={() => {
@@ -81,21 +90,28 @@ export default function Result({ user, module, result }) {
             <TabPanel>
               {
                 result.multipleChoice.answers.map((item, index) => (
-                  <MutlipleChoice key={index.toString()} item={item} questionNo={index + 1} />
+                  <MutlipleChoice key={index.toString()} item={item}/>
                 ))
               }
             </TabPanel>
             <TabPanel>
               {
                 result.fillBlank.answers.map((item, index) => (
-                  <FillBlank key={index.toString()} item={item} questionNo={index + 1} />
+                  <FillBlank key={index.toString()} item={item}/>
+                ))
+              }
+            </TabPanel>
+            <TabPanel>
+              {
+                result.outputTracing.answers.map((item, index) => (
+                  <Tracing key={index.toString()} item={item} />
                 ))
               }
             </TabPanel>
             <TabPanel>
               {
                 result.coding.answers.map((item, index) => (
-                  <Coding key={index.toString()} item={item} questionNo={index + 1} />
+                  <Coding key={index.toString()} item={item} />
                 ))
               }
             </TabPanel>
