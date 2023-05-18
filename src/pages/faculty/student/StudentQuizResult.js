@@ -83,104 +83,142 @@ export default function StudentQuizResult({ student, module, result, setSelected
             </div>
           </div>
           <TabList className="flex border-y-2 bg-base-100">
-            <Tab
-              className={
-                "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                (tab === "choices" && "bg-primary text-white")
-              }
-              onClick={() => {
-                setTab('choices')
-              }}
-            >
-              Mutliple Choice</Tab>
-            <Tab
-              className={
-                "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                (tab === "blank" && "bg-primary text-white")
-              }
-              onClick={() => {
-                setTab('blank')
-              }}
-            >
-              Fill in the Blank</Tab>
-            <Tab
-              className={
-                "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                (tab === "tracing" && "bg-primary text-white")
-              }
-              onClick={() => {
-                setTab('tracing')
-              }}
-            >
-              Output Tracing</Tab>
-            <Tab
-              className={
-                "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                (tab === "coding" && "bg-primary text-white")
-              }
-              onClick={() => {
-                setTab('coding')
-              }}
-            >
-              Coding
-              {
-                !quizResult.coding.status && (
-                  " (Unchecked)"
-                )
-              }
-            </Tab>
+            {
+              quizResult.multipleChoice.answers.length > 0 && (
+                <Tab
+                  className={
+                    "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                    (tab === "choices" && "bg-primary text-white")
+                  }
+                  onClick={() => {
+                    setTab('choices')
+                  }}
+                >
+                  Mutliple Choice</Tab>
+              )
+            }
+
+            {
+              quizResult.fillBlank.answers.length > 0 && (
+                <Tab
+                  className={
+                    "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                    (tab === "blank" && "bg-primary text-white")
+                  }
+                  onClick={() => {
+                    setTab('blank')
+                  }}
+                >
+                  Fill in the Blank</Tab>
+              )
+            }
+
+            {
+              quizResult.outputTracing.answers.length > 0 && (
+                <Tab
+                  className={
+                    "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                    (tab === "tracing" && "bg-primary text-white")
+                  }
+                  onClick={() => {
+                    setTab('tracing')
+                  }}
+                >
+                  Output Tracing</Tab>
+              )
+            }
+
+            {
+              quizResult.coding.answers.length > 0 && (
+                <Tab
+                  className={
+                    "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                    (tab === "coding" && "bg-primary text-white")
+                  }
+                  onClick={() => {
+                    setTab('coding')
+                  }}
+                >
+                  Coding
+                  {
+                    !quizResult.coding.status && (
+                      " (Unchecked)"
+                    )
+                  }
+                </Tab>
+              )
+            }
           </TabList>
         </div>
 
         <div className="flex flex-row justify-center pt-8 mt-8">
           <div className="w-full max-w-[48rem] lg:px-8 p-0 lg:mr-8 m-0">
-            <TabPanel>
-              {
-                quizResult.multipleChoice.answers.map((item, index) => (
-                  <MutlipleChoice key={index.toString()} item={item} questionNo={index + 1} />
-                ))
-              }
-            </TabPanel>
-            <TabPanel>
-              {
-                quizResult.fillBlank.answers.map((item, index) => (
-                  <FillBlank key={index.toString()} item={item} questionNo={index + 1} />
-                ))
-              }
-            </TabPanel>
-            <TabPanel>
-              {
-                quizResult.outputTracing.answers.map((item, index) => (
-                  <Tracing key={index.toString()} item={item} questionNo={index + 1} />
-                ))
-              }
-            </TabPanel>
-            <TabPanel>
-              <form onSubmit={checkCoding}>
-                {
-                  quizResult.coding.answers.map((item, index) => (
-                    <div key={index.toString()}>
-                      <Coding item={item} questionNo={index + 1} />
-                      {
-                        quizResult.coding.status === 0 && (
-                          <>
-                            <TextField name={index} label="Points" type="number" min={0} max={item.points} required />
-                            <HDivider />
-                          </>
-                        )
-                      }
-                    </div>
-                  ))
-                }
-                {
-                  quizResult.coding.status === 0 && (
-                    <button className='btn btn-success'>
-                      SUBMIT SCORE
-                    </button>
-                  )
-                }
-              </form>
-            </TabPanel>
+            {
+              quizResult.multipleChoice.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    quizResult.multipleChoice.answers.map((item, index) => (
+                      <MutlipleChoice key={index.toString()} item={item} questionNo={index + 1} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
+
+            {
+              quizResult.fillBlank.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    quizResult.fillBlank.answers.map((item, index) => (
+                      <FillBlank key={index.toString()} item={item} questionNo={index + 1} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
+
+            {
+              quizResult.outputTracing.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    quizResult.outputTracing.answers.map((item, index) => (
+                      <Tracing key={index.toString()} item={item} questionNo={index + 1} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
+
+            {
+              quizResult.coding.answers.length > 0 && (
+                <TabPanel>
+                  <form onSubmit={checkCoding}>
+                    {
+                      quizResult.coding.answers.map((item, index) => (
+                        <div key={index.toString()}>
+                          <Coding item={item} questionNo={index + 1} />
+                          {
+                            quizResult.coding.status === 0 && (
+                              <>
+                                <TextField name={index} label="Points" type="number" min={0} max={item.points} required />
+                                <HDivider />
+                              </>
+                            )
+                          }
+                        </div>
+                      ))
+                    }
+                    {
+                      quizResult.coding.status === 0 && (
+                        <button className='btn btn-success'>
+                          SUBMIT SCORE
+                        </button>
+                      )
+                    }
+                  </form>
+                </TabPanel>
+              )
+            }
           </div>
         </div>
 

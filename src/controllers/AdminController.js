@@ -34,6 +34,25 @@ class AdminController extends BaseController {
 
         return result;
     }
+
+    register = async (item) => {
+
+        var result = null;
+
+        try {
+            await auth.createUserWithEmailAndPassword(item.email, item.password)
+                .then(async res => {
+                    item.adminNo = await this.getIncrementId();
+                    item.docStatus = 1;
+                    result = await this.storeOnId(res.user.uid, item);
+                })
+        } catch (err) {
+            console.error(err);
+            result = err;
+        }
+
+        return result;
+    }
     
     resetPassword = async (email) => {
         var result = false;
@@ -68,6 +87,13 @@ class AdminController extends BaseController {
         }
 
         return result;
+    }
+
+    subscribeActiveList = (onSnapshot) => {
+        return this.collectionRef
+            .where('docStatus', '==', 1)
+            .orderBy('adminNo', 'asc')
+            .onSnapshot(onSnapshot);
     }
 }
 

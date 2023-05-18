@@ -72,7 +72,7 @@ export default function Questionnaire({ user, module, setResult }) {
     setTabIndex(i);
   }
 
-  function checkAnswer(entries, questions) {
+  function checkEntries(entries, questions) {
 
     let answers = [];
     let studentScore = 0;
@@ -80,9 +80,9 @@ export default function Questionnaire({ user, module, setResult }) {
 
     for (let question of questions) {
       let studentAnswer = {
-        ...question.data(),
+        ...question,
         questionId: question.id,
-        correctAnswer: question.data().answer,
+        correctAnswer: question.answer,
       }
 
       delete studentAnswer.answer;
@@ -91,11 +91,11 @@ export default function Questionnaire({ user, module, setResult }) {
       studentAnswer.studentAnswer = entries[question.id];
 
       //Check answer
-      if (question.data().type === "coding") {
+      if (question.type === "coding") {
         studentAnswer.remarks = -1;
       }
       else {
-        if (question.data().answer === entries[question.id]) {
+        if (question.answer === entries[question.id]) {
           studentScore += studentAnswer.points;
           studentAnswer.remarks = 1;
         }
@@ -143,8 +143,8 @@ export default function Questionnaire({ user, module, setResult }) {
     };
     
 
-    let data_mix = checkAnswer(entries_mix, questions);
-    let data_coding = checkAnswer(entries_coding, codings);
+    let data_mix = checkEntries(entries_mix, questions);
+    let data_coding = checkEntries(entries_coding, codings);
 
     for(let item of data_mix.answers) {
       if(item.type === "choices") {
@@ -265,10 +265,10 @@ export default function Questionnaire({ user, module, setResult }) {
               <form
                 id="form_mix"
                 className={tabIndex === 0 ? "" : "hidden"}
-                onSubmit={(e) => selectTab(e, 1)}
+                onSubmit={(e) => codings.length > 0 ? selectTab(e, 1) : checkAnswers(e)}
               >
                 <div className="font-bold text-xl mb-4">
-                  I. Questionnaires
+                  {codings.length > 0 ? "I. " : ""} Questionnaires
                 </div>
                 {questions.map((item, i) =>
                   item.type === "choices" ? (
@@ -295,7 +295,7 @@ export default function Questionnaire({ user, module, setResult }) {
                 )}
                 <div className="flex justify-end">
                   <button className="btn btn-primary" type="submit">
-                    NEXT PAGE
+                    {codings.length > 0 ? "NEXT PAGE" : "SUBMIT"}
                   </button>
                 </div>
               </form>

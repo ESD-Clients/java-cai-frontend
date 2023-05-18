@@ -14,6 +14,7 @@ import Footer from "../blocks/Footer";
 import RoomList from "./admin/RoomList";
 import Feedbacks from "./admin/Feedbacks";
 import StudentView from "./admin/student/StudentView";
+import AdminList from "./admin/AdminList";
 
 export default function Admin() {
 
@@ -56,6 +57,7 @@ export default function Admin() {
             <Routes>
               <Route path="/dashboard" element={<Dashboard user={user} />} />
 
+              <Route path="/administrators" element={<AdminList user={user} />} />
               <Route path="/faculties" element={<FacultyList user={user} />} />
 
               <Route path="/students" element={<StudentList user={user} />} />

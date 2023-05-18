@@ -35,86 +35,124 @@ export default function Result({ user, module, result }) {
               </div>
             </div>
             <TabList className="flex border-y-2 bg-base-100">
-              <Tab
-                className={
-                  "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                  (tab === "choices" && "bg-primary text-white")
-                }
-                onClick={() => {
-                  setTab('choices')
-                }}
-              >
-                Mutliple Choice</Tab>
-              <Tab
-                className={
-                  "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                  (tab === "blank" && "bg-primary text-white")
-                }
-                onClick={() => {
-                  setTab('blank')
-                }}
-              >
-                Fill in the Blank</Tab>
-              <Tab
-                className={
-                  "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                  (tab === "tracing" && "bg-primary text-white")
-                }
-                onClick={() => {
-                  setTab('tracing')
-                }}
-              >
-                Output Tracing</Tab>
-              <Tab
-                className={
-                  "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
-                  (tab === "coding" && "bg-primary text-white")
-                }
-                onClick={() => {
-                  setTab('coding')
-                }}
-              >
-                Coding
-                {
-                  !result.coding.status && (
-                    " (Unchecked)"
-                  )
-                }
-              </Tab>
+              {
+                result.multipleChoice.answers.length > 0 && (
+                  <Tab
+                    className={
+                      "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                      (tab === "choices" && "bg-primary text-white")
+                    }
+                    onClick={() => {
+                      setTab('choices')
+                    }}
+                  >
+                    Mutliple Choice</Tab>
+                )
+              }
+
+              {
+                result.fillBlank.answers.length > 0 && (
+                  <Tab
+                    className={
+                      "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                      (tab === "blank" && "bg-primary text-white")
+                    }
+                    onClick={() => {
+                      setTab('blank')
+                    }}
+                  >
+                    Fill in the Blank</Tab>
+                )
+              }
+
+              {
+                result.outputTracing.answers.length > 0 && (
+                  <Tab
+                    className={
+                      "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                      (tab === "tracing" && "bg-primary text-white")
+                    }
+                    onClick={() => {
+                      setTab('tracing')
+                    }}
+                  >
+                    Output Tracing</Tab>
+                )
+              }
+
+              {
+                result.coding.answers.length > 0 && (
+                  <Tab
+                    className={
+                      "flex-1 text-center py-4 px-2 outline-none hover:bg-primary-focus hover:text-white cursor-pointer " +
+                      (tab === "coding" && "bg-primary text-white")
+                    }
+                    onClick={() => {
+                      setTab('coding')
+                    }}
+                  >
+                    Coding
+                    {
+                      !result.coding.status && (
+                        " (Unchecked)"
+                      )
+                    }
+                  </Tab>
+                )
+              }
             </TabList>
           </div>
         </div>
 
         <div className="flex flex-row justify-center pt-8 mt-8">
           <div className="w-full max-w-[48rem] lg:px-8 p-0 lg:mr-8 m-0">
-            <TabPanel>
-              {
-                result.multipleChoice.answers.map((item, index) => (
-                  <MutlipleChoice key={index.toString()} item={item}/>
-                ))
-              }
-            </TabPanel>
-            <TabPanel>
-              {
-                result.fillBlank.answers.map((item, index) => (
-                  <FillBlank key={index.toString()} item={item}/>
-                ))
-              }
-            </TabPanel>
-            <TabPanel>
-              {
-                result.outputTracing.answers.map((item, index) => (
-                  <Tracing key={index.toString()} item={item} />
-                ))
-              }
-            </TabPanel>
-            <TabPanel>
-              {
-                result.coding.answers.map((item, index) => (
-                  <Coding key={index.toString()} item={item} />
-                ))
-              }
-            </TabPanel>
+            {
+              result.multipleChoice.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    result.multipleChoice.answers.map((item, index) => (
+                      <MutlipleChoice key={index.toString()} item={item} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
+
+            {
+              result.fillBlank.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    result.fillBlank.answers.map((item, index) => (
+                      <FillBlank key={index.toString()} item={item} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
+
+            {
+              result.outputTracing.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    result.outputTracing.answers.map((item, index) => (
+                      <Tracing key={index.toString()} item={item} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
+
+            {
+              result.coding.answers.length > 0 && (
+                <TabPanel>
+                  {
+                    result.coding.answers.map((item, index) => (
+                      <Coding key={index.toString()} item={item} />
+                    ))
+                  }
+                </TabPanel>
+              )
+            }
           </div>
         </div>
 

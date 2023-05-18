@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import PasswordField from "../../components/PasswordField";
-import { FacultyController, Helper } from "../../controllers/_Controllers";
+import { AdminController, Helper } from "../../controllers/_Controllers";
 import { getErrorMessage } from "../../controllers/_Helper";
-import { showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
+import { showLoading, showMessageBox } from "../../modals/Modal";
 import SearchField from "../../components/SearchField";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../values/MyColor";
 
-export default function FacultyList({ user }) {
+export default function AdminList() {
 
   const [loading, setLoading] = useState(true);
   const [faculties, setFaculties] = useState([]);
@@ -16,7 +16,7 @@ export default function FacultyList({ user }) {
 
   useEffect(() => {
 
-    let unsubscribe = FacultyController.subscribeActiveList(res => {
+    let unsubscribe = AdminController.subscribeActiveList(res => {
       setFaculties(res.docs);
       setLoading(false);
     })
@@ -27,13 +27,13 @@ export default function FacultyList({ user }) {
 
   async function addItem(e) {
     e.preventDefault();
-    document.getElementById("addFaculty").click();
+    document.getElementById("addAdmin").click();
 
     showLoading({
       message: "Saving..."
     })
 
-    let result = await FacultyController.register({
+    let result = await AdminController.register({
       ...Helper.getEventFormData(e)
     });
 
@@ -50,40 +50,10 @@ export default function FacultyList({ user }) {
         message: getErrorMessage(result),
         type: "danger",
         onPress: () => {
-          document.getElementById("addFaculty").click();
+          document.getElementById("addAdmin").click();
         }
       });
     }
-  }
-
-  async function deleteItem(item) {
-    showConfirmationBox({
-      title: "Confirmation",
-      message: "Are you sure you want to delete this item?",
-      type: "warning",
-      onYes: async () => {
-        showLoading({
-          message: "Deleting..."
-        })
-
-        let result = await FacultyController.destroy(item.id);
-        if (result) {
-          showMessageBox({
-            title: "Success",
-            message: "Success",
-            type: "success",
-          })
-        }
-        else {
-          showMessageBox({
-            title: "Error",
-            message: "Something went wrong",
-            type: "danger",
-          });
-        }
-
-      }
-    })
   }
 
   function checkFilter(item) {
@@ -91,9 +61,9 @@ export default function FacultyList({ user }) {
       let value = filter.toLowerCase();
       let name = item.data().name.toLowerCase();
       let email = item.data().email.toLowerCase();
-      let facultyNo = Helper.padIdNo(item.data().facultyNo);
+      let adminNo = Helper.padIdNo(item.data().adminNo);
 
-      if (name.includes(value) || email.includes(value) || facultyNo.includes(value)) {
+      if (name.includes(value) || email.includes(value) || adminNo.includes(value)) {
         return true;
       }
       else {
@@ -107,11 +77,11 @@ export default function FacultyList({ user }) {
 
   return (
     <>
-      <input type="checkbox" id="addFaculty" className="modal-toggle" />
+      <input type="checkbox" id="addAdmin" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg text-center">Add Faculty</h3>
-          <form id="addFacultyForm" onSubmit={addItem}>
+          <h3 className="font-bold text-lg text-center">Add Administrator</h3>
+          <form id="addAdminForm" onSubmit={addItem}>
             <div className="form-control py-1">
               <label className="input-group">
                 <span>Name</span>
@@ -136,7 +106,7 @@ export default function FacultyList({ user }) {
             </div>
             <div className="modal-action">
               <button type="submit" className="btn btn-primary">Add</button>
-              <label htmlFor="addFaculty" className="btn btn-error">Close</label>
+              <label htmlFor="addAdmin" className="btn btn-error">Close</label>
             </div>
           </form>
           <p id="errorPlaceholder"></p>
@@ -148,7 +118,7 @@ export default function FacultyList({ user }) {
         <div className="modal-box relative">
           <label htmlFor="successModal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <h3 className="text-lg font-bold">Success</h3>
-          <p className="py-4">Faculty Added</p>
+          <p className="py-4">Administrator Added</p>
         </div>
       </div>
 
@@ -157,8 +127,8 @@ export default function FacultyList({ user }) {
 
           <div className="flex flex-col sm:flex-row justify-between mb-8">
             <div>
-              <div className="font-bold uppercase mb-4">Faculty List</div>
-              <div className="font-thin">Total Number of Available Faculties:
+              <div className="font-bold uppercase mb-4">Administrator List</div>
+              <div className="font-thin">Total Number of Available Administrator:
                 <span className="font-bold ml-2">
                   {faculties.length}
                 </span>
@@ -167,9 +137,9 @@ export default function FacultyList({ user }) {
             <div className="mt-4 flex flex-row justify-center">
               <SearchField
                 setFilter={setFilter}
-                placeholder="Search faculty no, name or email"
+                placeholder="Search admin no, name or email"
               />
-              <label htmlFor="addFaculty" className="btn btn-primary">Add Faculty</label>
+              <label htmlFor="addAdmin" className="btn btn-primary">Add Admin</label>
             </div>
           </div>
 
@@ -179,10 +149,9 @@ export default function FacultyList({ user }) {
               <table className="table table-compact w-full">
                 <thead>
                   <tr>
-                    <th>Faculty No</th>
+                    <th>Admin No</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -190,14 +159,9 @@ export default function FacultyList({ user }) {
                     faculties.map((item, i) => (
                       checkFilter(item) && (
                         <tr key={i.toString()}>
-                          <td>{Helper.padIdNo(item.data().facultyNo)}</td>
+                          <td>{Helper.padIdNo(item.data().adminNo)}</td>
                           <td>{item.data().name}</td>
                           <td>{item.data().email}</td>
-                          <td className="flex gap-2">
-                            <button className="btn btn-sm btn-error" onClick={() => deleteItem(item)}>
-                              Delete
-                            </button>
-                          </td>
                         </tr>
                       )
                     ))

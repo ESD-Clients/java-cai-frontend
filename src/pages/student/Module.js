@@ -10,6 +10,8 @@ import QueryString from "qs";
 import { setPlaygroundCode } from "../../controllers/_Helper";
 import HDivider from "../../components/HDivider";
 import RichText from "../../components/RichText";
+import { showConfirmationBox } from "../../modals/Modal";
+import { clearModal } from "../../modals/Modal";
 
 export default function Module() {
 
@@ -99,6 +101,22 @@ export default function Module() {
     });
   }
 
+  function takeQuiz () {
+    showConfirmationBox({
+      title: "Confirmation",
+      message: "Did you read this module clearly?",
+      type: "warning",
+      onYes: () => {
+        navigate("/student/quiz", {
+          state: {
+            module: module
+          }
+        })
+        clearModal();
+      }
+    })
+  }
+
 
   if (!loaded) return <Loading />
   return (
@@ -122,7 +140,7 @@ export default function Module() {
               </button> */}
             </div>
             <div>
-              <Link
+              {/* <Link
                 className="btn btn-success"
                 to="/student/quiz"
                 state={{ module: module }}
@@ -130,7 +148,27 @@ export default function Module() {
                 {
                   quizResult ? "View Quiz" : "Take Quiz"
                 }
-              </Link>
+              </Link> */}
+              {
+                quizResult ? (
+                  <Link
+                    className="btn btn-success"
+                    to="/student/quiz"
+                    state={{ module: module }}
+                  >
+                    View Quiz
+                  </Link> 
+                ) : (
+                  <button
+                    className="btn btn-success"
+                    onClick={takeQuiz}
+                    // to="/student/quiz"
+                    // state={{ module: module }}
+                  >
+                    Take Quiz
+                  </button> 
+                )
+              }
             </div>
           </div>
 

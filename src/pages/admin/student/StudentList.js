@@ -6,6 +6,7 @@ import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../../values/MyColor";
 import SearchField from "../../../components/SearchField";
 import { useNavigate } from "react-router-dom";
+import { showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
 
 
 export default function StudentList({ user }) {
@@ -29,6 +30,36 @@ export default function StudentList({ user }) {
 
   function viewItem(item) {
     navigate('/admin/student?'+item.id)
+  }
+
+  async function deleteItem(item) {
+    showConfirmationBox({
+      title: "Confirmation",
+      message: "Are you sure you want to delete this item?",
+      type: "warning",
+      onYes: async () => {
+        showLoading({
+          message: "Deleting..."
+        })
+
+        let result = await StudentController.destroy(item.id);
+        if (result) {
+          showMessageBox({
+            title: "Success",
+            message: "Success",
+            type: "success",
+          })
+        }
+        else {
+          showMessageBox({
+            title: "Error",
+            message: "Something went wrong",
+            type: "danger",
+          });
+        }
+
+      }
+    })
   }
 
   function checkFilter(item) {
@@ -95,6 +126,9 @@ export default function StudentList({ user }) {
                           <td className="flex gap-2">
                             <button className="btn btn-info btn-sm" onClick={() => viewItem(item)}>
                               View
+                            </button>
+                            <button className="btn btn-sm btn-error" onClick={() => deleteItem(item)}>
+                              Delete
                             </button>
                           </td>
                         </tr>
