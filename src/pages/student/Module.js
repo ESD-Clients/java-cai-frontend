@@ -23,9 +23,7 @@ export default function Module() {
 
   const [module, setModule] = useState(null);
   const [topics, setTopics] = useState([]);
-
-  const [compiling, setCompiling] = useState(false);
-  const [output, setOutput] = useState('');
+  const [questionnaire, setQuestionnaire] = useState(0);
 
   const [loaded, setLoaded] = useState(false);
   const [quizResult, setQuizResult] = useState(null);
@@ -63,37 +61,15 @@ export default function Module() {
       let quizResult = await ModuleController.getQuizResult(moduleId, user.id);
       setQuizResult(quizResult);
 
+      let questionnaire = await ModuleController.getQuestions(moduleId);
+      setQuestionnaire(questionnaire.length);
+
       setLoaded(true);
     }
 
     if (!loaded) fetchData();
   }, [loaded])
 
-  async function compile(code) {
-
-    setCompiling(true);
-    let data = QueryString.stringify({
-      'code': code,
-      'language': 'java',
-      'input': ''
-    });
-
-    let config = {
-      method: 'post',
-      url: 'https://api.codex.jaagrav.in',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: data
-    };
-
-    await axios(config)
-      .then(function (response) {
-        setOutput(response.data.output);
-      })
-
-    setCompiling(false);
-  }
 
   function scrollTo (id) {
     document.getElementById(id).scrollIntoView({
@@ -116,7 +92,6 @@ export default function Module() {
       }
     })
   }
-
 
   if (!loaded) return <Loading />
   return (
@@ -162,6 +137,7 @@ export default function Module() {
                   <button
                     className="btn btn-success"
                     onClick={takeQuiz}
+                    disabled={questionnaire === 0}
                     // to="/student/quiz"
                     // state={{ module: module }}
                   >

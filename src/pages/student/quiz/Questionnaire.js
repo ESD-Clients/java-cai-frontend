@@ -15,8 +15,6 @@ export default function Questionnaire({ user, module, setResult }) {
   const [codingIndex, setCodingIndex] = useState(0);
 
   const [questions, setQuestions] = useState([]);
-  // const [multiChoices, setMultiChoices] = useState([]);
-  // const [fillBlanks, setFillBlanks] = useState([]);
   const [codings, setCodings] = useState([]);
 
   useEffect(() => {
@@ -24,8 +22,6 @@ export default function Questionnaire({ user, module, setResult }) {
 
       let results = await ModuleController.getQuestionsSortedByDifficulties(module.id);
 
-      // let multi = [];
-      // let blank = [];
       let question = [];
       let coding = [];
 
