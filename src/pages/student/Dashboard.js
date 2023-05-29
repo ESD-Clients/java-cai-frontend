@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import RichText from "../../components/RichText";
-import StudentNavBar from "../../blocks/StudentNavBar";
 import { Helper, ModuleController, RoomController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 import { getDocData } from "../../controllers/_Helper";
@@ -26,13 +25,15 @@ export default function Dashboard() {
         setModules(modules);
 
         getCurrentModule(modules);
+        computeProgress(modules);
       }
     })
+
+    return () => unsubscribeRoom();
   }, [])
 
   useEffect(() => {
     async function fetchData() {
-
       setLoaded(true);
     }
 
