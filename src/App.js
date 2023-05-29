@@ -20,6 +20,7 @@ export default function App () {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/faculty/*" element={<Faculty />} />
+          <Route path="/learner/*" element={<Student />} />
           <Route path="/student/*" element={<Student />} />
         </Routes>
       </HashRouter>

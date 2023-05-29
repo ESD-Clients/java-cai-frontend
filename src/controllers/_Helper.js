@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import CryptoJS from "crypto-js";
+import moment from "moment";
 
 export const setCurrentUser = (user) => {
   let value = JSON.stringify(user);
@@ -100,4 +101,12 @@ export function getDifficulty (difficulty) {
   else {
     return "Hard"
   }
+}
+
+export function getStringDateToday () {
+  return new Date().toISOString().split('T')[0]
+}
+
+export function formatDateTime (datetime) {
+  return moment(datetime).format("MMMM dd, yyyy - hh:mm A")
 }

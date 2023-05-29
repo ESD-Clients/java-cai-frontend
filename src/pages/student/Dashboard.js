@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import RichText from "../../components/RichText";
 import StudentNavBar from "../../blocks/StudentNavBar";
-import { Helper, ModuleController } from "../../controllers/_Controllers";
+import { Helper, ModuleController, RoomController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
+import { getDocData } from "../../controllers/_Helper";
 
 export default function Dashboard() {
 
@@ -12,17 +13,25 @@ export default function Dashboard() {
   const [loaded, setLoaded] = useState(false);
 
   const [currentModule, setCurrentModule] = useState(null);
+  const [room, setRoom] = useState(null);
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    const unsubscribeRoom = RoomController.subscribeDoc(user.currentRoom, async (snapshot) => {
+      if (snapshot) {
+        setRoom(getDocData(snapshot));
+
+        let modules = await ModuleController.getModulesByRoom(snapshot.id);
+        setModules(modules);
+
+        getCurrentModule(modules);
+      }
+    })
+  }, [])
+
+  useEffect(() => {
     async function fetchData() {
-
-
-      let modules = await ModuleController.getApprovedModules();
-      setModules(modules);
-      computeProgress(modules);
-      getCurrentModule(modules)
 
       setLoaded(true);
     }
@@ -31,6 +40,7 @@ export default function Dashboard() {
   }, [loaded])
 
   function getCurrentModule(modules) {
+
     let current = modules.length > 0 ? modules[0] : null;
 
     for (let i = 1; i < modules.length; i++) {
@@ -59,7 +69,7 @@ export default function Dashboard() {
     <>
 
       <div className="flex flex-row justify-center">
-        <div className="w-full lg:px-8 p-0 lg:mr-8 m-0">
+        <div className="w-full lg:px-8 p-0 m-0">
           <div className="mb-10">
             <div className="stats shadow bg-base-100 border border-slate-600 w-full">
               <div className="stat">
@@ -78,66 +88,66 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
           <div className="w-full">
             <div className="hero bg-base-200 rounded-lg">
               <div className="hero-content w-full">
-
                 {
-                  currentModule ? (
-                    <div className="px-8 w-full">
-                      <h1 className="text-lg mb-8 text-gray-600 font-semibold">Current Module: </h1>
-
-                      <h1 className="text-5xl font-bold">
-                        {currentModule.data().title}
-                      </h1>
-                      <RichText
-                        value={currentModule.data().sypnosis}
-                      />
-                      {/* <p className="py-6 whitespace-pre-wrap">
-                        {
-                          currentModule.data().sypnosis
-                        }
-                      </p> */}
-                      <div className="divider"></div>
-                      <div className="flex flex-row justify-end">
-                        <Link
-                          className="btn btn-primary"
-                          to={"/student/module?" + currentModule.id}
-                        >
-                          Get Started
-                        </Link>
+                  room ? (
+                    <div className="w-full">
+                      <div>
+                        <div className="text-gray-500">
+                          Room Code:
+                        </div>
+                        <div className="text-2xl font-bold">
+                          {room.code}
+                        </div>
                       </div>
+                      <div className="mt-8 mb-2 text-gray-500">
+                        Current Module:
+                      </div>
+                      {
+                        currentModule ? (
+                          <div className="px-8 w-full">
+                            <h1 className="text-2xl font-bold">
+                              {currentModule.data().title}
+                            </h1>
+                            <RichText
+                              value={currentModule.data().sypnosis}
+                            />
+                            <div className="divider"></div>
+                            <div className="flex flex-row justify-end">
+                              <Link
+                                className="btn btn-primary"
+                                to={"/student/module?" + currentModule.id}
+                              >
+                                Get Started
+                              </Link>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="px-8 w-full">
+                            <h1 className="text-2xl text-gray-600">
+                              No available modules yet.
+                            </h1>
+                          </div>
+                        )
+                      }
                     </div>
                   ) : (
-                    user.current_module ? (
-                      modules.length > 0 ? (
-                        <div className="px-8 w-full">
-                          <h1 className="text-5xl font-bold">
-                            Congratulations!
-                          </h1>
-                        </div>
-                      ) : (
-                        <div className="px-8 w-full">
-                          <h1 className="text-2xl text-gray-600">
-                            No modules yet
-                          </h1>
-                        </div>
-                      )
-                    ) : (
-                      <div className="px-8 w-full">
-                        <h1 className="text-2xl text-gray-600">
-                          You don't have assigned modules yet.
-                        </h1>
-                      </div>
-                    )
+                    <div className="px-8 w-full">
+                      <h1 className="text-2xl text-gray-600">
+                        You need to join a room first.
+                      </h1>
+                    </div>
                   )
                 }
               </div>
             </div>
           </div>
         </div>
-        <div className="hidden lg:block">
-          <ul className="menu pl-3 pt-4 bg-base-200 rounded-box">
+        <div className="hidden lg:block  min-w-[16rem]">
+          <ul className="menu pl-2 pt-4 bg-base-200 rounded-box">
             <li className="menu-title">
               <span className="uppercase">Module List</span>
             </li>
@@ -170,7 +180,7 @@ export default function Dashboard() {
                   )
                 ))
               ) : (
-                <li>No Module Available</li>
+                <li className="text-gray-400 m-4">(No modules yet.)</li>
               )
             }
           </ul>

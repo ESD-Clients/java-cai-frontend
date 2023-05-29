@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import FacultyNavBar from "../blocks/FacultyNavBar";
 import FacultySideBar from "../blocks/FacultySideBar";
-import { FacultyController, Helper } from "../controllers/_Controllers";
+import { FacultyController, Helper, SchoolController } from "../controllers/_Controllers";
 
 import Dashboard from "./faculty/Dashboard";
 
@@ -40,6 +40,8 @@ export default function Faculty() {
         let newUser = await FacultyController.get(user.id);
         if (newUser && newUser.id) {
           newUser.type = "faculty";
+          let school = await SchoolController.get(newUser.school);
+          newUser.school = school;
           Helper.setCurrentUser(newUser);
         }
         else {

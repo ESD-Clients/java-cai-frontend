@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Helper, StudentController } from "../../controllers/_Controllers"
+import { Helper, SchoolController, StudentController } from "../../controllers/_Controllers"
 import moment from "moment";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../values/MyColor";
@@ -11,6 +11,9 @@ import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 export default function Settings() {
 
   const [user, setUser] = useState(Helper.getCurrentUser());
+
+  
+  console.log(user);
 
   const [updatingImage, setUpdatingImage] = useState(false);
   const [image, setImage] = useState(null);
@@ -28,6 +31,37 @@ export default function Settings() {
         type: "student"
       });
       setUser(result)
+    }
+
+    return result;
+  }
+
+  async function updateSchool(value) {
+
+    let school = await SchoolController.getSchoolByCode(value);
+
+    if(school) {
+      let result = await updateUser("school", school.id);
+      if (result && result.id) {
+        Helper.setCurrentUser({
+          ...result,
+          school: school,
+          type: "student"
+        });
+        setUser({
+          ...result,
+          school: school
+        })
+      }
+  
+      return result;
+    }
+    else {
+      showMessageBox({
+        title: "Error",
+        type: "danger",
+        message: "School code not found!"
+      });
     }
   }
 
@@ -107,12 +141,14 @@ export default function Settings() {
                     <img
                       src={URL.createObjectURL(image)}
                       className="h-[10rem] w-[10rem] rounded-full border border-dashed object-cover"
+                      alt=""
                     />
                   ) : (
                     user.imageUri ? (
                       <img
                         src={user.imageUri}
                         className="h-[10rem] w-[10rem] rounded-full border border-dashed object-cover"
+                        alt=""
                       />
                     ) : (
                       <div className="text-gray-300 h-[10rem] w-[10rem] rounded-full border border-dashed">
@@ -204,9 +240,10 @@ export default function Settings() {
               />
               <Info
                 label="School"
-                value={user.school}
+                value={user.school.schoolNo}
+                displayValue={user.school.schoolNo + " - " + user.school.name}
                 editable
-                onSave={async (value) => updateUser("school", value)}
+                onSave={async (value) => updateSchool(value)}
               />
 
               <form onSubmit={updatePassword}>
@@ -241,7 +278,7 @@ export default function Settings() {
   )
 }
 
-const Info = ({ label, value, type, editable, onSave }) => {
+const Info = ({ label, value, displayValue, type, editable, onSave }) => {
 
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -275,7 +312,7 @@ const Info = ({ label, value, type, editable, onSave }) => {
               {
                 type === "date" ? (
                   moment(value).format("MMMM DD, yyyy")
-                ) : value
+                ) : displayValue ? displayValue : value
               }
             </div>
           )

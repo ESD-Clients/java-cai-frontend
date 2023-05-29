@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import HDivider from "../../../components/HDivider";
 import { useEffect } from "react";
-import { RoomController, StudentController } from "../../../controllers/_Controllers";
+import { ModuleController, RoomController, StudentController } from "../../../controllers/_Controllers";
 import { useState } from "react";
 import { getDocData, padIdNo } from "../../../controllers/_Helper";
 import ReactModal from "react-modal";
@@ -9,6 +9,7 @@ import { Dots } from "react-activity";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import RoomStudents from "./RoomStudents";
 import ActivityList from "./ActivityList";
+import ModuleList from "./ModuleList";
 
 export default function RoomView() {
 
@@ -35,6 +36,16 @@ export default function RoomView() {
   const [roomRequests, setRoomRequests] = useState([]);
 
   const [roomActivities, setRoomActivities] = useState([]);
+  const [roomModules, setRoomModules] = useState([]);
+
+  useEffect(() => {
+    async function fetchData () {
+      const modules = await ModuleController.getModulesByRoom(roomId);
+      setRoomModules(modules);
+    }
+
+    fetchData();
+  }, []);
 
 
   useEffect(() => {
@@ -42,9 +53,9 @@ export default function RoomView() {
 
       let room = getDocData(snapshot)
 
-      setRoom(room)
+      setRoom(room);
       getRoomStudents(room.students);
-      getStudentRequests(room.requests)
+      getStudentRequests(room.requests);
     });
 
     let unsubscribeStudents = StudentController.subscribeActiveList(snapshot => {
@@ -65,13 +76,15 @@ export default function RoomView() {
   }, [])
 
   async function getRoomStudents(students) {
+  
 
     let listStudents = [];
     for(let studentId of students) {
       let student = await StudentController.get(studentId);
-      listStudents.push(student);
+      student && listStudents.push(student);
+      
     }
-    // let students = await StudentController.getStudentsByRoom(roomId);
+
     setRoomStudents(listStudents);
 
     let invites = await StudentController.getStudentsByRoomInvites(roomId);
@@ -124,22 +137,24 @@ export default function RoomView() {
             className={"py-4 font-bold text-xl flex-1 outline-none text-center hover:bg-base-300 cursor-pointer " + (tab === 0 ? "border-b-2 border-primary" : "")}
             onClick={() => setTab(0)}
           >
-            ACTIVITIES
+            STUDENTS
           </Tab>
           <Tab 
             className={"py-4 font-bold text-xl flex-1 outline-none text-center hover:bg-base-300 cursor-pointer " + (tab === 1 ? "border-b-2 border-primary" : "")}
             onClick={() => setTab(1)}
           >
-            STUDENTS
+            MODULES
           </Tab>
+          <Tab 
+            className={"py-4 font-bold text-xl flex-1 outline-none text-center hover:bg-base-300 cursor-pointer " + (tab === 2 ? "border-b-2 border-primary" : "")}
+            onClick={() => setTab(2)}
+          >
+            ACTIVITIES
+          </Tab>
+
         </TabList>
 
-        <TabPanel>
-          <ActivityList
-            roomId={roomId}
-            roomActivities={roomActivities}
-          />
-        </TabPanel>
+
         <TabPanel>
           <RoomStudents
             room={room}
@@ -147,6 +162,18 @@ export default function RoomView() {
             roomInvites={roomInvites}
             roomStudents={roomStudents}
             roomRequests={roomRequests}
+          />
+        </TabPanel>
+        <TabPanel>
+          <ModuleList
+            roomId={roomId}
+            moduleList={roomModules}
+          />
+        </TabPanel>
+        <TabPanel>
+          <ActivityList
+            roomId={roomId}
+            roomActivities={roomActivities}
           />
         </TabPanel>
       </Tabs>

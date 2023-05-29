@@ -83,9 +83,9 @@ export default function ActivityList({ roomId, roomActivities }) {
         isOpen={createModal}
         ariaHideApp={false}
         style={{ overlay: { zIndex: 49, background: "transparent" } }}
-        className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-auto"
+        className="bg-modal flex w-screen h-screen py-6 backdrop-blur-sm z-50 items-center justify-center"
       >
-        <form className="bg-base-200 p-4 max-w-[60rem] sm:w-2/3 rounded relative" onSubmit={createActivity}>
+        <form className="bg-base-200 p-4 max-w-[60rem] max-h-full overflow-y-auto sm:w-2/3 rounded relative" onSubmit={createActivity}>
           <div className="my-4">
             <h1 className="text-lg font-bold">New Activity</h1>
           </div>

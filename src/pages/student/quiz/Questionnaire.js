@@ -182,7 +182,6 @@ export default function Questionnaire({ user, module, setResult }) {
       totalScore: totalScore,
     }
 
-    // console.log(answers);
     clearModal();
 
     let result = await ModuleController.submitQuizAnswer(module.id, answers);

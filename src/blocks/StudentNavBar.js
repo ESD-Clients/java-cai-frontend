@@ -12,8 +12,8 @@ export default function StudentNavBar({ user }) {
 
   useEffect(() => {
     async function fetchData() {
-      let modules = await ModuleController.getApprovedModules();
-      setModules(modules);
+      // let modules = await ModuleController.getApprovedModules();
+      // setModules(modules);
       setLoaded(true);
     }
 
@@ -51,48 +51,8 @@ export default function StudentNavBar({ user }) {
                 {/* Small Screen */}
                 <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 backdrop-blur-sm rounded-box w-52">
                   <li><div>Dashboard</div></li>
-                  <li tabIndex="0" className="">
-                    <div>
-                      Modules
-                      <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-                      </svg>
-                    </div>
-                    <ul className="p-2 bg-base-200 z-50">
-                      {
-                        modules.length > 0 ? (
-                          modules.map((item, i) => (
-                            ModuleController.isModuleUnlocked({
-                              student: user,
-                              lastId: i > 0 ? modules[i - 1].id : ''
-                            }) ? (
-                              <li key={i.toString()}>
-                                <Link
-                                  to={"/student/module?" + item.id}
-                                >
-                                  {item.data().title}
-                                </Link>
-                              </li>
-                            ) : (
-                              <li className="disabled" key={i.toString()}>
-                                <span>
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
-                                  </svg>
-                                  <span>{item.data().title}</span>
-                                </span>
-                              </li>
-                            )
-                          ))
-                        ) : (
-                          <li>No Module Available</li>
-                        )
-                      }
-
-                    </ul>
-                  </li>
-                  <li><Link to="/student/playground">Playground</Link></li>
                   <li><Link to="/student/room">Room</Link></li>
+                  <li><Link to="/student/playground">Playground</Link></li>
                 </ul>
               </div>
               <Link
@@ -105,48 +65,8 @@ export default function StudentNavBar({ user }) {
               <div className="hidden lg:block">
                 <ul className="menu menu-horizontal p-0">
                   <li><Link to="/student/dashboard">Dashboard</Link></li>
-                  <li tabIndex="0">
-                    <div>
-                      Modules
-                      <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-                      </svg>
-                    </div>
-                    <ul className="p-2 bg-base-200 z-50 max-w-[24rem]">
-                      {
-                        modules.length > 0 ? (
-                          modules.map((item, i) => (
-                            ModuleController.isModuleUnlocked({
-                              student: user,
-                              lastId: i > 0 ? modules[i - 1].id : ''
-                            }) ? (
-                              <li key={i.toString()}>
-                                <Link
-                                  to={"/student/module?" + item.id}
-                                  className="block overflow-hidden whitespace-nowrap text-ellipsis hover:whitespace-normal"
-                                >
-                                  {item.data().title}
-                                </Link>
-                              </li>
-                            ) : (
-                              <li className="disabled" key={i.toString()}>
-                                <span className="flex items-center">
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z" />
-                                  </svg>
-                                  <span className="block overflow-hidden whitespace-nowrap text-ellipsis">{item.data().title}</span>
-                                </span>
-                              </li>
-                            )
-                          ))
-                        ) : (
-                          <li>No Module Available</li>
-                        )
-                      }
-                    </ul>
-                  </li>
-                  <li><Link to="/student/playground">Playground</Link></li>
                   <li><Link to="/student/room">Room</Link></li>
+                  <li><Link to="/student/playground">Playground</Link></li>
                 </ul>
               </div>
             </div>

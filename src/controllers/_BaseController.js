@@ -126,7 +126,6 @@ class BaseController {
                 .doc(id)
                 .update({
                     ...item,
-                    type: "faculty",
                     updatedAt: getCurrentTimestamp()
                 })
                 .then(async () => {

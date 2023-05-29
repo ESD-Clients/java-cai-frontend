@@ -1,81 +1,41 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import PasswordField from "../../components/PasswordField";
-import { FacultyController, Helper, SchoolController } from "../../controllers/_Controllers";
+import { SchoolController, Helper } from "../../controllers/_Controllers";
 import { getErrorMessage } from "../../controllers/_Helper";
 import { showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 import SearchField from "../../components/SearchField";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../values/MyColor";
 
-export default function FacultyList({ user }) {
+export default function SchoolList({ user }) {
 
   const [loading, setLoading] = useState(true);
   const [faculties, setFaculties] = useState([]);
-  const [schools, setSchools] =  useState([]);
   const [filter, setFilter] = useState('');
-
-  const [isEdit, setIsEdit] = useState(false);
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [school, setSchool] = useState('');
 
   useEffect(() => {
 
-    let unsubscribeFaculty = FacultyController.subscribeActiveList(async res => {
-      let faculties = [];
-      
-      for(let doc of res.docs) {
-
-        let faculty = {
-          id: doc.id,
-          ...doc.data(),
-          school: await SchoolController.get(doc.data().school)
-        }
-
-        faculties.push(faculty);
-      }
-      setFaculties(faculties);
+    let unsubscribe = SchoolController.subscribeActiveList(res => {
+      setFaculties(res.docs);
       setLoading(false);
     })
 
-    let unsubscribeSchool = SchoolController.subscribeActiveList(res => {
-      setSchools(res.docs);
-    })
-
-    return () => {
-      unsubscribeFaculty();
-      unsubscribeSchool();
-    };
+    return () => unsubscribe();
 
   }, [])
 
-  useEffect(() => {
-    if(!isEdit) {
-      setId('');
-      setName('');
-      setEmail('');
-      setSchool(schools.length > 0 ? schools[0].id : "");
-    }
-  }, [isEdit])
-
-  async function saveItem(e) {
+  async function addItem(e) {
     e.preventDefault();
-    document.getElementById("addFaculty").click();
+    document.getElementById("addSchool").click();
 
     showLoading({
       message: "Saving..."
     })
 
-    let data = {
+    let result = await SchoolController.register({
       ...Helper.getEventFormData(e)
-    }
-
-    let result = isEdit ? 
-        await FacultyController.update(id, data)
-      : 
-        await FacultyController.register(data)
+    });
 
     if (result && result.id) {
       showMessageBox({
@@ -90,20 +50,10 @@ export default function FacultyList({ user }) {
         message: getErrorMessage(result),
         type: "danger",
         onPress: () => {
-          document.getElementById("addFaculty").click();
+          document.getElementById("addSchool").click();
         }
       });
     }
-  }
-
-  function editItem(item) {
-    setIsEdit(true);
-    document.getElementById("addFaculty").click();
-
-    setId(item.id);
-    setName(item.name);
-    setEmail(item.email);
-    setSchool(item.school ? item.school.id : '');
   }
 
   async function deleteItem(item) {
@@ -116,7 +66,7 @@ export default function FacultyList({ user }) {
           message: "Deleting..."
         })
 
-        let result = await FacultyController.destroy(item.id);
+        let result = await SchoolController.destroy(item.id);
         if (result) {
           showMessageBox({
             title: "Success",
@@ -139,11 +89,11 @@ export default function FacultyList({ user }) {
   function checkFilter(item) {
     if (filter) {
       let value = filter.toLowerCase();
-      let name = item.name.toLowerCase();
-      let email = item.email.toLowerCase();
-      let facultyNo = Helper.padIdNo(item.facultyNo);
+      let name = item.data().name.toLowerCase();
+      let email = item.data().email.toLowerCase();
+      let schoolNo = Helper.padIdNo(item.data().schoolNo);
 
-      if (name.includes(value) || email.includes(value) || facultyNo.includes(value)) {
+      if (name.includes(value) || email.includes(value) || schoolNo.includes(value)) {
         return true;
       }
       else {
@@ -157,55 +107,32 @@ export default function FacultyList({ user }) {
 
   return (
     <>
-      <input type="checkbox" id="addFaculty" className="modal-toggle" />
+      <input type="checkbox" id="addSchool" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg text-center">{isEdit ? "Edit" : "Add"} Faculty</h3>
-          <form id="addFacultyForm" onSubmit={saveItem}>
+          <h3 className="font-bold text-lg text-center">Add School</h3>
+          <form id="addSchoolForm" onSubmit={addItem}>
             <div className="form-control py-1">
               <label className="input-group">
                 <span>Name</span>
-                <input type="text" name="name" defaultValue={name} className="input input-bordered w-full" required />
+                <input type="text" name="name" className="input input-bordered w-full" required />
               </label>
             </div>
             <div className="form-control py-1">
               <label className="input-group">
-                <span>Email</span>
-                <input type="email" name="email" defaultValue={email} className="input input-bordered w-full" required />
+                <span>Acronym</span>
+                <input type="text" name="acronym" className="input input-bordered w-full" required />
               </label>
             </div>
             <div className="form-control py-1">
               <label className="input-group">
-                <span>School</span>
-                <select name="school" value={school} onChange={e => setSchool(e.target.value)} className="input input-bordered w-full" required>
-                  <option className="text-gray-400" disabled >Select school...</option>
-                  {
-                    schools.map((item, index) => (
-                      <option key={index.toString()} value={item.id}>
-                        {item.data().schoolNo} - {item.data().name}
-                      </option>
-                    ))
-                  }
-                </select>
+                <span>Address</span>
+                <input type="text" name="address" className="input input-bordered w-full" required />
               </label>
             </div>
-            {
-              !isEdit && (
-                <div className="form-control py-1">
-                  <label className="input-group">
-                    <span>Password</span>
-                    <PasswordField
-                      className="rounded-l-none"
-                      name="password"
-                      required
-                    />
-                  </label>
-                </div>
-              )
-            }
             <div className="modal-action">
-              <button type="submit" className="btn btn-primary">Save</button>
-              <label htmlFor="addFaculty" className="btn btn-error">Close</label>
+              <button type="submit" className="btn btn-primary">Add</button>
+              <label htmlFor="addSchool" className="btn btn-error">Close</label>
             </div>
           </form>
           <p id="errorPlaceholder"></p>
@@ -217,7 +144,7 @@ export default function FacultyList({ user }) {
         <div className="modal-box relative">
           <label htmlFor="successModal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <h3 className="text-lg font-bold">Success</h3>
-          <p className="py-4">Faculty Added</p>
+          <p className="py-4">School Added</p>
         </div>
       </div>
 
@@ -226,7 +153,7 @@ export default function FacultyList({ user }) {
 
           <div className="flex flex-col sm:flex-row justify-between mb-8">
             <div>
-              <div className="font-bold uppercase mb-4">Faculty List</div>
+              <div className="font-bold uppercase mb-4">School List</div>
               <div className="font-thin">Total Number of Available Faculties:
                 <span className="font-bold ml-2">
                   {faculties.length}
@@ -236,9 +163,9 @@ export default function FacultyList({ user }) {
             <div className="mt-4 flex flex-row justify-center">
               <SearchField
                 setFilter={setFilter}
-                placeholder="Search faculty no, name or email"
+                placeholder="Search school no, name or email"
               />
-              <label htmlFor="addFaculty" onClick={() => setIsEdit(false)} className="btn btn-primary">Add Faculty</label>
+              <label htmlFor="addSchool" className="btn btn-primary">Add School</label>
             </div>
           </div>
 
@@ -248,10 +175,10 @@ export default function FacultyList({ user }) {
               <table className="table table-compact w-full">
                 <thead>
                   <tr>
-                    <th>Faculty No</th>
+                    <th>School No</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>School</th>
+                    <th>Acronym</th>
+                    <th>Address</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -260,18 +187,11 @@ export default function FacultyList({ user }) {
                     faculties.map((item, i) => (
                       checkFilter(item) && (
                         <tr key={i.toString()}>
-                          <td>{Helper.padIdNo(item.facultyNo)}</td>
-                          <td>{item.name}</td>
-                          <td>{item.email}</td>
-                          <td>
-                            {
-                              item.school ? item.school.schoolNo + " - " + item.school.name : "N/A"
-                            }
-                          </td>
+                          <td>{item.data().schoolNo}</td>
+                          <td>{item.data().name}</td>
+                          <td>{item.data().acronym}</td>
+                          <td>{item.data().address}</td>
                           <td className="flex gap-2">
-                            <button className="btn btn-sm btn-info" onClick={() => editItem(item)}>
-                              Edit
-                            </button>
                             <button className="btn btn-sm btn-error" onClick={() => deleteItem(item)}>
                               Delete
                             </button>

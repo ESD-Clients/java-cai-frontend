@@ -6,7 +6,7 @@ import { AdminController } from "../controllers/_Controllers";
 
 export default function LoginModal({onSubmit}) {
 
-  const [tab, setTab] = useState('student');
+  const [tab, setTab] = useState('learner');
 
   function toggleForgotPassword () {
 
@@ -25,7 +25,6 @@ export default function LoginModal({onSubmit}) {
     let email = e.target.email.value;
     let res = await AdminController.resetPassword(email);
     clearModal();
-    console.log("RESULT", res);
     
     if(res === true) {
       showMessageBox({
@@ -51,11 +50,22 @@ export default function LoginModal({onSubmit}) {
         <div className="flex flex-col items-center w-full">
           <div className="flex items-start lg:justify-start lg:w-96">
             <div className="tabs bg-base-200 rounded-t-md">
+              
+              <div
+                className={
+                  "tab tab-lifted " + (tab === "learner" ? "tab-active" : "")
+                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  setTab("learner");
+                }}
+              >
+                Learner
+              </div>
               <div
                 className={
                   "tab tab-lifted " + (tab === "student" ? "tab-active" : "")
                 }
-                id="studentTab"
                 onClick={(e) => {
                   e.preventDefault();
                   setTab("student");
@@ -67,7 +77,6 @@ export default function LoginModal({onSubmit}) {
                 className={
                   "tab tab-lifted " + (tab === "faculty" ? "tab-active" : "")
                 }
-                id="studentTab"
                 onClick={(e) => {
                   e.preventDefault();
                   setTab("faculty");
@@ -79,7 +88,6 @@ export default function LoginModal({onSubmit}) {
                 className={
                   "tab tab-lifted " + (tab === "admin" ? "tab-active" : "")
                 }
-                id="studentTab"
                 onClick={(e) => {
                   e.preventDefault();
                   setTab("admin");
@@ -99,6 +107,8 @@ export default function LoginModal({onSubmit}) {
                   ? " Faculty"
                   : tab === "admin"
                   ? " Admin"
+                  : tab === "learner"
+                  ? " Learner"
                   : ""}
               </h3>
             </div>

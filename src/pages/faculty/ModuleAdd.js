@@ -3,22 +3,28 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactModal from "react-modal";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import HDivider from "../../components/HDivider";
 import RichText from "../../components/RichText";
 import RichTextEditor from "../../components/RichTextEditor";
 import TextField from "../../components/TextField";
-import { ModuleController } from "../../controllers/_Controllers";
+import { Helper, ModuleController, RoomController } from "../../controllers/_Controllers";
 import { getFileType } from "../../controllers/_Helper";
 import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
+import Select from "../../components/Select";
 
 export default function ModuleAdd({ user }) {
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [rooms, setRooms] = useState([]);
 
   /** MODULE */
   const [moduleNo, setModuleNo] = useState('');
   const [title, setTitle] = useState('');
+  const [room, setRoom] = useState('');
+  const [closeDate, setCloseDate] = useState('');
   const [sypnosis, setSypnosis] = useState('');
   const [topics, setTopics] = useState([]);
 
@@ -29,12 +35,31 @@ export default function ModuleAdd({ user }) {
   const [topicCode, setTopicCode] = useState('');
 
   useEffect(() => {
+
+    async function fetchData() {
+      const rooms = await RoomController.getRoomsByFaculty(user.id);
+
+      if (location.state && location.state.room) {
+        setRoom(location.state.room);
+      }
+      else {
+        rooms.length > 0 && setRoom(rooms[0].id);
+      }
+
+      setRooms(rooms);
+    }
+    fetchData();
+
+
+  }, [])
+
+  useEffect(() => {
     setTopicTitle('');
     setTopicContent('');
     setTopicCode('');
   }, [add])
 
-  function addTopic (e) {
+  function addTopic(e) {
 
     e.preventDefault();
 
@@ -44,8 +69,8 @@ export default function ModuleAdd({ user }) {
       code: topicCode
     };
 
-    
-    if(e.target.media.files.length > 0) {
+
+    if (e.target.media.files.length > 0) {
       topic.file = e.target.media.files[0];
     }
 
@@ -57,7 +82,7 @@ export default function ModuleAdd({ user }) {
     setAdd(false);
   }
 
-  function removeTopic (index) {
+  function removeTopic(index) {
     let newList = [...topics];
     newList.splice(index, 1);
     setTopics(newList);
@@ -66,7 +91,7 @@ export default function ModuleAdd({ user }) {
   async function addModule(e) {
     e.preventDefault();
 
-    if(topics.length === 0) {
+    if (topics.length === 0) {
       showMessageBox({
         title: "Warning",
         type: "warning",
@@ -83,7 +108,10 @@ export default function ModuleAdd({ user }) {
       moduleNo: parseInt(moduleNo),
       title: title,
       sypnosis: sypnosis,
-      remarks: "unapproved"
+      room: room,
+      type: "student",
+      closeDate: closeDate,
+      createdBy: user.id,
     };
 
 
@@ -91,9 +119,9 @@ export default function ModuleAdd({ user }) {
 
     if (result && result.id) {
 
-      for(let topic of topics) {
+      for (let topic of topics) {
 
-        if(topic.file) {
+        if (topic.file) {
           topic.media = {
             type: getFileType(topic.file),
             url: await ModuleController.uploadFile(topic.file, `module/${result.id}`)
@@ -115,12 +143,11 @@ export default function ModuleAdd({ user }) {
         type: "success",
         onPress: () => {
           navigate(-1);
-          // document.getElementById("btnBack").click();
         }
       })
     }
     else {
-      
+
       showMessageBox({
         title: "Error",
         message: "Something went wrong",
@@ -134,30 +161,30 @@ export default function ModuleAdd({ user }) {
   return (
     <>
       {/* Modal for ADD TOPIC */}
-      <ReactModal 
+      <ReactModal
         isOpen={add}
         ariaHideApp={false}
-        style={{overlay: {zIndex: 49, background: "transparent"}}}
+        style={{ overlay: { zIndex: 49, background: "transparent" } }}
         className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "
       >
-        <form 
+        <form
           className="h-[90vh] overflow-y-auto bg-base-200 p-4 sm:w-2/3 rounded relative"
           onSubmit={addTopic}
         >
           <div className="my-4">
             <h1 className="text-lg font-semibold">New Topic</h1>
           </div>
-          <TextField 
-            label="Title" 
+          <TextField
+            label="Title"
             value={topicTitle}
             onChange={setTopicTitle}
             required />
-          <RichTextEditor 
-            label="Content" 
+          <RichTextEditor
+            label="Content"
             value={topicContent}
             onChange={setTopicContent}
             required />
-          
+
           {/* <TextArea 
             label="Content" 
             value={topicContent}
@@ -169,10 +196,10 @@ export default function ModuleAdd({ user }) {
               <span className="label-text">Media</span>
             </label>
             <div>
-              <input 
-                type="file" 
+              <input
+                type="file"
                 name="media"
-                accept="video/*, image/*" 
+                accept="video/*, image/*"
                 className="file-input file-input-bordered w-full max-w-xs" />
             </div>
           </div>
@@ -190,7 +217,7 @@ export default function ModuleAdd({ user }) {
           />
 
           <div className="flex justify-end my-4 space-x-2">
-            <button 
+            <button
               className="btn btn-ghost"
               onClick={() => setAdd(false)}
             >CANCEL</button>
@@ -221,29 +248,52 @@ export default function ModuleAdd({ user }) {
           <div className="my-4">
             <h1 className="text-lg font-bold">Module Information</h1>
           </div>
-
           <div className="flex space-x-2">
-            <TextField 
-              label="Module No" 
-              type="number" 
+            <Select
+              label="Room"
+              width="xs"
+              required
+              value={room}
+              onChange={setRoom}
+              options={rooms.map((item, index) => {
+                return {
+                  value: item.id,
+                  label: item.data().code,
+                }
+              })}
+            />
+            <TextField
+              label="Close Date"
+              type="datetime-local"
+              width="xs"
+              required
+              value={closeDate}
+              onChange={setCloseDate}
+              min={Helper.getStringDateToday()}
+            />
+          </div>
+          <div className="flex space-x-2">
+            <TextField
+              label="Module No"
+              type="number"
               width="xs"
               required
               value={moduleNo}
               onChange={setModuleNo}
               min={1}
             />
-            <TextField 
-              label="Module Title" 
+            <TextField
+              label="Module Title"
               value={title}
               onChange={setTitle}
               required />
           </div>
 
           <RichTextEditor
-            label="Sypnosis" 
+            label="Sypnosis"
             value={sypnosis}
             onChange={setSypnosis}
-            required 
+            required
           />
 
           {/* <TextArea 
@@ -254,8 +304,8 @@ export default function ModuleAdd({ user }) {
 
           <div className="mt-8 flex justify-between">
             <h1 className="text-lg font-bold">Topics</h1>
-            <button 
-              className="btn btn-info" 
+            <button
+              className="btn btn-info"
               type="button"
               onClick={() => setAdd(true)}
             >
@@ -319,7 +369,7 @@ export default function ModuleAdd({ user }) {
                       </svg>
                     </span>
 
-       
+
                   </div>
                 </div>
               ))

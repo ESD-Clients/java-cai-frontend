@@ -5,7 +5,7 @@ import FillBlank from '../../student/quiz/FillBlank';
 import MutlipleChoice from '../../student/quiz/MutlipleChoice';
 import Tracing from '../../student/quiz/Tracing';
 
-export default function StudentQuizResult({ student, module, result, setSelected }) {
+export default function LearnerQuiz({ student, module, result, setSelected }) {
 
   const [tab, setTab] = useState('choices');
 

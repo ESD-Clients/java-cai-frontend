@@ -24,7 +24,14 @@ export default function FacultyNavBar({ user }) {
       <div className="sticky top-0 bg-base-100 shadow-lg py-2">
         <div className="navbar w-full bg-base-100 px-6">
 
-          <div className="navbar-center px-2 mx-2 uppercase ml-16 lg:ml-2">Faculty</div>
+          <div className="flex flex-col items-start px-2 mx-2 uppercase ml-16 lg:ml-2">
+            <div>
+              Faculty
+            </div>
+            <div>
+              School: {user.school.schoolNo + " - " + user.school.name}
+            </div>
+          </div>
           <div className="flex justify-end flex-1">
             <div className="flex items-stretch">
               <div className="dropdown dropdown-end">

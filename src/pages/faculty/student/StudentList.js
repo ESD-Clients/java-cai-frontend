@@ -5,12 +5,12 @@ import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../../values/MyColor";
 import { useNavigate } from "react-router-dom";
 
-export default function StudentList() {
+export default function StudentList({user}) {
 
+  console.log(user)
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
-
   const [students, setStudents] = useState([]);
   const [modules, setModules] = useState([]);
   const [filter, setFilter] = useState('');
@@ -21,7 +21,7 @@ export default function StudentList() {
       setModules(snapshot.docs);
     })
 
-    let unsubscribeStudents = StudentController.subscribeActiveList(snapshot => {
+    let unsubscribeStudents = StudentController.subscribeBySchool(user.school.id, snapshot => {
       setStudents(snapshot.docs);
       setLoading(false);
     })

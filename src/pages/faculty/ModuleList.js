@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Helper, ModuleController } from "../../controllers/_Controllers";
+import { Helper, ModuleController, RoomController } from "../../controllers/_Controllers";
 import SearchField from "../../components/SearchField";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../values/MyColor";
@@ -17,18 +17,33 @@ export default function ModuleList({ user }) {
 
   useEffect(() => {
 
-    const unsubscribe = ModuleController.subscribeList(async (snapshot) => {
-      let docs = snapshot.docs;
-
-      for (let doc of docs) {
+    async function fetchData () {
+      const results = await ModuleController.getModulesByFaculty(user.id);
+      for (let doc of results) {
         let topics = await ModuleController.getTopics(doc.id);
         doc.topics = topics;
+        if(doc.data().room) {
+          let room = await RoomController.get(doc.data().room);
+          doc.room = room;
+        }
       }
-      setModules(docs);
+      setModules(results);
       setLoading(false);
-    })
+    }
 
-    return () => unsubscribe();
+    fetchData();
+
+    // const unsubscribe = ModuleController.getModulesByFaculty(async (results) => {
+
+    //   for (let doc of results) {
+    //     let topics = await ModuleController.getTopics(doc.id);
+    //     doc.topics = topics;
+    //   }
+    //   setModules(results);
+    //   setLoading(false);
+    // })
+
+    // return () => unsubscribe();
   }, [])
 
   function viewItem(item) {
@@ -90,7 +105,8 @@ export default function ModuleList({ user }) {
                   <tr>
                     <th>Module No</th>
                     <th>Title</th>
-                    <th>Remarks</th>
+                    <th>Room</th>
+                    <th>Close Date</th>
                     <th>Topics</th>
                     <th>Action</th>
                   </tr>
@@ -102,7 +118,8 @@ export default function ModuleList({ user }) {
                         <tr key={i.toString()}>
                           <td>{item.data().moduleNo}</td>
                           <td>{item.data().title}</td>
-                          <td>{item.data().remarks}</td>
+                          <td>{item.room ? item.room.code : "-"}</td>
+                          <td>{Helper.formatDateTime(item.data().closeDate)}</td>
                           <td>{item.topics.length}</td>
                           <td className="flex gap-2">
                             <button className="btn btn-sm btn-info" onClick={() => viewItem(item.id)}>

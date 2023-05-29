@@ -181,7 +181,15 @@ export default function Activity({ user }) {
           <h1 className="text-4xl font-bold">{activity.title}</h1>
           <div>
             <h2>Score:</h2>
-            <h6 className="uppercase text-2xl font-bold">{submittedWork.score ? submittedWork.score : "-"} / {activity.points}</h6>
+            {
+              submittedWork ? (
+                <h6 className="uppercase text-2xl font-bold">
+                  {submittedWork.score ? submittedWork.score : "-"} / {activity.points}
+                </h6>
+              ) : (
+                <span className="italic text-red-400">No work/s submitted</span>
+              )
+            }
           </div>
           
         </div>

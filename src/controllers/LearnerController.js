@@ -1,9 +1,9 @@
 import { auth } from "../config/initFirebase";
 import BaseController from "./_BaseController";
 
-class StudentController extends BaseController {
+class LearnerController extends BaseController {
     constructor() {
-        super('students');
+        super('learners');
     }
 
     authenticate = async ({ email, password }) => {
@@ -59,8 +59,7 @@ class StudentController extends BaseController {
         try {
             await auth.createUserWithEmailAndPassword(item.email, item.password)
                 .then(async res => {
-                    item.studentNo = await this.getIncrementId();
-                    // item.password = hashData(item.password);
+                    item.learnerNo = await this.getIncrementId();
                     item.docStatus = 1;
                     result = await this.storeOnId(res.user.uid, item);
                 })
@@ -90,53 +89,14 @@ class StudentController extends BaseController {
         return result;
     }
 
-    getStudentsByRoom = async (roomId) => {
-        var result = [];
-
-        try {
-            await this.collectionRef
-                .where('currentRoom', '==', roomId)
-                .orderBy('studentNo', 'asc')
-                .get()
-                .then( res => {
-                    result = res.docs;
-                })
-            
-        } catch (err) {
-            console.error(err);
-            result = [];
-        }
-
-        return result;
-    }
-
-    getStudentsByRoomInvites = async (roomId) => {
-        var result = [];
-
-        try {
-            await this.collectionRef
-                .where('roomInvites', 'array-contains', roomId)
-                .orderBy('studentNo', 'asc')
-                .get()
-                .then( res => {
-                    result = res.docs;
-                })
-            
-        } catch (err) {
-            console.error(err);
-            result = [];
-        }
-
-        return result;
-    }
-
+   
     getActiveList= async () => {
         var result = [];
 
         try {
             await this.collectionRef
                 .where('docStatus', '==', 1)
-                .orderBy('studentNo', 'asc')
+                .orderBy('learnerNo', 'asc')
                 .get()
                 .then(res => {
                     result = res.docs;
@@ -153,18 +113,10 @@ class StudentController extends BaseController {
     subscribeActiveList = (onSnapshot) => {
         return this.collectionRef
             .where('docStatus', '==', 1)
-            .orderBy('studentNo', 'asc')
-            .onSnapshot(onSnapshot);
-    }
-
-    subscribeBySchool = (school, onSnapshot) => {
-        return this.collectionRef
-            .where('docStatus', '==', 1)
-            .where('school', '==', school)
-            .orderBy('studentNo', 'asc')
+            .orderBy('learnerNo', 'asc')
             .onSnapshot(onSnapshot);
     }
     
 }
 
-export default StudentController;
+export default LearnerController;

@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import HDivider from "../../../components/HDivider";
-import { RoomController, StudentController } from "../../../controllers/_Controllers";
+import { ModuleController, RoomController, StudentController } from "../../../controllers/_Controllers";
 import { getDocData } from "../../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading } from "../../../modals/Modal";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import ActivityList from "./ActivityList";
+import ModuleList from "./ModuleList";
 
 export default function RoomView({ student }) {
 
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
+  const [tab, setTab] = useState(0);
   const [activities, setActivities] = useState([]);
+  const [modules, setModules] = useState([]);
 
   useEffect(() => {
 
@@ -27,9 +32,14 @@ export default function RoomView({ student }) {
       setActivities(activities);
     })
 
+    const unsubscribeModules = ModuleController.subscribeByRoom(student.currentRoom, async (snapshot) =>  {
+      setModules(snapshot.docs);
+    })
+
     return () => {
       unsubscribeActivities();
       unsubscribeRoom();
+      unsubscribeModules();
     };
 
   }, [])
@@ -80,63 +90,31 @@ export default function RoomView({ student }) {
           </div>
         </div>
 
-        <HDivider />
 
-        <div>
-          <h2 className="font-bold text-lg">Activities</h2>
+        <Tabs>
+          <TabList  className="flex my-6 border-t-2">
+            <Tab 
+              className={"py-4 font-bold text-xl flex-1 outline-none text-center hover:bg-base-300 cursor-pointer " + (tab === 0 ? "border-b-2 border-primary" : "")}
+              onClick={() => setTab(0)}
+            >
+              MODULES
+            </Tab>
+            <Tab 
+              className={"py-4 font-bold text-xl flex-1 outline-none text-center hover:bg-base-300 cursor-pointer " + (tab === 1 ? "border-b-2 border-primary" : "")}
+              onClick={() => setTab(1)}
+            >
+              ACTIVITIES
+            </Tab>
 
-          <div className="mt-8">
-            {
-              activities.length > 0 ? (
-                <>
-                  <table className="table table-compact w-full">
-                    <thead>
-                      <tr>
-                        <th>Title</th>
-                        <th>Points</th>
-                        <th>Remarks</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        activities.map((item, i) => (
-                          <tr key={i.toString()}>
-                            <td>{item.data().title}</td>
-                            <td>{item.data().points}</td>
-                            <td>
-                              {
-                                item.studentWork ? (
-                                  item.studentWork.score ? (
-                                    <span className="text-green-500">{item.studentWork.score}</span>
-                                  ) : (
-                                    <span className="italic text-blue-400">Submitted</span>
-                                  )
-                                ) : (
-                                  <span className="italic text-red-400">No work/s submitted</span>
-                                )
-                              }
-                            </td>
-                            <td>
-                              <button
-                                className="btn btn-info btn-sm"
-                                onClick={() => navigate(`/student/activity?room=${room.id}&activity=${item.id}`)}
-                              >
-                                View
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      }
-                    </tbody>
-                  </table>
-                </>
-              ) : (
-                <div className="flex justify-center items-center">No activities yet</div>
-              )
-            }
-          </div>
-        </div>
+          </TabList>
+
+          <TabPanel>
+            <ModuleList student={student} modules={modules} room={room} />
+          </TabPanel>
+          <TabPanel>
+            <ActivityList activities={activities} room={room} />
+          </TabPanel>
+        </Tabs>
       </div>
     </>
   )

@@ -1,5 +1,7 @@
 import Admin from './AdminController';
+import School from './SchoolController';
 import Faculty from './FacultyController';
+import Learner from './LearnerController';
 import Student from './StudentController';
 import Module from './ModuleController';
 import Feedback from './FeedbackController';
@@ -8,8 +10,10 @@ import Room from './RoomController';
 
 export * as Helper from './_Helper';
 export const AdminController = new Admin();
+export const SchoolController = new School();
 export const FacultyController = new Faculty();
 export const StudentController = new Student();
+export const LearnerController = new Learner();
 export const ModuleController = new Module();
 export const FeedbackController = new Feedback();
 export const PlaygroundController = new Playground();

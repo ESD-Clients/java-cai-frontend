@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
-import { AdminController, FacultyController, Helper, StudentController } from "../controllers/_Controllers";
+import { AdminController, FacultyController, Helper, SchoolController, StudentController } from "../controllers/_Controllers";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordField from "../components/PasswordField";
 import LoginModal from "../blocks/LoginModal";
@@ -11,6 +11,7 @@ export default function Enroll () {
   const user = Helper.getCurrentUser();
 
   /** REGISTER */
+  const [userType, setUserType] = useState("learner");
   const [image, setImage] = useState("");
   const [imgFile, setImgFile] = useState(null);
   const [imgSource, setImgSource] = useState("");
@@ -41,12 +42,16 @@ export default function Enroll () {
         email: email,
         password: password
       })
+      let school = await SchoolController.get(result.school);
+      result.school = school;
     }
     else if(type === "faculty") {
       result = await FacultyController.authenticate({
         email: email,
         password: password
       })
+      let school = await SchoolController.get(result.school);
+      result.school = school;
     }
     else if(type === "admin") {
       result = await AdminController.authenticate({
@@ -119,7 +124,6 @@ export default function Enroll () {
         message: "Enrollment Success",
         type: "success",
         onPress: () => {
-          // document.getElementById("btnBack").click();
         }
       })
     }
@@ -162,6 +166,18 @@ export default function Enroll () {
 
       <section className="min-h-[85vh]">
         <form className="flex flex-col justify-start items-center mb-16" onSubmit={enroll}>
+          <div className="input-group items-center my-4 w-[40rem]">
+            <label className="text-right w-32 mr-8">Enroll As:</label>
+            <select 
+              className="input flex-1"
+              value={userType}
+              onChange={e => setUserType(e.target.value)}
+            >
+              <option value="learner">Learner</option>
+              <option value="student">Student</option>
+            </select>
+            <label className="ml-2 text-red-500">*</label>
+          </div>
           <div className="input-group items-start my-4 w-[40rem]">
             <label className="text-right w-32 mr-8">Avatar:</label>
             <div className="flex flex-col items-center">
@@ -243,21 +259,15 @@ export default function Enroll () {
             <label className="ml-2 text-red-500">*</label>
           </div>
 
-          <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-32 mr-8">School:</label>
-            <input className="input flex-1" name="school" />
-            <label className="ml-2 text-transparent">*</label>
-          </div>
-          {/* <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-32 mr-8">Grade:</label>
-            <input className="input flex-1" name="grade" />
-            <label className="ml-2 text-transparent">*</label>
-          </div>
-          <div className="input-group items-center my-4 w-[40rem]">
-            <label className="text-right w-32 mr-8">Section:</label>
-            <input className="input flex-1" name="section" />
-            <label className="ml-2 text-transparent">*</label>
-          </div> */}
+          {
+            userType === "student" && (
+              <div className="input-group items-center my-4 w-[40rem]">
+                <label className="text-right w-32 mr-8">School Code:</label>
+                <input className="input flex-1" name="school" />
+                <label className="ml-2 text-transparent">*</label>
+              </div>
+            )
+          }
 
           <div className="w-[40rem] form-control items-end">
             <p>All forms marked with red asterisk (<span className="text-red-500">*</span>) are required.</p>

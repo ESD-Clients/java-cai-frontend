@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import StudentNavBar from "../blocks/StudentNavBar";
-import { Helper, SchoolController, StudentController } from "../controllers/_Controllers";
+import { Helper, StudentController } from "../controllers/_Controllers";
 import Dashboard from "./student/Dashboard";
 import Module from "./student/Module";
 import PlayGround from "./student/PlayGround";
@@ -29,10 +29,7 @@ export default function Student () {
         let newUser = await StudentController.get(user.id);
         if(newUser && newUser.id) {
           newUser.type = "student";
-          let school = await SchoolController.get(newUser.school);
-          newUser.school = school;
           Helper.setCurrentUser(newUser);
-          
         }
         else {
           Helper.logout();

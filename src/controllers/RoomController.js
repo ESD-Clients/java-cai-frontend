@@ -8,9 +8,37 @@ class RoomController extends BaseController {
     super('rooms');
   }
 
+  getRoomsByFaculty = async (facultyId) => {
+    var result = [];
+
+    try {
+      await this.collectionRef
+        .where('createdBy', '==', facultyId)
+        .orderBy('createdAt', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      result = err;
+    }
+
+    return result;
+  }
+
   subscribeFacultyRooms = (facultyId, onSnapshot) => {
     return this.collectionRef
       .where('createdBy', '==', facultyId)
+      .onSnapshot(onSnapshot);
+  }
+
+  subscribeListBySchool = (schoolId, onSnapshot) => {
+    return this.collectionRef
+      .where('school', '==', schoolId)
+      .orderBy('createdAt', 'asc')
       .onSnapshot(onSnapshot);
   }
 
@@ -20,7 +48,7 @@ class RoomController extends BaseController {
       .onSnapshot(onSnapshot);
   }
 
-  
+
   destroy = async (roomId) => {
     var result = false;
 
@@ -32,7 +60,7 @@ class RoomController extends BaseController {
       await documentRef
         .collection('subcollection')
         .get()
-        .then( async activities => {
+        .then(async activities => {
           activities.docs.forEach(async (activity) => {
             await this.destroyActivity(roomId, activity.id)
           });
@@ -44,22 +72,22 @@ class RoomController extends BaseController {
       result = true;
     }
     catch (err) {
-        console.error(err);
-        result = err;
+      console.error(err);
+      result = err;
     }
 
     return result;
   }
 
-  destroyActivity  = async (roomId, activityId) => {
+  destroyActivity = async (roomId, activityId) => {
     var result = false;
 
     try {
       var activityCollectionRef = this.collectionRef
-      .doc(roomId)
-      .collection('activities')
-      .doc(activityId);
-      
+        .doc(roomId)
+        .collection('activities')
+        .doc(activityId);
+
       await activityCollectionRef
         .get()
         .then(async activity => {
@@ -74,7 +102,7 @@ class RoomController extends BaseController {
                 await work.ref.delete();
               })
             })
-          
+
           //Delete activity
           await activity.ref.delete();
 
@@ -108,8 +136,8 @@ class RoomController extends BaseController {
       .collection('activities')
       .doc(activityId)
       .get()
-      .then( res => {
-        if(res.exists) {
+      .then(res => {
+        if (res.exists) {
           result = getDocData(res);
         }
       })
@@ -121,20 +149,20 @@ class RoomController extends BaseController {
     var result = false;
 
     try {
-        await this.collectionRef
-            .doc(roomId)
-            .collection('activities')
-            .add({
-                ...data,
-                createdAt: getCurrentTimestamp()
-            })
-            .then(() => {
-                result = true;
-            })
+      await this.collectionRef
+        .doc(roomId)
+        .collection('activities')
+        .add({
+          ...data,
+          createdAt: getCurrentTimestamp()
+        })
+        .then(() => {
+          result = true;
+        })
 
     } catch (err) {
-        console.error(err);
-        result = false;
+      console.error(err);
+      result = false;
     }
 
     return result;
@@ -149,7 +177,7 @@ class RoomController extends BaseController {
       .collection('activities')
       .doc(activityId)
       .update(data)
-      .then( async () => {
+      .then(async () => {
         result = await this.getActivity(activityId);
       })
 
@@ -161,17 +189,17 @@ class RoomController extends BaseController {
 
     try {
       await this.collectionRef
-      .doc(roomId)
-      .collection('activities')
-      .doc(activityId)
-      .collection('studentWorks')
-      .where('studentId', '==', studentId)
-      .get()
-      .then(res => {
-        if(res.docs.length > 0) {
-          result = getDocData(res.docs[0]);
-        }
-      })
+        .doc(roomId)
+        .collection('activities')
+        .doc(activityId)
+        .collection('studentWorks')
+        .where('studentId', '==', studentId)
+        .get()
+        .then(res => {
+          if (res.docs.length > 0) {
+            result = getDocData(res.docs[0]);
+          }
+        })
 
     } catch (error) {
       console.error(error)
@@ -191,17 +219,17 @@ class RoomController extends BaseController {
 
     try {
       await this.collectionRef
-      .doc(roomId)
-      .collection('activities')
-      .doc(activityId)
-      .collection('studentWorks')
-      .add(data)
-      .then(async res => {
-        result = {
-          ...data,
-          id: res.id,
-        };
-      })
+        .doc(roomId)
+        .collection('activities')
+        .doc(activityId)
+        .collection('studentWorks')
+        .add(data)
+        .then(async res => {
+          result = {
+            ...data,
+            id: res.id,
+          };
+        })
 
     } catch (error) {
       console.error(error)

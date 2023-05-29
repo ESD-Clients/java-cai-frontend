@@ -57,6 +57,7 @@ export default function RoomList({ user }) {
     let result = await RoomController.store({
       code: code,
       createdBy: user.id,
+      school: user.school.id,
       createdAt: getCurrentTimestamp(),
       type: type,
       students: [],
@@ -210,6 +211,13 @@ export default function RoomList({ user }) {
               }
             ]}
           />
+          {/* <TextField
+            label="Module Completion Time"
+            value={password}
+            onChange={setPassword}
+            maxLength={8}
+            required
+          /> */}
           {
             type === "close" && (
               <TextField

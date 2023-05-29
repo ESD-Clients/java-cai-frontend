@@ -7,22 +7,25 @@ import Header2 from "../../components/Header2";
 import HDivider from "../../components/HDivider";
 import TextField from "../../components/TextField";
 import TextInfo from "../../components/TextInfo";
-import { ModuleController } from "../../controllers/_Controllers";
+import { Helper, ModuleController, RoomController } from "../../controllers/_Controllers";
 import { getErrorMessage, getFileType } from "../../controllers/_Helper";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../modals/Modal";
 
 import 'react-quill/dist/quill.snow.css';
 import RichTextEditor from "../../components/RichTextEditor";
 import RichText from "../../components/RichText";
+import Select from "../../components/Select";
 
 
-export default function ModuleView() {
+export default function ModuleView({user}) {
 
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const moduleId = location.search.substring(1);
+
+  const [rooms, setRooms] = useState([]);
 
   const [module, setModule] = useState(null);
   const [topics, setTopics] = useState([]);
@@ -32,6 +35,8 @@ export default function ModuleView() {
   const [moduleNo, setModuleNo] = useState('');
   const [title, setTitle] = useState('');
   const [sypnosis, setSypnosis] = useState('');
+  const [room, setRoom] = useState('');
+  const [closeDate, setCloseDate] = useState('');
 
   /** EDIT TOPIC */
   const [topicModal, setTopicModal] = useState(false);
@@ -44,13 +49,27 @@ export default function ModuleView() {
 
   useEffect(() => {
 
-    const unsubscribeModule = ModuleController.subscribeDoc(moduleId, (snapshot) => {
+    const unsubscribeModule = ModuleController.subscribeDoc(moduleId, async (snapshot) => {
       let item = snapshot.data();
       item.id = moduleId;
       setModule(item);
       setModuleNo(item.moduleNo);
       setTitle(item.title);
       setSypnosis(item.sypnosis);
+
+      if(item.room) {
+        let room = await RoomController.get(item.room);
+      
+        if(room) {
+          item.room = room;
+          setRoom(room.id);
+        }
+        else {
+          item.room = null;
+        }
+      }
+      setCloseDate(item.closeDate);
+      setModule(item);
     })
 
     const unsubscribeTopics = ModuleController.subscribeTopics(moduleId, (snapshot) => {
@@ -62,6 +81,18 @@ export default function ModuleView() {
       unsubscribeTopics();
     };
 
+  }, []);
+
+  useEffect(() => {
+
+    async function fetchData () {
+      const rooms = await RoomController.getRoomsByFaculty(user.id);
+      
+      setRooms(rooms);
+    }
+
+    fetchData();
+    
   }, [])
 
   useEffect(() => {
@@ -69,6 +100,13 @@ export default function ModuleView() {
       setModuleNo(module.moduleNo);
       setTitle(module.title);
       setSypnosis(module.sypnosis);
+      setCloseDate(module.closeDate);
+      if(module.room) {
+        setRoom(module.room.id);
+      }
+      else {
+        rooms.length > 0 && setRoom(rooms[0].id)
+      }
     }
   }, [editing])
 
@@ -83,7 +121,9 @@ export default function ModuleView() {
     let result = await ModuleController.update(moduleId, {
       moduleNo: parseInt(moduleNo),
       title: title,
-      sypnosis: sypnosis
+      sypnosis: sypnosis,
+      room: room,
+      closeDate: closeDate,
     });
 
     clearModal();
@@ -237,6 +277,7 @@ export default function ModuleView() {
           {topicId ? "Edit Topic" : "New Topic"}
         </h1>
       </div>
+      
       <TextField
         label="Title"
         value={topicTitle}
@@ -320,19 +361,42 @@ export default function ModuleView() {
       <div className="my-4">
         <h1 className="text-lg font-semibold">Edit Details</h1>
       </div>
-
-      <TextField
-        label="Title"
-        type="number"
-        value={moduleNo}
-        onChange={setModuleNo}
-        required />
-
-      <TextField
-        label="Title"
-        value={title}
-        onChange={setTitle}
-        required />
+      <div className="flex space-x-2">
+        <Select
+          label="Room"
+          width="xs"
+          required
+          value={room}
+          onChange={setRoom}
+          options={rooms.map((item, index) => {
+            return {
+              value: item.id,
+              label: item.data().code,
+            }
+          })}
+        />
+       <TextField
+          label="Close Date"
+          type="datetime-local"
+          value={closeDate}
+          onChange={setCloseDate}
+          min={Helper.getStringDateToday()}
+          required />
+      </div>
+      <div className="flex space-x-2">
+        <TextField
+          label="Module No"
+          type="number"
+          width="xs"
+          value={moduleNo}
+          onChange={setModuleNo}
+          required />
+        <TextField
+          label="Title"
+          value={title}
+          onChange={setTitle}
+          required />
+      </div>
 
       <RichTextEditor
         label="Sypnosis"
@@ -388,8 +452,11 @@ export default function ModuleView() {
             </button>
           </div>
         </div>
+        
+        <TextInfo label="Room" value={module.room ? module.room.code : ""} />
         <TextInfo label="Module No" value={module.moduleNo} />
         <TextInfo label="Title" value={module.title} />
+        <TextInfo label="Close Date" type="datetime" value={module.closeDate} />
         <RichText label="Sypnosis" value={module.sypnosis} />
 
         <div className="flex items-center justify-between mt-4">
@@ -442,6 +509,7 @@ export default function ModuleView() {
                     <img
                       src={item.data().media.url}
                       className="max-h-[20rem] max-w-[80rem] my-4"
+                      alt=""
                     />
                   ) : (
                     <div className="mt-4">

@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Helper, StudentController } from "../../../controllers/_Controllers";
+import { Helper, LearnerController } from "../../../controllers/_Controllers";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../../values/MyColor";
 import SearchField from "../../../components/SearchField";
@@ -9,18 +9,18 @@ import { useNavigate } from "react-router-dom";
 import { showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
 
 
-export default function StudentList({ user }) {
+export default function LearnerList({ user }) {
 
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
 
-  const [students, setStudents] = useState([]);
+  const [learners, setLearners] = useState([]);
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    let unsubscribe = StudentController.subscribeActiveList(snapshot => {
-      setStudents(snapshot.docs);
+    let unsubscribe = LearnerController.subscribeActiveList(snapshot => {
+      setLearners(snapshot.docs);
       setLoading(false);
     })
 
@@ -29,7 +29,7 @@ export default function StudentList({ user }) {
   }, [])
 
   function viewItem(item) {
-    navigate('/admin/student?'+item.id)
+    navigate('/admin/learner?'+item.id)
   }
 
   async function deleteItem(item) {
@@ -42,7 +42,7 @@ export default function StudentList({ user }) {
           message: "Deleting..."
         })
 
-        let result = await StudentController.destroy(item.id);
+        let result = await LearnerController.destroy(item.id);
         if (result) {
           showMessageBox({
             title: "Success",
@@ -67,9 +67,9 @@ export default function StudentList({ user }) {
       let value = filter.toLowerCase();
       let name = item.data().name.toLowerCase();
       let email = item.data().email.toLowerCase();
-      let studentNo = Helper.padIdNo(item.data().studentNo);
+      let learnerNo = Helper.padIdNo(item.data().learnerNo);
 
-      if (name.includes(value) || email.includes(value) || studentNo.includes(value)) {
+      if (name.includes(value) || email.includes(value) || learnerNo.includes(value)) {
         return true;
       }
       else {
@@ -88,17 +88,17 @@ export default function StudentList({ user }) {
           
         <div className="flex flex-col sm:flex-row justify-between mb-8">
           <div>
-            <div className="font-bold uppercase mb-4">Student List</div>
-            <div className="font-thin">Total Number of Students:
+            <div className="font-bold uppercase mb-4">Learner List</div>
+            <div className="font-thin">Total Number of Learners:
               <span className="font-bold ml-2">
-                {students.length}
+                {learners.length}
               </span>
             </div>
           </div>
           <div className="mt-4 flex flex-row justify-center">
             <SearchField
               setFilter={setFilter}
-              placeholder="Search student no, name or email"
+              placeholder="Search learner no, name or email"
             />
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function StudentList({ user }) {
               <table className="table table-compact w-full">
                 <thead>
                   <tr>
-                    <th>Student No</th>
+                    <th>Learner No</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Action</th>
@@ -117,10 +117,10 @@ export default function StudentList({ user }) {
                 </thead>
                 <tbody>
                   {
-                    students.map((item, i) => (
+                    learners.map((item, i) => (
                       checkFilter(item) && (
                         <tr key={i.toString()}>
-                          <td>{Helper.padIdNo(item.data().studentNo)}</td>
+                          <td>{Helper.padIdNo(item.data().learnerNo)}</td>
                           <td>{item.data().name}</td>
                           <td>{item.data().email}</td>
                           <td className="flex gap-2">

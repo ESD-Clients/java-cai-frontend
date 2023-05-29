@@ -213,9 +213,6 @@ export default function ModuleQuestions() {
       setCode(data.code);
     }
 
-    console.log(data);
-
-
     setModal(true);
   }
 

@@ -7,14 +7,15 @@ import { AdminController, Helper } from "../controllers/_Controllers";
 import Dashboard from "./admin/Dashboard";
 import FacultyList from "./admin/FacultyList";
 import Modules from "./admin/Modules";
-import StudentList from "./admin/student/StudentList";
+import LearnerList from "./admin/learner/LearnerList";
 import ViewModule from "./admin/ViewModule";
 import AdminSettings from "./admin/AdminSettings";
 import Footer from "../blocks/Footer";
 import RoomList from "./admin/RoomList";
 import Feedbacks from "./admin/Feedbacks";
-import StudentView from "./admin/student/StudentView";
+import LearnerView from "./admin/learner/LearnerView";
 import AdminList from "./admin/AdminList";
+import SchoolList from "./admin/SchoolList";
 
 export default function Admin() {
 
@@ -59,9 +60,10 @@ export default function Admin() {
 
               <Route path="/administrators" element={<AdminList user={user} />} />
               <Route path="/faculties" element={<FacultyList user={user} />} />
+              <Route path="/schools" element={<SchoolList user={user} />} />
 
-              <Route path="/students" element={<StudentList user={user} />} />
-              <Route path="/student" element={<StudentView user={user} />} />
+              <Route path="/learners" element={<LearnerList user={user} />} />
+              <Route path="/learner" element={<LearnerView user={user} />} />
 
               <Route path="/modules" element={<Modules user={user} />} />
               <Route path="/module" element={<ViewModule user={user} />} />

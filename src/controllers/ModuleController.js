@@ -1,4 +1,3 @@
-import axios from "axios";
 import BaseController from "./_BaseController";
 import { getCurrentTimestamp, getDocData } from "./_Helper";
 
@@ -13,14 +12,21 @@ class ModuleController extends BaseController {
       .onSnapshot(onSnapshot);
   }
 
-  getApprovedModules = async () => {
+  subscribeByRoom = (roomId, onSnapshot) => {
+    return this.collectionRef
+      .where('room', '==', roomId)
+      .orderBy('moduleNo', 'asc')
+      .onSnapshot(onSnapshot);
+  }
+
+  getModulesByFaculty = async (facultyId) => {
     var result = [];
 
     try {
       await this.collectionRef
-        // .where('docStatus', '==', 1)
-        .where('remarks', '==', 'approved')
-        .orderBy('createdAt', 'asc')
+        .where('createdBy', '==', facultyId)
+        .where('type', '==', 'student')
+        .orderBy('moduleNo', 'asc')
         .get()
         .then(res => {
           result = res.docs;
@@ -32,6 +38,46 @@ class ModuleController extends BaseController {
 
     return result;
   }
+
+  getModulesByRoom = async (roomId) => {
+    var result = [];
+
+    try {
+      await this.collectionRef
+        .where('room', '==', roomId)
+        .where('type', '==', 'student')
+        .orderBy('moduleNo', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+    } catch (err) {
+      console.error(err);
+      result = [];
+    }
+
+    return result;
+  }
+
+  // getApprovedModules = async () => {
+  //   var result = [];
+
+  //   try {
+  //     await this.collectionRef
+  //       // .where('docStatus', '==', 1)
+  //       .where('remarks', '==', 'approved')
+  //       .orderBy('createdAt', 'asc')
+  //       .get()
+  //       .then(res => {
+  //         result = res.docs;
+  //       })
+  //   } catch (err) {
+  //     console.error(err);
+  //     result = [];
+  //   }
+
+  //   return result;
+  // }
 
   /** TOPICS */
 

@@ -43,8 +43,6 @@ export default function StudentQuizResult({ student, module, result, setSelected
     let newData = { ...newResult };
     delete newData.id;
 
-    console.log(newResult);
-
     let res = await ModuleController.updateQuizResult(module.id, resultId, newData);
     clearModal();
     if (res === true) {

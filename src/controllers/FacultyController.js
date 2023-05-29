@@ -51,7 +51,7 @@ class FacultyController extends BaseController {
             console.error(err);
             result = err;
         }
-
+        
         return result;
     }
 

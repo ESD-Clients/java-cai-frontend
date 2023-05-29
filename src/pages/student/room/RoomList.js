@@ -17,7 +17,7 @@ export default function RoomList ({student}) {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    const unsubscribe = RoomController.subscribeList( async (snapshot) => {
+    const unsubscribe = RoomController.subscribeListBySchool( student.school.id, async (snapshot) => {
 
       let docs = snapshot.docs;
 

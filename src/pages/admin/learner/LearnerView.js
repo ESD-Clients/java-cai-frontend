@@ -5,9 +5,9 @@ import { getDocData } from "../../../controllers/_Helper";
 import HDivider from "../../../components/HDivider";
 import Header2 from "../../../components/Header2";
 import moment from "moment";
-import StudentQuizResult from "./StudentQuizResult";
+import LearnerQuiz from "./LearnerQuiz";
 
-export default function StudentView() {
+export default function LearnerView() {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,8 +22,8 @@ export default function StudentView() {
   useEffect(() => {
 
     async function getModules() {
-      let modules = await ModuleController.getApprovedModules();
-      setModules(modules);
+      // let modules = await ModuleController.getApprovedModules();
+      // setModules(modules);
     }
 
     getModules();
@@ -69,7 +69,7 @@ export default function StudentView() {
   if(selectedModule) {
     return (
       <div className="relative w-full">
-        <StudentQuizResult 
+        <LearnerQuiz 
           student={student} 
           module={selectedModule} 
           result={selectedModule.quizResult} 
