@@ -17,6 +17,7 @@ export default function Room ({user}) {
     })
 
     return () => unsubscribeStudent();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom";
-import HDivider from "../../../components/HDivider";
 import { ModuleController, RoomController, StudentController } from "../../../controllers/_Controllers";
 import { getDocData } from "../../../controllers/_Helper";
-import { clearModal, showConfirmationBox, showLoading } from "../../../modals/Modal";
+import { showConfirmationBox, showLoading } from "../../../modals/Modal";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import ActivityList from "./ActivityList";
 import ModuleList from "./ModuleList";
 
 export default function RoomView({ student }) {
 
-  const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [tab, setTab] = useState(0);
   const [activities, setActivities] = useState([]);
@@ -42,6 +39,7 @@ export default function RoomView({ student }) {
       unsubscribeModules();
     };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function leaveRoom () {

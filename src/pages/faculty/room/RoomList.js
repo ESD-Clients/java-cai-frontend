@@ -1,8 +1,6 @@
 import { useState } from "react"
 import ReactModal from "react-modal";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import PasswordField from "../../../components/PasswordField";
-import Select from "../../../components/Select";
+import { useNavigate } from "react-router-dom";
 import { v1 as uuidv1 } from 'uuid';
 import TextField from "../../../components/TextField";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
@@ -36,6 +34,7 @@ export default function RoomList({ user }) {
 
     return () => unsubscribe();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -148,7 +147,7 @@ export default function RoomList({ user }) {
     if (filter) {
       let value = filter.toLowerCase();
       let code = item.data().code.toLowerCase();
-      let type = item.data().type.toLowerCase();
+      // let type = item.data().type.toLowerCase();
 
       if (code.includes(value)) {
         return true;
