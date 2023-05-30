@@ -69,7 +69,8 @@ export default function RoomView({ student }) {
           students: students
         });
 
-        clearModal();
+        window.location.reload();
+        // clearModal();
       }
     })
   }

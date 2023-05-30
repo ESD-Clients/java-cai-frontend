@@ -120,10 +120,10 @@ export default function RoomView({user}) {
           <div className="">Code :</div>
           <div className="ml-4 text-4xl font-bold">{room && room.code}</div>
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <div className="">Type :</div>
           <div className="ml-4 text-lg font-bold uppercase">{room && room.type}</div>
-        </div>
+        </div> */}
       </div>
 
       <Tabs>

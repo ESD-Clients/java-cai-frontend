@@ -180,7 +180,7 @@ export default function RoomList ({student}) {
               </table>
             </>
           ) : (
-            <div className="flex justify-center items-center">No Data Available</div>
+            <div className="flex justify-center items-center">No rooms yet!</div>
           )
         }
       </div>

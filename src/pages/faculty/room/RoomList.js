@@ -25,7 +25,7 @@ export default function RoomList({ user }) {
   const [infoModal, setInfoModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [code, setCode] = useState('12345678');
-  const [type, setType] = useState('open');
+  const [type, setType] = useState('close');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function RoomList({ user }) {
   useEffect(() => {
     if (addModal) {
       setCode('');
-      setType('open');
+      setType('close');
       setPassword('');
     }
   }, [addModal])
@@ -150,7 +150,7 @@ export default function RoomList({ user }) {
       let code = item.data().code.toLowerCase();
       let type = item.data().type.toLowerCase();
 
-      if (code.includes(value) || type.includes(value)) {
+      if (code.includes(value)) {
         return true;
       }
       else {
@@ -196,7 +196,7 @@ export default function RoomList({ user }) {
             <h1 className="text-lg font-bold">Room Information</h1>
           </div>
 
-          <Select
+          {/* <Select
             label="Type"
             value={type}
             onChange={setType}
@@ -210,7 +210,7 @@ export default function RoomList({ user }) {
                 label: "Close"
               }
             ]}
-          />
+          /> */}
           {/* <TextField
             label="Module Completion Time"
             value={password}
@@ -255,7 +255,7 @@ export default function RoomList({ user }) {
           <div className="mt-4 flex flex-row justify-center">
             <SearchField
               setFilter={setFilter}
-              placeholder="Search room code or type"
+              placeholder="Search room code"
             />
             <button className="btn btn-primary" onClick={() => setAddModal(true)}>
               Create Room
@@ -270,7 +270,7 @@ export default function RoomList({ user }) {
             <thead>
               <tr>
                 <th>Code</th>
-                <th>Type</th>
+                {/* <th>Type</th> */}
                 <th>Students</th>
                 <th>Action</th>
               </tr>
@@ -281,7 +281,7 @@ export default function RoomList({ user }) {
                   checkFilter(item) && (
                     <tr key={i.toString()}>
                       <td>{item.data().code}</td>
-                      <td className="uppercase">{item.data().type}</td>
+                      {/* <td className="uppercase">{item.data().type}</td> */}
                       <td>{item.data().students.length}</td>
                       <td className="flex gap-2">
                         <button
