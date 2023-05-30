@@ -11,14 +11,14 @@ export default function LearnerNavBar({ user }) {
   const [modules, setModules] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      // let modules = await ModuleController.getApprovedModules();
-      // setModules(modules);
+    const unsubscribeModules = ModuleController.subscribeLearnersModule(snapshot => {
+      setModules(snapshot.docs);
       setLoaded(true);
-    }
+    });
 
-    if (!loaded) fetchData();
-  }, [loaded])
+    return () => unsubscribeModules();
+
+  }, [])
 
   function logout() {
 
@@ -63,7 +63,7 @@ export default function LearnerNavBar({ user }) {
                         modules.length > 0 ? (
                           modules.map((item, i) => (
                             ModuleController.isModuleUnlocked({
-                              learner: user,
+                              student: user,
                               lastId: i > 0 ? modules[i - 1].id : ''
                             }) ? (
                               <li key={i.toString()}>
@@ -117,7 +117,7 @@ export default function LearnerNavBar({ user }) {
                         modules.length > 0 ? (
                           modules.map((item, i) => (
                             ModuleController.isModuleUnlocked({
-                              learner: user,
+                              student: user,
                               lastId: i > 0 ? modules[i - 1].id : ''
                             }) ? (
                               <li key={i.toString()}>

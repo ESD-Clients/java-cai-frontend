@@ -4,18 +4,21 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import AdminNavBar from "../blocks/AdminNavBar";
 import AdminSideBar from "../blocks/AdminSideBar";
 import { AdminController, Helper } from "../controllers/_Controllers";
-import Dashboard from "./admin/Dashboard";
-import FacultyList from "./admin/FacultyList";
-import Modules from "./admin/Modules";
-import LearnerList from "./admin/learner/LearnerList";
-import ViewModule from "./admin/ViewModule";
-import AdminSettings from "./admin/AdminSettings";
+import Dashboard from "../pages/admin/Dashboard";
+import FacultyList from "../pages/admin/FacultyList";
+import ModuleList from "../pages/admin/module/ModuleList";
+import LearnerList from "../pages/admin/learner/LearnerList"; 
+import ViewModule from "../pages/admin/module/ViewModule";
+import AdminSettings from "../pages/admin/AdminSettings";
 import Footer from "../blocks/Footer";
-import RoomList from "./admin/RoomList";
-import Feedbacks from "./admin/Feedbacks";
-import LearnerView from "./admin/learner/LearnerView";
-import AdminList from "./admin/AdminList";
-import SchoolList from "./admin/SchoolList";
+import RoomList from "../pages/admin/RoomList";
+import Feedbacks from "../pages/admin/Feedbacks";
+import LearnerView from "../pages/admin/learner/LearnerView";
+import AdminList from "../pages/admin/AdminList";
+import SchoolList from "../pages/admin/SchoolList";
+import ModuleAdd from "../pages/admin/module/ModuleAdd";
+import ModuleQuestions from "../pages/admin/module/ModuleQuestions";
+import ModuleView from "../pages/admin/module/ModuleView";
 
 export default function Admin() {
 
@@ -65,8 +68,10 @@ export default function Admin() {
               <Route path="/learners" element={<LearnerList user={user} />} />
               <Route path="/learner" element={<LearnerView user={user} />} />
 
-              <Route path="/modules" element={<Modules user={user} />} />
-              <Route path="/module" element={<ViewModule user={user} />} />
+              <Route path="/modules" element={<ModuleList user={user} />} />
+              <Route path="/modules/add" element={<ModuleAdd user={user} />} />
+              <Route path="/module" element={<ModuleView user={user} />} />
+              <Route path="/questions" element={<ModuleQuestions user={user} />} />
 
               <Route path="/rooms" element={<RoomList user={user} />} />
               

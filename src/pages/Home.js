@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
-import { AdminController, FacultyController, Helper, SchoolController, StudentController } from "../controllers/_Controllers";
+import { AdminController, FacultyController, Helper, LearnerController, SchoolController, StudentController } from "../controllers/_Controllers";
 import { Link, useNavigate } from "react-router-dom";
 import LoginModal from "../blocks/LoginModal";
 import Footer from "../blocks/Footer";
@@ -31,7 +31,13 @@ export default function Home () {
 
     let result = false;
 
-    if(type === "student") {
+    if(type === "learner") {
+      result = await LearnerController.authenticate({
+        email: email,
+        password: password
+      })
+    }
+    else if(type === "student") {
       result = await StudentController.authenticate({
         email: email,
         password: password

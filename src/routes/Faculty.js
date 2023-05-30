@@ -5,23 +5,23 @@ import FacultyNavBar from "../blocks/FacultyNavBar";
 import FacultySideBar from "../blocks/FacultySideBar";
 import { FacultyController, Helper, SchoolController } from "../controllers/_Controllers";
 
-import Dashboard from "./faculty/Dashboard";
+import Dashboard from "../pages/faculty/Dashboard";
 
-import StudentList from "./faculty/student/StudentList";
-import StudentView from "./faculty/student/StudentView";
+import StudentList from "../pages/faculty/student/StudentList";
+import StudentView from "../pages/faculty/student/StudentView";
 
-import ModuleList from "./faculty/ModuleList";
-import ModuleAdd from "./faculty/ModuleAdd";
-import ModuleView from "./faculty/ModuleView";
-import ModuleQuestions from "./faculty/ModuleQuestions";
+import ModuleList from "../pages/faculty/ModuleList";
+import ModuleAdd from "../pages/faculty/ModuleAdd";
+import ModuleView from "../pages/faculty/ModuleView";
+import ModuleQuestions from "../pages/faculty/ModuleQuestions";
 
-import RoomView from "./faculty/room/RoomView";
-import RoomList from "./faculty/room/RoomList";
+import RoomView from "../pages/faculty/room/RoomView";
+import RoomList from "../pages/faculty/room/RoomList";
 
-import ActivityView from "./faculty/room/ActivityView";
-import ActivityWork from "./faculty/room/ActivityWork";
+import ActivityView from "../pages/faculty/room/ActivityView";
+import ActivityWork from "../pages/faculty/room/ActivityWork";
 
-import FacultySettings from "./faculty/FacultySettings";
+import FacultySettings from "../pages/faculty/FacultySettings";
 import Footer from "../blocks/Footer";
 
 export default function Faculty() {

@@ -1,19 +1,18 @@
 
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import StudentNavBar from "../blocks/StudentNavBar";
-import { Helper, StudentController } from "../controllers/_Controllers";
-import Dashboard from "./student/Dashboard";
-import Module from "./student/Module";
-import PlayGround from "./student/PlayGround";
-import Quiz from "./student/quiz/Quiz";
-import Room from "./student/room/Room";
-import Activity from "./student/room/Activity";
-import Settings from "./student/Settings";
+import LearnerNavBar from "../blocks/LearnerNavBar";
+import { Helper, LearnerController, StudentController } from "../controllers/_Controllers";
 import Footer from "../blocks/Footer";
 import ContactUsForm from "../blocks/ContactUsForm";
 
-export default function Student () {
+import Dashboard from "../pages/learner/Dashboard";
+import Module from "../pages/learner/Module";
+import PlayGround from "../pages/learner/PlayGround";
+import Settings from "../pages/learner/Settings";
+import Quiz from "../pages/quiz/Quiz";
+
+export default function Learner () {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,14 +20,14 @@ export default function Student () {
   const user = Helper.getCurrentUser();
 
   useEffect(() => {
-    if(!user || user.type !== "student") {
+    if(!user || user.type !== "learner") {
       navigate("/");
     }
     else {
       async function updateUser () {
-        let newUser = await StudentController.get(user.id);
+        let newUser = await LearnerController.get(user.id);
         if(newUser && newUser.id) {
-          newUser.type = "student";
+          newUser.type = "learner";
           Helper.setCurrentUser(newUser);
         }
         else {
@@ -51,19 +50,20 @@ export default function Student () {
               <Route path="/dashboard" element={<Dashboard user={user} />} />
               <Route path="/module" element={<Module user={user} />} />
               <Route path="/playground" element={<PlayGround user={user} />} />
-              <Route path="/room" element={<Room user={user} />} />
+              {/* <Route path="/room" element={<Room user={user} />} />
               <Route path="/activity" element={<Activity user={user} />} />
-              <Route path="/quiz" element={<Quiz user={user} />} />
+              */}
+              <Route path="/quiz" element={<Quiz user={user} />} /> 
               <Route path="/contact" element={<ContactUsForm user={user} />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/" element={<Navigate to="/student/dashboard" replace />} />
+              <Route path="/" element={<Navigate to="/learner/dashboard" replace />} />
             </Routes>
           </div>
         </div>
         {
-          !location.pathname.includes("student/quiz") && (
+          !location.pathname.includes("learner/quiz") && (
             <div className="fixed w-full top-0">
-              <StudentNavBar user={user} />
+              <LearnerNavBar user={user} />
             </div>
           )
         }

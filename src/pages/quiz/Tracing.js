@@ -1,11 +1,11 @@
-import { getDifficulty } from "../../../controllers/_Helper";
+import { getDifficulty } from "../../controllers/_Helper";
 
-export default function FillBlank ({item, questionNo}) {
+export default function Tracing ({item, questionNo}) {
 
   return (
     <div className="shadow-lg rounded-lg mb-4">
       <div className={
-        "flex rounded-t-lg p-4 text-white gap-4 "  + (
+        "flex rounded-t-lg p-4 gap-4 "  + (
           item.remarks !== undefined ? (
             item.remarks === 1 ?
               "bg-green-500"
@@ -17,8 +17,11 @@ export default function FillBlank ({item, questionNo}) {
         {
           item.remarks === undefined && <div className="mt-1 text-xs">{questionNo}.&#41;</div>
         }
-        <div className="flex-1 font-semibold">{item.question}</div>
-        <div>
+        <div className="flex-1">
+          <div className="text-white mb-2">{item.question}</div>
+          <div className="whitespace-pre textarea">{item.code}</div>
+        </div>
+        <div className="text-white">
           <div className="text-right text-xs">Difficulty: {getDifficulty(item.difficulty)}</div>
           <div className="text-right text-xs">
             <div>
@@ -40,18 +43,18 @@ export default function FillBlank ({item, questionNo}) {
         {
           item.remarks !== undefined ? (
             <div 
-              className={"textarea textarea-bordered w-full border-2 " + (
+              className={"textarea textarea-bordered w-full border-2 whitespace-pre " + (
                 item.remarks === 1  ? "border-green-400" : "border-red-400 "
               )}
             >
               {item.studentAnswer}
             </div>
           ) : (
-            <input 
+            <textarea 
               name={item.id}
               type="text" 
               placeholder=""
-              className="input input-bordered w-full"
+              className="textarea textarea-bordered w-full"
               required
               disabled={item.remarks !== undefined}
             />

@@ -13,13 +13,6 @@ import ModuleList from "./ModuleList";
 
 export default function RoomView() {
 
-  //TODO: 
-  //   When Adding student
-
-  // -Check student limit
-  // -Check student current room
-  // -Check room type
-
   const navigate = useNavigate();
   const location = useLocation();
 

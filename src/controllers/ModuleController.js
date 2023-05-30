@@ -6,8 +6,9 @@ class ModuleController extends BaseController {
     super('modules');
   }
 
-  subscribeList = (onSnapshot) => {
+  subscribeLearnersModule = (onSnapshot) => {
     return this.collectionRef
+      .where('type', '==', 'learner')
       .orderBy('moduleNo', 'asc')
       .onSnapshot(onSnapshot);
   }
@@ -17,6 +18,65 @@ class ModuleController extends BaseController {
       .where('room', '==', roomId)
       .orderBy('moduleNo', 'asc')
       .onSnapshot(onSnapshot);
+  }
+
+  subscribeModuleWorks = (moduleId, onSnapshot) => {
+    return this.collectionRef
+      .doc(moduleId)
+      .collection('studentAnswers')
+      .orderBy('submittedAt', 'asc')
+      .onSnapshot(onSnapshot);
+  }
+
+  getModuleWorks = async (moduleId) => {
+
+    var result = [];
+
+    try {
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('studentAnswers')
+        .orderBy('submittedAt', 'asc')
+        .get()
+        .then(res => {
+          result = res.docs;
+          console.log(result);
+        })
+    } catch (error) {
+      console.error(error)
+      result = [];
+    }
+
+    return result;
+  }
+
+  destroyStudentWork = async (moduleId, studentId) => {
+
+    console.log(moduleId, studentId);
+    var result = false;
+
+    try {
+
+      let worksRef = this.collectionRef
+        .doc(moduleId)
+        .collection("studentAnswers");
+
+      await worksRef
+        .where('studentId', '==', studentId)
+        .get()
+        .then(async res => {
+          console.log(res.docs);
+          for(let doc of res.docs) {
+            // console.log(res.docs.length);
+            await worksRef.doc(doc.id).delete();
+          }
+        })
+    } catch (error) {
+      console.error(error)
+      result = false;
+    }
+
+    return result;
   }
 
   getModulesByFaculty = async (facultyId) => {
@@ -59,28 +119,8 @@ class ModuleController extends BaseController {
     return result;
   }
 
-  // getApprovedModules = async () => {
-  //   var result = [];
-
-  //   try {
-  //     await this.collectionRef
-  //       // .where('docStatus', '==', 1)
-  //       .where('remarks', '==', 'approved')
-  //       .orderBy('createdAt', 'asc')
-  //       .get()
-  //       .then(res => {
-  //         result = res.docs;
-  //       })
-  //   } catch (err) {
-  //     console.error(err);
-  //     result = [];
-  //   }
-
-  //   return result;
-  // }
 
   /** TOPICS */
-
   getTopics = async (moduleId) => {
     var result = [];
 
@@ -324,6 +364,26 @@ class ModuleController extends BaseController {
     return result;
   }
 
+  getQuizAnswers = async (moduleId) => {
+    var result = null;
+    try {
+
+      await this.collectionRef
+        .doc(moduleId)
+        .collection('studentAnswers')
+        .get()
+        .then(res => {
+          result = res.docs;
+        })
+
+    } catch (err) {
+      console.error(err);
+      result = err;
+    }
+
+    return result;
+  }
+
   getQuizResult = async (moduleId, studentId) => {
 
     var result = null;
@@ -372,13 +432,14 @@ class ModuleController extends BaseController {
   }
 
   /** HELPER */
-  isModuleUnlocked = ({ student, lastId }) => {
+  isModuleUnlocked = ({ student: user, lastId }) => {
 
+    
     if (!lastId) {
       return true;
     }
     else {
-      if (lastId && student.finishedModules.includes(lastId)) {
+      if (lastId && user && user.finishedModules.includes(lastId)) {
         return true;
       }
     }

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Helper, ModuleController, StudentController } from "../../../controllers/_Controllers";
-import { getDocData } from "../../../controllers/_Helper";
-import { clearModal, showLoading, showMessageBox } from "../../../modals/Modal";
+import { Helper, LearnerController, ModuleController, StudentController } from "../../controllers/_Controllers";
+import { getDocData } from "../../controllers/_Helper";
+import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 import MutlipleChoice from "./MutlipleChoice";
 import FillBlank from "./FillBlank";
 import Coding from "./Coding";
 import Tracing from "./Tracing";
-import Timer from "../../../components/Timer";
+import Timer from "../../components/Timer";
 
 export default function Questionnaire({ user, module, setResult }) {
 
@@ -26,17 +26,17 @@ export default function Questionnaire({ user, module, setResult }) {
       let coding = [];
 
       for (let doc of results) {
-        
+
         let data = getDocData(doc);
         if (data.type === "coding") {
           coding.push(data);
         }
         else {
-          if(data.type === "choices") {
+          if (data.type === "choices") {
             let choices = data.choices;
             let shuffled = shuffleChoices(choices);
             data.choices = shuffled;
-            
+
           }
           question.push(data);
         }
@@ -61,7 +61,7 @@ export default function Questionnaire({ user, module, setResult }) {
     }
 
     return array;
-  }  
+  }
 
   function selectTab(e, i) {
     e.preventDefault();
@@ -137,30 +137,30 @@ export default function Questionnaire({ user, module, setResult }) {
       studentScore: 0,
       totalScore: 0
     };
-    
+
 
     let data_mix = checkEntries(entries_mix, questions);
     let data_coding = checkEntries(entries_coding, codings);
 
-    for(let item of data_mix.answers) {
-      if(item.type === "choices") {
+    for (let item of data_mix.answers) {
+      if (item.type === "choices") {
         data_choices.answers.push(item);
         data_choices.totalScore += item.points;
-        if(item.remarks === 0) {
+        if (item.remarks === 0) {
           data_choices.studentScore += item.points;
         }
       }
-      else if(item.type === "blank") {
+      else if (item.type === "blank") {
         data_blanks.answers.push(item);
         data_blanks.totalScore += item.points;
-        if(item.remarks === 0) {
+        if (item.remarks === 0) {
           data_blanks.studentScore += item.points;
         }
       }
-      else if(item.type === "tracing") {
+      else if (item.type === "tracing") {
         data_tracing.answers.push(item);
         data_tracing.totalScore += item.points;
-        if(item.remarks === 0) {
+        if (item.remarks === 0) {
           data_tracing.studentScore += item.points;
         }
       }
@@ -182,33 +182,51 @@ export default function Questionnaire({ user, module, setResult }) {
       totalScore: totalScore,
     }
 
+    if (answers.coding.answers.length === 0) {
+      let passingScore = Math.ceil(totalScore * 0.6);
+      console.log(answers.studentScore, passingScore);
+      if (answers.studentScore >= passingScore) {
+        answers.remarks = "passed";
+      }
+      else {
+        answers.remarks = "failed";
+      }
+    }
+    else {
+      answers.remarks = "for cheking";
+    }
+
     clearModal();
 
     let result = await ModuleController.submitQuizAnswer(module.id, answers);
 
-    clearModal();
-
     if (result && result.id) {
-
       showLoading({
         message: "Updating progress..."
       });
 
-      let finishedModules = user.finishedModules;
-      finishedModules.push(module.id);
+      if (answers.remarks === "passed") {
+        let finishedModules = user.finishedModules;
+        finishedModules.push(module.id);
 
-      await StudentController.update(user.id, {
-        finishedModules: finishedModules
-      });
+        if(user.type === "student") {
+          await StudentController.update(user.id, {
+            finishedModules: finishedModules
+          });
+        }
+        else {
+          await LearnerController.update(user.id, {
+            finishedModules: finishedModules
+          });
+        }
 
-      let updateUser = user;
-      user.finishedModules = finishedModules;
+        let updateUser = user;
+        user.finishedModules = finishedModules;
 
-      Helper.setCurrentUser(updateUser);
+        Helper.setCurrentUser(updateUser);
+      }
 
       clearModal();
-
-      setResult(result);
 
       showMessageBox({
         title: "Success",
@@ -223,16 +241,18 @@ export default function Questionnaire({ user, module, setResult }) {
         type: "danger"
       });
     }
+
+    setResult(result);
   }
 
   function getFormEntries(form) {
     let formData = new FormData(form);
     let formEntries = Object.fromEntries(formData.entries());
-
+    
     return formEntries;
   }
 
-  function timerTimeout () {
+  function timerTimeout() {
     showMessageBox({
       title: "Time's up",
       message: "Sorry your out of time.",
@@ -248,7 +268,7 @@ export default function Questionnaire({ user, module, setResult }) {
           <h1 className="text-center">Quiz Timer:</h1>
           <Timer
             className="text-4xl font-bold text-primary"
-            minutes={module ? module.examTime : 90}
+            minutes={module && module.examTime ? module.examTime : 90}
             onTimeout={timerTimeout}
           />
         </div>
@@ -273,20 +293,20 @@ export default function Questionnaire({ user, module, setResult }) {
                       questionNo={i + 1}
                     />
                   ) :
-                  item.type === "blank" ? (
-                    <FillBlank
-                      key={i.toString()}
-                      item={item}
-                      questionNo={i + 1}
-                    />
-                  ) :
-                  item.type === "tracing" ? (
-                    <Tracing
-                      key={i.toString()}
-                      item={item}
-                      questionNo={i + 1}
-                    />
-                  ) : null
+                    item.type === "blank" ? (
+                      <FillBlank
+                        key={i.toString()}
+                        item={item}
+                        questionNo={i + 1}
+                      />
+                    ) :
+                      item.type === "tracing" ? (
+                        <Tracing
+                          key={i.toString()}
+                          item={item}
+                          questionNo={i + 1}
+                        />
+                      ) : null
                 )}
                 <div className="flex justify-end">
                   <button className="btn btn-primary" type="submit">

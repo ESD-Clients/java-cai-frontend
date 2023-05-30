@@ -1,7 +1,7 @@
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
-import { PlaygroundController } from "../../../controllers/_Controllers";
-import { getDifficulty } from "../../../controllers/_Helper";
+import { PlaygroundController } from "../../controllers/_Controllers";
+import { getDifficulty } from "../../controllers/_Helper";
 
 export default function Coding({ item, questionNo }) {
 

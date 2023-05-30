@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import StudentNavBar from "../../blocks/StudentNavBar";
+import LearnerNavBar from "../../blocks/LearnerNavBar";
 import { Helper, ModuleController } from "../../controllers/_Controllers";
 import Loading from "../../modals/Loading";
 import config from "../../config.json";
@@ -46,7 +46,7 @@ export default function Module() {
   }, []);
 
   useEffect(() => {
-    if (moduleId === "") navigate("/student")
+    if (moduleId === "") navigate("/learner")
     else setLoaded(false);
   }, [moduleId])
 
@@ -83,7 +83,7 @@ export default function Module() {
       message: "Did you read this module clearly?",
       type: "warning",
       onYes: () => {
-        navigate("/student/quiz", {
+        navigate("/learner/quiz", {
           state: {
             module: module
           }
@@ -117,7 +117,7 @@ export default function Module() {
             <div>
               {/* <Link
                 className="btn btn-success"
-                to="/student/quiz"
+                to="/learner/quiz"
                 state={{ module: module }}
               >
                 {
@@ -128,7 +128,7 @@ export default function Module() {
                 quizResult ? (
                   <Link
                     className="btn btn-success"
-                    to="/student/quiz"
+                    to="/learner/quiz"
                     state={{ module: module }}
                   >
                     View Quiz
@@ -138,7 +138,7 @@ export default function Module() {
                     className="btn btn-success"
                     onClick={takeQuiz}
                     disabled={questionnaire === 0}
-                    // to="/student/quiz"
+                    // to="/learner/quiz"
                     // state={{ module: module }}
                   >
                     Take Quiz
@@ -185,7 +185,7 @@ export default function Module() {
             <div className="pb-16 w-full">
               {
                 moduleId && module && (
-                  <div className=" w-full">
+                  <div className="w-full">
                     <h1 className="text-4xl uppercase font-bold">{module.title}</h1>
                     
                     <HDivider id="sypnosis"/>
@@ -260,7 +260,7 @@ export default function Module() {
                                 <div className="flex justify-end mt-2">
                                   <Link
                                     className="btn btn-info"
-                                    to="/student/playground"
+                                    to="/learner/playground"
                                     target="_blank"
                                     onClick={() => {
                                       setPlaygroundCode(item.data().code)

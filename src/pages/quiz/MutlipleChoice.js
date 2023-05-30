@@ -1,4 +1,4 @@
-import { getDifficulty } from "../../../controllers/_Helper";
+import { getDifficulty } from "../../controllers/_Helper";
 
 export default function MutlipleChoice({item, questionNo}) {
 

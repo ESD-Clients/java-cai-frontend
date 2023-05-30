@@ -1,15 +1,39 @@
 import { useNavigate } from "react-router-dom";
-import { RoomController } from "../../../controllers/_Controllers";
+import { Helper, ModuleController, RoomController, StudentController } from "../../../controllers/_Controllers";
 import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "../../../modals/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
-import TextField from "../../../components/TextField";
-import Select from "../../../components/Select";
-import { formatDateTime } from "../../../controllers/_Helper";
+import { formatDateTime, getDocData } from "../../../controllers/_Helper";
+import Result from "../../quiz/Result";
+import StudentQuizResult from "../student/StudentQuizResult";
 
 export default function ModuleList({ roomId, moduleList }) {
 
   const navigate = useNavigate();
+  const [module, setModule] = useState(null);
+  const [quizModal, setQuizModal] = useState(false);
+  const [quiz, setQuiz] = useState(null);
+  const [quizzes, setQuizzes] = useState([]);
+
+  useEffect(() => {
+
+    async function fetchData () {
+      let result = await ModuleController.getModuleWorks(module.id);
+      let quizzes = [];
+      for(let doc of result) {
+        let quiz = getDocData(doc);
+        let student = await StudentController.get(doc.data().studentId);
+        quiz.student = student;
+        quizzes.push(quiz);
+      }
+
+      setQuizzes(quizzes);
+    }
+
+    if(module) {
+      fetchData();
+    }
+  }, [module])
 
   function removeModule(moduleId) {
 
@@ -37,12 +61,77 @@ export default function ModuleList({ roomId, moduleList }) {
     })
   }
 
-  async function addModule () {
-
+  if(module && quiz) {
+    return (
+      <div className="relative w-full">
+        <StudentQuizResult 
+          student={quiz.student} 
+          module={module} 
+          result={quiz} 
+          setSelected={() => {
+            setQuizModal(false);
+            setModule(null);
+            setQuiz(null);
+          }}
+        />
+      </div>
+    )
   }
-
   return (
     <>
+      <ReactModal
+        isOpen={quizModal}
+        ariaHideApp={false}
+        style={{ overlay: { zIndex: 49, background: "transparent" } }}
+        className="bg-modal flex w-full h-full backdrop-blur-sm z-50 items-center justify-center overflow-y-scroll "
+      >
+        <div className="bg-base-200 p-4 sm:w-2/3 rounded relative">
+          <div className="flex justify-end">
+            <button className="btn btn-ghost" onClick={() => setQuizModal(false)}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            </button>
+          </div>
+          <table className="table table-compact w-full">
+            <thead>
+              <tr>
+                <th>Student No</th>
+                <th>Name</th>
+                <th>Submitted At</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                quizzes.map((item, i) => (
+                  <tr key={i.toString()}>
+                    
+                    <td>{item.student.studentNo}</td>
+                    <td>{item.student.name}</td>
+                    <td>{Helper.formatDateTime(item.submittedAt)}</td>
+                    <td>{item.remarks}</td>
+                    <td>{item.studentScore}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-info"
+                        onClick={() => {
+                          setQuiz(item)
+                        }}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </ReactModal>
       <div className="flex items-center gap-12">
         <h1 className="text-2xl font-bold">
           Total Modules:
@@ -89,6 +178,15 @@ export default function ModuleList({ roomId, moduleList }) {
                             onClick={() => navigate(`/faculty/module?${item.id}`)}
                           >
                             View
+                          </button>
+                          <button
+                            className="btn btn-sm btn-info"
+                            onClick={() => {
+                              setModule(getDocData(item));
+                              setQuizModal(true);
+                            }}
+                          >
+                            View Quizzes
                           </button>
                           <button
                             className="btn btn-sm btn-error"

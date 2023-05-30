@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Helper, ModuleController } from "../../../controllers/_Controllers";
+import { Helper, ModuleController } from "../../controllers/_Controllers";
 import Questionnaire from "./Questionnaire";
 import Result from "./Result";
 

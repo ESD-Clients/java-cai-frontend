@@ -3,13 +3,31 @@ import MutlipleChoice from './MutlipleChoice';
 import FillBlank from './FillBlank';
 import Coding from './Coding';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Tracing from './Tracing';
+import { clearModal, showLoading } from '../../modals/Modal';
+import { ModuleController } from '../../controllers/_Controllers';
 
 export default function Result({ user, module, result }) {
 
+  console.log(result);
+
   const navigate = useNavigate();
   const [tab, setTab] = useState('choices');
+
+  async function retakeQuiz() {
+    showLoading({
+      message: "Opening Quiz..."
+    })
+
+    await ModuleController.destroyStudentWork(module.id, user.id);
+    clearModal();
+    navigate(`/${user.type}/quiz`, {
+      state: {
+        module: module
+      }
+    })
+  }
 
   return (
     <>
@@ -31,9 +49,44 @@ export default function Result({ user, module, result }) {
 
               <div className='ml-8'>
                 <div className='text-xs'>Score:</div>
-                <div className='font-bold text-2xl'>{result.studentScore} / {result.totalScore}</div>
+                <div className={
+                  'font-bold text-2xl ' + (result.remarks === "failed" ? "text-red-500" : result.remarks === "passed" ? "text-green-500" : "")
+                }>
+                  {result.studentScore} / {result.totalScore}
+                </div>
               </div>
             </div>
+
+            <div className='flex mb-4 '>
+              <div>
+                <div className='mx-28 text-red-400 flex-1'>
+                  {
+                    result.remarks === "failed" && "You failed the quiz. Need to retake."
+                  }
+                </div>
+                {
+                  result.feedBack && (
+                    <div className='mx-28 flex-1'>
+                      Feedback: {result.feedBack}
+                    </div>
+                  )
+                }
+              </div>
+              <div>
+                {
+                  result.remarks === "failed" && (
+                    <button
+                      className="btn btn-success"
+                      onClick={retakeQuiz}
+                    >
+                      Retake Quiz
+                    </button>
+                  )
+                }
+              </div>
+
+            </div>
+
             <TabList className="flex border-y-2 bg-base-100">
               {
                 result.multipleChoice.answers.length > 0 && (
@@ -104,7 +157,7 @@ export default function Result({ user, module, result }) {
           </div>
         </div>
 
-        <div className="flex flex-row justify-center pt-8 mt-8">
+        <div className="flex flex-row justify-center pt-24 mt-8">
           <div className="w-full max-w-[48rem] lg:px-8 p-0 lg:mr-8 m-0">
             {
               result.multipleChoice.answers.length > 0 && (

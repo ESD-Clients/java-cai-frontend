@@ -1,9 +1,9 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useState } from 'react';
-import Coding from '../../student/quiz/Coding';
-import FillBlank from '../../student/quiz/FillBlank';
-import MutlipleChoice from '../../student/quiz/MutlipleChoice';
-import Tracing from '../../student/quiz/Tracing';
+import Coding from '../../quiz/Coding';
+import FillBlank from '../../quiz/FillBlank';
+import MutlipleChoice from '../../quiz/MutlipleChoice';
+import Tracing from '../../quiz/Tracing';
 
 export default function LearnerQuiz({ student, module, result, setSelected }) {
 

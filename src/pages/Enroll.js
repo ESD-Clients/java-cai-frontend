@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { clearModal, showLoading, showMessageBox } from "../modals/Modal";
-import { AdminController, FacultyController, Helper, SchoolController, StudentController } from "../controllers/_Controllers";
+import { AdminController, FacultyController, Helper, LearnerController, SchoolController, StudentController } from "../controllers/_Controllers";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordField from "../components/PasswordField";
 import LoginModal from "../blocks/LoginModal";
@@ -37,7 +37,13 @@ export default function Enroll () {
 
     let result = false;
 
-    if(type === "student") {
+    if(type === "learner") {
+      result = await LearnerController.authenticate({
+        email: email,
+        password: password
+      })
+    }
+    else if(type === "student") {
       result = await StudentController.authenticate({
         email: email,
         password: password
@@ -108,13 +114,32 @@ export default function Enroll () {
     let data = Helper.getEventFormData(e);
     delete data.retype;
     data.finishedModules = [];
+    
+    if(userType === "student") {
+      let school = await SchoolController.getSchoolByCode(data.school);
+
+      if(school) {
+        data.school = school.id;
+      }
+      else {
+
+        showMessageBox({
+          title: "Error",
+          message: "School not found. Make sure you entered the correct school code.",
+          type: "danger"
+        })
+      }
+    }
+
 
     if(imgFile) {
       let imageUri = await StudentController.uploadFile(imgFile, 'image/student/profile');
       data.image = imageUri;
     }
 
-    let result = await StudentController.register(data);
+    let result = userType === "student" ? await StudentController.register(data) 
+      : await LearnerController.register(data);
+
     clearModal();
     
     if (result && result.id) {
@@ -263,8 +288,8 @@ export default function Enroll () {
             userType === "student" && (
               <div className="input-group items-center my-4 w-[40rem]">
                 <label className="text-right w-32 mr-8">School Code:</label>
-                <input className="input flex-1" name="school" />
-                <label className="ml-2 text-transparent">*</label>
+                <input className="input flex-1" name="school" required />
+                <label className="ml-2 text-red-500">*</label>
               </div>
             )
           }

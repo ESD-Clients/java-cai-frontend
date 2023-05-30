@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 import { useLocation, useNavigate } from "react-router-dom"
-import Header2 from "../../components/Header2";
-import HDivider from "../../components/HDivider";
-import RichText from "../../components/RichText";
-import TextInfo from "../../components/TextInfo";
-import { ModuleController } from "../../controllers/_Controllers";
-import { getErrorMessage } from "../../controllers/_Helper";
-import { clearModal, showMessageBox } from "../../modals/Modal";
+import Header2 from "../../../components/Header2";
+import HDivider from "../../../components/HDivider";
+import RichText from "../../../components/RichText";
+import TextInfo from "../../../components/TextInfo";
+import { ModuleController } from "../../../controllers/_Controllers";
+import { getErrorMessage } from "../../../controllers/_Helper";
+import { clearModal, showMessageBox } from "../../../modals/Modal";
 
 
 export default function ViewModule () {

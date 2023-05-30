@@ -1,18 +1,22 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useState } from 'react';
-import Coding from '../../student/quiz/Coding';
-import FillBlank from '../../student/quiz/FillBlank';
-import MutlipleChoice from '../../student/quiz/MutlipleChoice';
+import Coding from '../../quiz/Coding';
+import FillBlank from '../../quiz/FillBlank';
+import MutlipleChoice from '../../quiz/MutlipleChoice';
 import TextField from '../../../components/TextField';
 import HDivider from '../../../components/HDivider';
-import { Helper, ModuleController } from '../../../controllers/_Controllers';
+import { Helper, LearnerController, ModuleController, StudentController } from '../../../controllers/_Controllers';
 import { clearModal, showLoading, showMessageBox } from '../../../modals/Modal';
-import Tracing from '../../student/quiz/Tracing';
+import Tracing from '../../quiz/Tracing';
+import ReactModal from 'react-modal';
+import TextArea from '../../../components/TextArea';
 
-export default function StudentQuizResult({ student, module, result, setSelected }) {
+export default function StudentQuizResult({ user, student, module, result, setSelected }) {
 
   const [tab, setTab] = useState('choices');
   const [quizResult, setQuizResult] = useState(result);
+  const [feedBack, setFeedBack] = useState(result.feedBack);
+  const [feedBackModal, setFeedBackModal] = useState(false);
 
   async function checkCoding(e) {
     e.preventDefault();
@@ -39,12 +43,39 @@ export default function StudentQuizResult({ student, module, result, setSelected
     newResult.coding.status = 1;
     newResult.studentScore = newResult.studentScore + studentScore;
 
+    let passingScore = Math.ceil(newResult.totalScore * 0.6);
+
+    if (newResult.studentScore >= passingScore) {
+      newResult.remarks = "passed";
+    }
+    else {
+      newResult.remarks = "failed";
+    }
+
     let resultId = newResult.id;
     let newData = { ...newResult };
     delete newData.id;
 
     let res = await ModuleController.updateQuizResult(module.id, resultId, newData);
+
+    if (newResult.remarks === "passed") {
+      let finishedModules = student.finishedModules;
+      finishedModules.push(module.id);
+
+      if(user.type === "faculty") {
+        await StudentController.update(student.id, {
+          finishedModules: finishedModules
+        });
+      }
+      else {
+        await LearnerController.update(student.id, {
+          finishedModules: finishedModules
+        });
+      }
+    }
+
     clearModal();
+
     if (res === true) {
       setQuizResult(newResult);
     }
@@ -55,15 +86,66 @@ export default function StudentQuizResult({ student, module, result, setSelected
         message: res.message
       })
     }
+  }
 
+  async function submitFeedback (e) {
+    e.preventDefault();
+
+    showLoading({
+      message: "Saving..."
+    });
+
+    await ModuleController.updateQuizResult(module.id, quizResult.id, {
+      feedBack: feedBack
+    });
+
+    clearModal();
+    setFeedBackModal(false);
   }
 
   return (
     <>
+      <ReactModal
+        isOpen={feedBackModal}
+        ariaHideApp={false}
+        style={{ overlay: { zIndex: 49, background: "transparent" } }}
+        className="bg-modal flex w-full h-full backdrop-blur-sm z-50 p-4 items-center justify-center"
+      >
+        <form 
+          className="bg-base-200 p-4 sm:w-1/2 rounded relative overflow-x-hidden overflow-y-auto"
+          onSubmit={submitFeedback}
+        >
+          <TextArea
+            label="Feedback"
+            required
+            name="message"
+            value={feedBack}
+            onChange={setFeedBack}
+          />
+          <div className='mt-4 flex justify-end gap-2'>
+            <button
+              className="btn btn-info"
+              onClick={() => {
+
+              }}
+            >
+              SAVE
+            </button>
+            <button
+              className="btn btn-ghost"
+              onClick={() => {
+                setFeedBackModal(false);
+              }}
+            >
+              CANCEL
+            </button>
+          </div>
+        </form>
+      </ReactModal>
       <Tabs className="flex flex-col w-full bg-base-100">
         <div className='sticky top-6 bg-base-100'>
-          <div className="flex justify-between mb-4 gap-12">
-            <div className='flex items-center'>
+          <div className="flex justify-between items-center mb-4">
+            <div className='flex items-center flex-1'>
               <button className="btn btn-ghost" onClick={() => setSelected(null)}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                   <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
@@ -74,8 +156,15 @@ export default function StudentQuizResult({ student, module, result, setSelected
                 {module.title}
               </h2>
             </div>
-
-            <div className='ml-8'>
+            <button
+              className="btn btn-sm btn-info ml-8 mr-4"
+              onClick={() => {
+                setFeedBackModal(true);
+              }}
+            >
+              Feedback
+            </button>
+            <div>
               <div className='text-xs'>Score:</div>
               <div className='font-bold text-2xl'>{quizResult.studentScore} / {quizResult.totalScore}</div>
             </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function Timer ({ minutes, onTimeout, className }) {
+
   const [timeLeft, setTimeLeft] = useState(minutes * 60);
 
   useEffect(() => {

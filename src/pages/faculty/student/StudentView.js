@@ -149,7 +149,7 @@ export default function StudentView() {
                 <th>Module No</th>
                 <th>Title</th>
                 <th>Quiz Result</th>
-                <th>Quiz Status</th>
+                {/* <th>Quiz Status</th> */}
                 <th>Action</th>
               </tr>
             </thead>
@@ -160,9 +160,9 @@ export default function StudentView() {
                     <td>{item.moduleNo}</td>
                     <td>{item.title}</td>
                     <td>{item.quizResult.studentScore}/{item.quizResult.totalScore}</td>
-                    <td className="italic">
-                      {item.quizResult.coding.status ? "Checked" : "Coding Unchecked"} 
-                    </td>
+                    {/* <td className="italic">
+                      {item.remarks === "for checking" ? "Coding Unchecked" : "Passed"} 
+                    </td> */}
                     <td className="flex gap-2">
                       <button className="btn btn-info btn-sm" onClick={() => setSelectedModule(item)}>
                         View Quiz

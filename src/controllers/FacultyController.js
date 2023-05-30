@@ -27,7 +27,6 @@ class FacultyController extends BaseController {
                 .catch(err => {
                     result = err;
                 })
-
         } catch (err) {
             result = err;
         }
@@ -46,7 +45,7 @@ class FacultyController extends BaseController {
                     // item.password = hashData(item.password);
                     item.docStatus = 1;
                     result = await this.storeOnId(res.user.uid, item);
-                })
+                });
         } catch (err) {
             console.error(err);
             result = err;
