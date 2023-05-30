@@ -3,15 +3,13 @@ import HDivider from "../../../components/HDivider";
 import { useEffect } from "react";
 import { ModuleController, RoomController, StudentController } from "../../../controllers/_Controllers";
 import { useState } from "react";
-import { getDocData, padIdNo } from "../../../controllers/_Helper";
-import ReactModal from "react-modal";
-import { Dots } from "react-activity";
+import { getDocData } from "../../../controllers/_Helper";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import RoomStudents from "./RoomStudents";
 import ActivityList from "./ActivityList";
 import ModuleList from "./ModuleList";
 
-export default function RoomView() {
+export default function RoomView({user}) {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,6 +36,8 @@ export default function RoomView() {
     }
 
     fetchData();
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -51,7 +51,7 @@ export default function RoomView() {
       getStudentRequests(room.requests);
     });
 
-    let unsubscribeStudents = StudentController.subscribeActiveList(snapshot => {
+    let unsubscribeStudents = StudentController.subscribeBySchool(user.school.id, snapshot => {
       let result = snapshot.docs;
       setStudentList(result);
     });
@@ -66,6 +66,8 @@ export default function RoomView() {
       unsubscribeStudents();
       unsubscribeActivities();
     };
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function getRoomStudents(students) {
@@ -161,6 +163,7 @@ export default function RoomView() {
           <ModuleList
             roomId={roomId}
             moduleList={roomModules}
+            studentList={roomStudents}
           />
         </TabPanel>
         <TabPanel>

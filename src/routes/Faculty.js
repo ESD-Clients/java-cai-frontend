@@ -23,6 +23,7 @@ import ActivityWork from "../pages/faculty/room/ActivityWork";
 
 import FacultySettings from "../pages/faculty/FacultySettings";
 import Footer from "../blocks/Footer";
+import StudentProgress from "../pages/faculty/reports/StudentProgress";
 
 export default function Faculty() {
 
@@ -82,6 +83,9 @@ export default function Faculty() {
                 <Route path="/module" element={<ModuleView user={user} />} />
                 <Route path="/modules/add" element={<ModuleAdd user={user} />} />
                 <Route path="/questions" element={<ModuleQuestions user={user} />} />
+
+                
+                <Route path="/reports/student" element={<StudentProgress user={user} />} />
 
                 <Route path="/settings" element={<FacultySettings />} />
 

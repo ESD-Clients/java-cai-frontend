@@ -14,24 +14,25 @@ export default function RoomList ({student}) {
 
   const [joinModal, setJoinModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
-    const unsubscribe = RoomController.subscribeListBySchool( student.school.id, async (snapshot) => {
+    if(student.school && student.school.id) {
+      const unsubscribe = RoomController.subscribeListBySchool( student.school.id, async (snapshot) => {
 
-      let docs = snapshot.docs;
-
-      for(let doc of docs) {
-        let faculty = await FacultyController.get(doc.data().createdBy);
-        doc.faculty = faculty;
-      }
-
-      setRoomList(docs);
-    });
-
-
-
-    return () => unsubscribe();
+        let docs = snapshot.docs;
+  
+        for(let doc of docs) {
+          let faculty = await FacultyController.get(doc.data().createdBy);
+          doc.faculty = faculty;
+        }
+  
+        setRoomList(docs);
+      });
+  
+      return () => unsubscribe();
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function checkFilter (item) {

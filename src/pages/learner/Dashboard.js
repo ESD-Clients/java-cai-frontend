@@ -23,6 +23,8 @@ export default function Dashboard() {
     })
 
     return () => unsubscribeModules();
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -31,6 +33,8 @@ export default function Dashboard() {
     }
 
     if (!loaded && user) fetchData();
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded])
 
   function getCurrentModule(modules) {

@@ -66,7 +66,6 @@ export default function Home () {
 
     if(result && result.id) {
 
-      console.log(result);
       result.type = type;
       Helper.setCurrentUser(result);
       e.target.reset();

@@ -1,7 +1,5 @@
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
-import axios from "axios";
-import QueryString from "qs";
 import { Helper, PlaygroundController } from "../../controllers/_Controllers";
 
 export default function PlayGround() {
@@ -41,7 +39,7 @@ export default function PlayGround() {
     //     setOutput(response.data);
     //   })
     //   .catch(function (error) {
-    //     console.log(error);
+    //     console.error(error);
     //     setOutput({
     //       error: error
     //     })

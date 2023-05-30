@@ -184,7 +184,6 @@ export default function Questionnaire({ user, module, setResult }) {
 
     if (answers.coding.answers.length === 0) {
       let passingScore = Math.ceil(totalScore * 0.6);
-      console.log(answers.studentScore, passingScore);
       if (answers.studentScore >= passingScore) {
         answers.remarks = "passed";
       }

@@ -3,14 +3,12 @@ import MutlipleChoice from './MutlipleChoice';
 import FillBlank from './FillBlank';
 import Coding from './Coding';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Tracing from './Tracing';
 import { clearModal, showLoading } from '../../modals/Modal';
-import { ModuleController } from '../../controllers/_Controllers';
+import { LearnerController, ModuleController, StudentController } from '../../controllers/_Controllers';
 
 export default function Result({ user, module, result }) {
-
-  console.log(result);
 
   const navigate = useNavigate();
   const [tab, setTab] = useState('choices');
@@ -18,7 +16,41 @@ export default function Result({ user, module, result }) {
   async function retakeQuiz() {
     showLoading({
       message: "Opening Quiz..."
-    })
+    });
+
+    let modulesTaken = user.modulesTaken ? user.modulesTaken : [];
+      
+    let currentModule = null;
+
+    let found = false;
+
+    for(let item of modulesTaken) {
+      if(item.id === module.id) {
+        currentModule = item;
+        currentModule.takes += 1;
+        found = true;
+        break;
+      }
+    }
+
+    if(!found) {
+      currentModule = {
+        id: module.id,
+        takes: 2,
+      }
+      modulesTaken.push(currentModule);
+    }
+
+    if(user.type === "student") {
+      await StudentController.update(user.id, {
+        modulesTaken: modulesTaken
+      });
+    }
+    else {
+      await LearnerController.update(user.id, {
+        modulesTaken: modulesTaken
+      });
+    }
 
     await ModuleController.destroyStudentWork(module.id, user.id);
     clearModal();
@@ -58,7 +90,7 @@ export default function Result({ user, module, result }) {
             </div>
 
             <div className='flex mb-4 '>
-              <div>
+              <div className='flex-1'>
                 <div className='mx-28 text-red-400 flex-1'>
                   {
                     result.remarks === "failed" && "You failed the quiz. Need to retake."

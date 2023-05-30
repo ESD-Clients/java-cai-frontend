@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Helper, SchoolController, LearnerController } from "../../controllers/_Controllers"
+import { Helper, LearnerController } from "../../controllers/_Controllers"
 import moment from "moment";
 import { Dots } from "react-activity";
 import { CLR_PRIMARY } from "../../values/MyColor";
@@ -11,9 +11,6 @@ import { clearModal, showLoading, showMessageBox } from "../../modals/Modal";
 export default function Settings() {
 
   const [user, setUser] = useState(Helper.getCurrentUser());
-
-  
-  console.log(user);
 
   const [updatingImage, setUpdatingImage] = useState(false);
   const [image, setImage] = useState(null);
@@ -250,6 +247,8 @@ const Info = ({ label, value, displayValue, type, editable, onSave }) => {
 
   useEffect(() => {
     setText(value)
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editing])
 
   async function save() {

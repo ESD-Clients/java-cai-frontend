@@ -5,8 +5,6 @@ export default function ModuleList({student, room, modules}) {
 
   const navigate = useNavigate();
 
-  console.log(student);
-
   return (
     <div>
       <h2 className="font-bold text-lg">Modules</h2>

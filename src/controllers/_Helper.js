@@ -108,5 +108,5 @@ export function getStringDateToday () {
 }
 
 export function formatDateTime (datetime) {
-  return moment(datetime).format("MMMM DD, yyyy - hh:mm A")
+  return moment(datetime).format("MMM DD, yyyy - hh:mm A")
 }

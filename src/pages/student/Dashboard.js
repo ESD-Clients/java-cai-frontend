@@ -17,19 +17,23 @@ export default function Dashboard() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const unsubscribeRoom = RoomController.subscribeDoc(user.currentRoom, async (snapshot) => {
-      if (snapshot) {
-        setRoom(getDocData(snapshot));
-
-        let modules = await ModuleController.getModulesByRoom(snapshot.id);
-        setModules(modules);
-
-        getCurrentModule(modules);
-        computeProgress(modules);
-      }
-    })
-
-    return () => unsubscribeRoom();
+    if(user.currentRoom) {
+      const unsubscribeRoom = RoomController.subscribeDoc(user.currentRoom, async (snapshot) => {
+        if (snapshot.exists) {
+          setRoom(getDocData(snapshot));
+  
+          let modules = await ModuleController.getModulesByRoom(snapshot.id);
+          setModules(modules);
+  
+          getCurrentModule(modules);
+          computeProgress(modules);
+        }
+      })
+  
+      return () => unsubscribeRoom();
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -38,6 +42,8 @@ export default function Dashboard() {
     }
 
     if (!loaded && user) fetchData();
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded])
 
   function getCurrentModule(modules) {
@@ -71,9 +77,40 @@ export default function Dashboard() {
 
       <div className="flex flex-row justify-center">
         <div className="w-full lg:px-8 p-0 m-0">
-          <div className="mb-10">
-            <div className="stats shadow bg-base-100 border border-slate-600 w-full">
-              <div className="stat">
+          <div className="rounded-lg ">
+            <div className="flex gap-6 items-center bg-base-100 w-full">
+              {
+                user.imageUri ? (
+                  <img
+                    src={user.imageUri}
+                    className="avatar h-28 w-28 object-cover"
+                    alt="Student Profile"
+                  />
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-28" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                    <path fill="currentColor" d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5Z" />
+                    <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2Zm7.992 22.926A5.002 5.002 0 0 0 19 20h-6a5.002 5.002 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0Z" />
+                  </svg>
+                )
+              }
+              <div>
+                <div className="font-bold text-2xl">{user.name}</div>
+                <div>
+                  <span className="text-sm">Student No: </span>
+                  <span className="ml-2 font-semibold text-lg">{Helper.padIdNo(user.studentNo)}</span>
+                </div>
+              </div>
+              <div className="ml-4">
+                <div>
+                  <span className="text-sm">Email:</span>
+                  <span className="ml-2 font-semibold text-lg">{user.email}</span>
+                </div>
+                <div>
+                  <span className="text-sm">School</span>
+                  <span className="ml-2 font-semibold text-lg">{user.school.name}</span>
+                </div>
+              </div>
+              {/* <div className="stat">
                 <div className="flex flex-row items-center">
                   <div className="">
                     <span className="stat-title">Good Morning,</span>
@@ -82,15 +119,31 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="stat">
-                <div className="stat-title">Progress</div>
+                <div>
+                <div className="stat-title">
+                    Progress:
+                  <span className="font-semibold ml-2 text-primary">{progress.toFixed(2)}%</span>
+                </div>
+                </div>
                 <div className="stat-desc">
                   <progress className="progress progress-primary w-full lg:w-56" value={progress} max="100"></progress>
                 </div>
+              </div> */}
+            </div>
+            <div className="flex items-center gap-4 mt-8 px-4">
+              <div className="text-lg font-bold">
+                Progress:
+              </div>
+              <div className="flex-1 flex items-center">
+                <progress className="progress progress-primary w-full h-4" value={progress} max="100"></progress>
+              </div>
+              <div>
+                <span className="font-bold ml-2 text-2xl text-primary">{progress.toFixed(2)}%</span>
               </div>
             </div>
           </div>
 
-          <div className="w-full">
+          <div className="w-full mt-8">
             <div className="hero bg-base-200 rounded-lg">
               <div className="hero-content w-full">
                 {

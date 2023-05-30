@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Helper, ModuleController } from "../controllers/_Controllers";
+import { Helper } from "../controllers/_Controllers";
 import { clearModal, showConfirmationBox } from "../modals/Modal";
 
 export default function StudentNavBar({ user }) {
@@ -8,7 +8,6 @@ export default function StudentNavBar({ user }) {
   const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
-  const [modules, setModules] = useState([]);
 
   useEffect(() => {
     async function fetchData() {

@@ -122,12 +122,13 @@ export default function Enroll () {
         data.school = school.id;
       }
       else {
-
         showMessageBox({
           title: "Error",
           message: "School not found. Make sure you entered the correct school code.",
           type: "danger"
         })
+
+        return;
       }
     }
 

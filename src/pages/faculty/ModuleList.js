@@ -54,6 +54,10 @@ export default function ModuleList({ user }) {
     navigate('/faculty/questions?' + item)
   }
 
+  function viewStudents(item) {
+
+  }
+
   function checkFilter (item) {
     if(filter) {
       let value = filter.toLowerCase();
@@ -106,6 +110,7 @@ export default function ModuleList({ user }) {
                     <th>Module No</th>
                     <th>Title</th>
                     <th>Room</th>
+                    <th>Open Date</th>
                     <th>Close Date</th>
                     <th>Topics</th>
                     <th>Action</th>
@@ -119,15 +124,19 @@ export default function ModuleList({ user }) {
                           <td>{item.data().moduleNo}</td>
                           <td>{item.data().title}</td>
                           <td>{item.room ? item.room.code : "-"}</td>
+                          <td>{Helper.formatDateTime(item.data().createdAt)}</td>
                           <td>{Helper.formatDateTime(item.data().closeDate)}</td>
                           <td>{item.topics.length}</td>
                           <td className="flex gap-2">
                             <button className="btn btn-sm btn-info" onClick={() => viewItem(item.id)}>
-                              View Content
+                              Content
                             </button>
                             <button className="btn btn-sm btn-info" onClick={() => viewQuestions(item.id)}>
-                              View Questions
+                              Questions
                             </button>
+                            {/* <button className="btn btn-sm btn-info" onClick={() => viewStudents(item.id)}>
+                              Students
+                            </button> */}
                           </td>
                         </tr>
                       )

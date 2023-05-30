@@ -4,10 +4,10 @@ import { clearModal, showConfirmationBox, showLoading, showMessageBox } from "..
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { formatDateTime, getDocData } from "../../../controllers/_Helper";
-import Result from "../../quiz/Result";
 import StudentQuizResult from "../student/StudentQuizResult";
+import RoomModuleStudents from "../reports/RoomModuleStudents";
 
-export default function ModuleList({ roomId, moduleList }) {
+export default function ModuleList({ roomId, moduleList, studentList }) {
 
   const navigate = useNavigate();
   const [module, setModule] = useState(null);
@@ -150,6 +150,13 @@ export default function ModuleList({ roomId, moduleList }) {
         >
           ADD MODULE
         </button>
+      </div>
+
+      <div className="mt-8">
+        <RoomModuleStudents
+          students={studentList}
+          modules={moduleList}
+        />
       </div>
 
       <div className="mt-8">

@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"
-import { Helper, ModuleController, RoomController, StudentController } from "../../../controllers/_Controllers";
+import { Helper, ModuleController, RoomController, SchoolController, StudentController } from "../../../controllers/_Controllers";
 import { getDocData } from "../../../controllers/_Helper";
 import HDivider from "../../../components/HDivider";
 import Header2 from "../../../components/Header2";
 import moment from "moment";
 import StudentQuizResult from "./StudentQuizResult";
-import Loading from "../../../modals/Loading";
+import StudentProgress from "../reports/StudentProgress";
 
-export default function StudentView() {
+export default function StudentView({user}) {
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const studentId = location.search.substring(1);
-
   const [modules, setModules] = useState([]);
   const [student, setStudent] = useState(null);
 
@@ -23,19 +22,22 @@ export default function StudentView() {
   useEffect(() => {
 
     async function getModules() {
-      let modules = await ModuleController.getApprovedModules();
+      let modules = await ModuleController.getModulesByRoom(student.currentRoom.id);
       setModules(modules);
     }
 
-    getModules();
+    if(student) {
+      getModules();
+    }
 
-  }, [])
+  }, [student])
 
   useEffect(() => {
     const unsubscribe = StudentController.subscribeDoc(studentId, async snapshot => {
       let student = getDocData(snapshot);
       let room = await RoomController.get(student.currentRoom);
       let finishedModules = [];
+      let school = await SchoolController.get(student.school);
 
       for (let moduleId of student.finishedModules) {
         let module = await ModuleController.get(moduleId);
@@ -47,7 +49,9 @@ export default function StudentView() {
       }
 
       student.currentRoom = room;
+      student.modules = student.finishedModules;
       student.finishedModules = finishedModules;
+      student.school = school;
 
       setStudent(student);
     });
@@ -55,13 +59,13 @@ export default function StudentView() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function computeProgress() {
-    let finishedModules = student.finishedModules;
+  // function computeProgress() {
+  //   let finishedModules = student.finishedModules;
 
-    let progress = (100 / modules.length) * finishedModules.length;
+  //   let progress = (100 / modules.length) * finishedModules.length;
 
-    return progress;
-  }
+  //   return progress;
+  // }
 
   if (!studentId || !student) return null;
 
@@ -77,19 +81,73 @@ export default function StudentView() {
       </div>
     )
   }
+
+  // function exportReport() {
+  //   let doc = new jsPDF();
+
+  //   // let toPrint = document.getElementById("toPrint")
+  //   // return;
+  //   doc.html(toPrint, {
+  //     callback(doc) {
+  //       doc.save('pdf_name');
+  //     },
+  //   })
+  //   // doc.save('sample-file.pdf');
+  // };
+
+  function getQuizTakesCount (item) {
+    let modulesTaken = student.modulesTaken;
+
+    if(modulesTaken && modulesTaken.length > 0) {
+      for(let module of modulesTaken) {
+        if(item.id === module.id) {
+          return module.takes;
+        }
+      }
+    }
+    return 1;
+  }
+
+  function computeModuleCompleteDuration (module) {
+
+    let diff = module.quizResult.submittedAt - module.createdAt;
+
+    // Convert milliseconds to seconds
+    let seconds = Math.floor(diff / 1000);
+
+    // Convert seconds to minutes
+    let minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+
+    // Convert minutes to hours
+    let hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+
+    // Convert hours to days
+    let days = Math.floor(hours / 24);
+    hours = hours % 24;
+
+    return `${days}d : ${hours}h : ${minutes}m`
+  }
+
   
   return (
     <>
       <div>
         <div className="flex justify-between">
-          <div className="flex gap-4 items-center">
-            <button className="btn btn-ghost" onClick={() => navigate(-1)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
-              </svg>
-              <p>Back</p>
-            </button>
-            <Header2 value="Student Profile" />
+          <div className="flex w-full gap-4 items-center">
+            <div className="flex gap-4 items-center flex-1">
+              <button className="btn btn-ghost" onClick={() => navigate(-1)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6Z" />
+                </svg>
+                <p>Back</p>
+              </button>
+              <Header2 value="Student Profile" />
+            </div>
+            {/* <button className="btn btn-info" onClick={exportReport}>
+              <p>Export</p>
+            </button> */}
           </div>
 
           {/* <button className="btn btn-primary" onClick={() => navigate('/faculty/questions?' + moduleId)}>
@@ -134,20 +192,23 @@ export default function StudentView() {
           />
           <StudentInfo
             label="School"
-            value={student.school}
+            value={student.school.schoolNo + " - " + student.school.name}
           />
         </div>
 
         <div className="mt-8">
           <div className="flex items-center gap-12">
             <Header2 value="Completed Modules" />
-            <progress className="progress progress-primary w-full lg:w-56" value={computeProgress()} max="100" />
+            {/* <progress className="progress progress-primary w-full lg:w-56" value={computeProgress()} max="100" /> */}
           </div>
           <table className="table table-compact w-full">
             <thead>
               <tr>
                 <th>Module No</th>
                 <th>Title</th>
+                <th>Time Completed</th>
+                <th>Duration</th>
+                <th>Takes</th>
                 <th>Quiz Result</th>
                 {/* <th>Quiz Status</th> */}
                 <th>Action</th>
@@ -159,6 +220,9 @@ export default function StudentView() {
                   <tr key={i.toString()}>
                     <td>{item.moduleNo}</td>
                     <td>{item.title}</td>
+                    <td>{Helper.formatDateTime(item.quizResult.submittedAt)}</td>
+                    <td>{computeModuleCompleteDuration(item)}</td>
+                    <td>{getQuizTakesCount(item)}</td>
                     <td>{item.quizResult.studentScore}/{item.quizResult.totalScore}</td>
                     {/* <td className="italic">
                       {item.remarks === "for checking" ? "Coding Unchecked" : "Passed"} 
@@ -175,7 +239,16 @@ export default function StudentView() {
           </table>
 
         </div>
+        <HDivider />
+        <div className="">
+          <Header2 value="Student Reports" />
+          <StudentProgress
+            student={student}
+            modules={modules}
+          />
+        </div>
       </div>
+      <div id="editor"></div>
     </>
   )
 }

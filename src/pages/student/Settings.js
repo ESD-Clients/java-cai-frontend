@@ -12,9 +12,6 @@ export default function Settings() {
 
   const [user, setUser] = useState(Helper.getCurrentUser());
 
-  
-  console.log(user);
-
   const [updatingImage, setUpdatingImage] = useState(false);
   const [image, setImage] = useState(null);
 
@@ -286,6 +283,8 @@ const Info = ({ label, value, displayValue, type, editable, onSave }) => {
 
   useEffect(() => {
     setText(value)
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editing])
 
   async function save() {

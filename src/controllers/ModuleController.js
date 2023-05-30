@@ -40,7 +40,6 @@ class ModuleController extends BaseController {
         .get()
         .then(res => {
           result = res.docs;
-          console.log(result);
         })
     } catch (error) {
       console.error(error)
@@ -52,7 +51,6 @@ class ModuleController extends BaseController {
 
   destroyStudentWork = async (moduleId, studentId) => {
 
-    console.log(moduleId, studentId);
     var result = false;
 
     try {
@@ -65,9 +63,7 @@ class ModuleController extends BaseController {
         .where('studentId', '==', studentId)
         .get()
         .then(async res => {
-          console.log(res.docs);
           for(let doc of res.docs) {
-            // console.log(res.docs.length);
             await worksRef.doc(doc.id).delete();
           }
         })

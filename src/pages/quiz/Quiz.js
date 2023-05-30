@@ -33,6 +33,7 @@ export default function Quiz() {
       getQuizResult();
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [module]);
 
   if(!loaded) return null;
